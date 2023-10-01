@@ -39,7 +39,6 @@ public class PetCommands extends ListenerAdapter {
                 // Send the pet hatching embed
                 event.replyEmbeds(embedBuilder.build()).queue();
             } else {
-                // User does not have an egg
                 event.reply("You don't have an egg to hatch.").queue();
             }
         }
@@ -59,7 +58,7 @@ public class PetCommands extends ListenerAdapter {
         } catch (SQLException e) {
             e.printStackTrace();
         }
-        return false; // Return false by default (no egg found or error occurred)
+        return false;
     }
     private void removeEggFromInventory(String userId) {
         try (final Connection connection = SQLiteDataSource.getConnection();
@@ -72,9 +71,7 @@ public class PetCommands extends ListenerAdapter {
     }
 
     private String hatchRandomPet() {
-            // Implement logic to hatch a random pet from an egg
-            // Replace this with your logic
-            String[] possiblePets = {"🐢", "🦃", "🐈", "🐕","🐑","🦌","🐂","🐄","🦎","🐍","🐣","🦐", "🦩", "🐌", "🦢"};
+            String[] possiblePets = {"🐢", "🦃", "🐈", "🐕","🐑","🦌","🐂","🐄","🦎","🐍","🐣","🦐", "🦩", "🐌", "🦢","🐊","🦙"};
             Random random = new Random();
             int index = random.nextInt(possiblePets.length);
             return possiblePets[index];
