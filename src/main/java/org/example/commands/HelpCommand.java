@@ -15,7 +15,7 @@ public class HelpCommand extends ListenerAdapter {
             EmbedBuilder embedBuilder1 = new EmbedBuilder();
             embedBuilder1.setTitle("**Iapetus**");
             embedBuilder1.setDescription("**`Basic info`** \n" +
-                    "**Iapetus is a strawberry economy bot with pet commands, fun commands and a lot more! It developed by @saturnsolo, and @vae.** \n \n" +
+                    "**Iapetus is a strawberry economy bot with pet commands, fun commands and a lot more! It developed by @saturnsolo, and @msvae.** \n \n" +
                     "**`More info`** \n" +
                     "**The 💚 will take you to the commands menu, the ❔ will take you to the more info tab!**");
             embedBuilder1.setColor(0xD4C2FC);
