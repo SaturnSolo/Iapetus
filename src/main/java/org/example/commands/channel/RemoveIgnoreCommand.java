@@ -15,7 +15,7 @@ public class RemoveIgnoreCommand extends IapetusCommand {
 
     public RemoveIgnoreCommand() {
         super(Commands.slash("remove-ignore", "remove from ignored channels")
-          .addOption(OptionType.CHANNEL, "channel-1", "choose channels for to remove from ignored"));
+          .addOption(OptionType.CHANNEL, "channel-1", "choose channels for to remove from ignored", true));
     }
 
     @Override

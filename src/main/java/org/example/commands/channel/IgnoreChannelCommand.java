@@ -13,7 +13,7 @@ import org.example.utils.MemberUtils;
 public class IgnoreChannelCommand extends IapetusCommand {
     public IgnoreChannelCommand() {
         super(Commands.slash("ignore-channel", "ignore channels")
-          .addOption(OptionType.CHANNEL, "channel-1", "choose channels for to ignore"));
+          .addOption(OptionType.CHANNEL, "channel-1", "choose channels for to ignore", true));
     }
 
     @Override
