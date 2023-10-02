@@ -12,6 +12,7 @@ import net.dv8tion.jda.api.utils.cache.CacheFlag;
 import org.example.buttons.StrawberryButton;
 import org.example.commands.*;
 import org.example.commands.channel.IgnoreChannelCommand;
+import org.example.commands.channel.ListIgnoredCommand;
 import org.example.commands.channel.RemoveIgnoreCommand;
 import org.example.commands.pet.HatchCommand;
 import org.example.commands.pet.PetMenuCommand;
@@ -62,6 +63,7 @@ public class Main {
           new HatchCommand(),
           new IgnoreChannelCommand(),
           new RemoveIgnoreCommand(),
+          new ListIgnoredCommand(),
           new HelpCommand()
         );
 
