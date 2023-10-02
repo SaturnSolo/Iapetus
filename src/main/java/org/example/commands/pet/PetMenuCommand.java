@@ -1,38 +1,40 @@
-package org.example.commands;
+package org.example.commands.pet;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.example.database.SQLiteDataSource;
+import org.example.structures.IapetusCommand;
 
-import java.beans.EventHandler;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class PetMenu extends ListenerAdapter {
+public class PetMenuCommand extends IapetusCommand {
+    public PetMenuCommand() {
+        super("pets", "shows a list of your pets");
+    }
     @Override
-    public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {
-        if (event.getName().equals("pets")) {
-            String userId = event.getUser().getId();
-            String petList = getHatchedPets(userId);
+    public boolean runCommand(SlashCommandInteractionEvent event) {
+        String userId = event.getUser().getId();
+        String petList = getHatchedPets(userId);
 
-            if (!petList.isEmpty()) {
-                // Build a message to display the user's pets
-                MessageEmbed embed = buildPetListEmbed(petList);
+        if (!petList.isEmpty()) {
+            // Build a message to display the user's pets
+            MessageEmbed embed = buildPetListEmbed(petList);
 
-                // Check if the interaction is not already replied to
-                if (!event.isAcknowledged()) {
-                    // Send the embed to the user
-                    event.replyEmbeds(embed).queue();
-                }
-            } else {
-                // No hatched pets found
-                event.reply("You don't have any hatched pets yet.").queue();
+            // Check if the interaction is not already replied to
+            if (!event.isAcknowledged()) {
+                // Send the embed to the user
+                event.replyEmbeds(embed).queue();
             }
+        } else {
+            // No hatched pets found
+            event.reply("You don't have any hatched pets yet.").queue();
         }
+        return true;
     }
     private String getHatchedPets(String userId) {
         // Implement logic to fetch hatched pets from the database
