@@ -77,11 +77,6 @@ public class SQLiteDataSource {
                     "price INTEGER NOT NULL" +
                     ");");
 
-            statement.execute("INSERT INTO items (name, price) VALUES " +
-                    "('egg', 5), " +
-                    "('rose', 10), " +
-                    "('tulip', 10), " +
-                    "('cherry_blossom', 15);");
 
             statement.execute("CREATE TABLE IF NOT EXISTS hatch_log (" +
                     "id INTEGER PRIMARY KEY AUTOINCREMENT," +
