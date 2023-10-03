@@ -3,6 +3,7 @@ package org.example.buttons;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.example.database.SQLiteDataSource;
+import org.example.items.Item;
 import org.example.structures.IapetusButton;
 
 import java.sql.Connection;
@@ -11,11 +12,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class ShopButton extends IapetusButton {
-    private String item;
+    private Item item;
     private Integer cost;
 
-    public ShopButton(String id, String item, Integer cost) {
-        super(Button.primary(id, item));
+    public ShopButton(String id, Item item, Integer cost) {
+        super(Button.secondary(id, item.getName()).withEmoji(item.getIcon()));
         this.item = item;
         this.cost = cost;
     }
@@ -28,7 +29,7 @@ public class ShopButton extends IapetusButton {
         int userBerries = getUserBerries(userId);
         if (userBerries >= cost) {
             deductBerries(userId, cost);
-            addToInventory(userId, item);
+            addToInventory(userId, item.getId());
             event.reply("**You have purchased a " + item + " and added it to your inventory!**").setEphemeral(true).queue();
         } else {
             event.reply("**Insufficient berries!**").setEphemeral(true).queue();

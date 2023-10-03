@@ -3,6 +3,8 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.example.ItemManager;
+import org.example.Main;
 import org.example.database.SQLiteDataSource;
 import org.example.structures.IapetusCommand;
 
@@ -14,6 +16,7 @@ import java.util.Random;
 
 
 public class HatchCommand extends IapetusCommand {
+    private final ItemManager im = Main.itemManager;
     public HatchCommand() {
         super("hatch", "hatches a pet out of an egg");
     }
@@ -24,7 +27,7 @@ public class HatchCommand extends IapetusCommand {
         String userId = user.getId();
 
         // Check if the user has an egg in their inventory (You need to implement this logic)
-        if (hasEggInInventory(userId)) {
+        if (im.hasItem(userId, "egg")) {
             // If the user has an egg, hatch it into a random pet
             String hatchedPet = hatchRandomPet();
 
@@ -32,7 +35,8 @@ public class HatchCommand extends IapetusCommand {
             logHatchInDatabase(userId, hatchedPet);
 
             // Remove the egg from the inventory
-            removeEggFromInventory(userId); // Add this line
+            //removeEggFromInventory(userId); // Add this line
+            im.takeItem(userId, "egg");
 
             // Create an embed for the hatched pet
             EmbedBuilder embedBuilder = new EmbedBuilder();
