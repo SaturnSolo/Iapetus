@@ -1,6 +1,7 @@
 package org.example.items;
 
 import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.example.ItemManager;
 import org.example.Main;
 import org.example.buttons.ShopButton;
@@ -41,7 +42,7 @@ public abstract class Item {
     }
 
 
-    abstract public void use(Member owner);
+    abstract public void use(SlashCommandInteractionEvent event);
 
     public String getString() {
         return getString(false);

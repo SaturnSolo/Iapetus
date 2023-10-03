@@ -1,6 +1,7 @@
 package org.example.items;
 
 import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
 import java.lang.reflect.Member;
 
@@ -10,7 +11,7 @@ public class EggItem extends Item {
     }
 
     @Override
-    public void use(Member member) {
+    public void use(SlashCommandInteractionEvent event) {
         // hatch or throw it?
     }
 }
