@@ -8,7 +8,7 @@ import org.example.buttons.ShopButton;
 import java.lang.reflect.Member;
 
 public abstract class Item {
-    final ItemManager manager = new ItemManager();
+    final ItemManager manager = Main.itemManager;
 
     // these values will show to the user.
     String name;
@@ -43,17 +43,25 @@ public abstract class Item {
 
     abstract public void use(Member owner);
 
+    public String getString() {
+        return getString(false);
+    }
+    public String getString(boolean reverse) {
+        if (reverse) return name + " " + getIcon();
+        return getIcon() + " " + name;
+    }
+
     public String getName() {
         return name;
     }
     public String getDescription() {
         return description;
     }
-    public Emoji getIcon() {
+    public Emoji getIconEmoji() {
         return icon;
     }
-    public String getIconString() {
-        return getIcon().getFormatted();
+    public String getIcon() {
+        return getIconEmoji().getFormatted();
     }
 
     public Integer getCost() {

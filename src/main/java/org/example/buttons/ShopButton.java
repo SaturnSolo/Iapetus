@@ -16,7 +16,7 @@ public class ShopButton extends IapetusButton {
     private Integer cost;
 
     public ShopButton(String id, Item item, Integer cost) {
-        super(Button.secondary(id, item.getName()).withEmoji(item.getIcon()));
+        super(Button.secondary(id, item.getName()).withEmoji(item.getIconEmoji()));
         this.item = item;
         this.cost = cost;
     }
@@ -30,7 +30,7 @@ public class ShopButton extends IapetusButton {
         if (userBerries >= cost) {
             deductBerries(userId, cost);
             addToInventory(userId, item.getId());
-            event.reply("**You have purchased a " + item + " and added it to your inventory!**").setEphemeral(true).queue();
+            event.reply("**You have purchased a " + item.getString() + " and added it to your inventory!**").setEphemeral(true).queue();
         } else {
             event.reply("**Insufficient berries!**").setEphemeral(true).queue();
         }

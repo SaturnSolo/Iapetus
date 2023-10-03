@@ -7,7 +7,7 @@ import java.lang.reflect.Member;
 
 public class RoseItem extends Item {
     public RoseItem() {
-        super("Rose", "surprisingly no thorns.", "tulip", Emoji.fromUnicode("🌹"), 10);
+        super("Rose", "surprisingly no thorns.", "rose", Emoji.fromUnicode("🌹"), 10);
     }
 
     @Override

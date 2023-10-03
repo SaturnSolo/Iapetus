@@ -43,7 +43,7 @@ public class InventoryCommand extends IapetusCommand {
                     Item item = im.getItem(itemName);
                     if (item == null) item = new InvalidItem(itemName);
 
-                    embedBuilder.addField(item.getIconString() + " " +  item.getName(), "> " + item.getDescription() + "\nQuantity: " + itemCount, true);
+                    embedBuilder.addField(item.getString(), "> " + item.getDescription() + "\nQuantity: " + itemCount, true);
                     hasItems = true;
                 }
 
