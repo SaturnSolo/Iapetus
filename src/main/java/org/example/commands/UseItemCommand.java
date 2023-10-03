@@ -1,7 +1,6 @@
 package org.example.commands;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.interactions.commands.OptionMapping;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -10,14 +9,15 @@ import org.example.Main;
 import org.example.items.Item;
 import org.example.structures.IapetusCommand;
 
-public class HatCommands extends IapetusCommand {
+public class UseItemCommand extends IapetusCommand {
     final ItemManager im = Main.itemManager;
-    public HatCommands() {
+    public UseItemCommand() {
         super(Commands.slash("use", "to use an item")
-                .addOptions(new OptionData(OptionType.STRING, "item", "use item")
+                .addOptions(new OptionData(OptionType.STRING, "item", "use item", true)
                         .addChoice("🌹","rose")
                         .addChoice("🌷", "tulip")
-                        .addChoice("🌸", "cherry_blossom"))
+                        .addChoice("🌸", "cherry_blossom")
+                )
 
         );
     }
@@ -25,7 +25,6 @@ public class HatCommands extends IapetusCommand {
     @Override
     public boolean runCommand(SlashCommandInteractionEvent event) {
         String choice = event.getOption("item").getAsString();
-        String user = event.getUser().getAsMention();
         String userId = event.getUser().getId();
 
         if (!im.hasItem(userId, choice)) {
@@ -34,7 +33,7 @@ public class HatCommands extends IapetusCommand {
         }
         Item item = im.getItem(choice);
         im.takeItem(userId, choice);
-        event.reply( user + "** has eaten **" + item.getString(true)).queue();
+        item.use(event);
         return true;
     }
 }

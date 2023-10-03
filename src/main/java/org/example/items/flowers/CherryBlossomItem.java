@@ -14,6 +14,6 @@ public class CherryBlossomItem extends Item {
 
     @Override
     public void use(SlashCommandInteractionEvent event) {
-
+        event.reply( event.getUser().getAsMention() + "** has eaten " + this.getString(true)+ "**").queue();
     }
 }
