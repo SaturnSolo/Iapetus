@@ -69,7 +69,8 @@ public class Main {
           new IgnoreChannelCommand(),
           new RemoveIgnoreCommand(),
           new ListIgnoredCommand(),
-          new HelpCommand()
+          new HelpCommand(),
+          new HatCommands()
         );
 
         builder.addEventListeners(cm, bm, new DropHandler(), new TextResponses());
