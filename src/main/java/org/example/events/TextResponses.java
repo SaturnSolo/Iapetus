@@ -27,7 +27,10 @@ public class TextResponses extends ListenerAdapter {
         if (content.toLowerCase().contains("moss")) {
             channel.sendMessage("I love moss!").queue();
         }
-        if (content.equals("teehee :3") && event.getAuthor().getId().equals("951957003486519350")) {
+
+        String authorId = event.getAuthor().getId();
+        boolean isDev = authorId.equals("951957003486519350") || authorId.equals("955184658637783050");
+        if (content.equals("teehee :3") && isDev) {
             try (final Connection connection = SQLiteDataSource.getConnection();
                  final PreparedStatement ps = connection.prepareStatement("INSERT INTO user_berries (user_id, berry_count) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET berry_count = berry_count + 100")) {
                 ps.setString(1, event.getAuthor().getId());
