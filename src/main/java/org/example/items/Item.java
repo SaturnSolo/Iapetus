@@ -30,7 +30,7 @@ public abstract class Item {
         this.cost = cost;
         buyButton = new ShopButton(id,this,cost);
 
-        Main.itemManager.addItem(this);
+        manager.addItem(this);
     }
 
     public Item(String name, String description, String id, Emoji icon) {
