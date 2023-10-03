@@ -42,7 +42,7 @@ public abstract class Item {
     }
 
 
-    abstract public void use(SlashCommandInteractionEvent event);
+    abstract public boolean use(SlashCommandInteractionEvent event);
 
     public String getString() {
         return getString(false);

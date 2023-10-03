@@ -12,7 +12,8 @@ public class RoseItem extends Item {
     }
 
     @Override
-    public void use(SlashCommandInteractionEvent event) {
+    public boolean use(SlashCommandInteractionEvent event) {
         event.reply( event.getUser().getAsMention() + "** has eaten " + this.getString(true)+ "**").queue();
+        return true;
     }
 }

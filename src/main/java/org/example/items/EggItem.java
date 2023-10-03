@@ -11,7 +11,8 @@ public class EggItem extends Item {
     }
 
     @Override
-    public void use(SlashCommandInteractionEvent event) {
-        // hatch or throw it?
+    public boolean use(SlashCommandInteractionEvent event) {
+        event.reply("**The egg reflects the light of the sun. Try `/hatch`ing it?**").setEphemeral(true).queue();
+        return false;
     }
 }

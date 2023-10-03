@@ -11,7 +11,8 @@ public class InvalidItem extends Item {
     }
 
     @Override
-    public void use(SlashCommandInteractionEvent event) {
+    public boolean use(SlashCommandInteractionEvent event) {
+        return false;
         // something later
     }
 }
