@@ -1,6 +1,7 @@
 package org.example.commands;
 
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.Command;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.OptionData;
@@ -9,16 +10,16 @@ import org.example.Main;
 import org.example.items.Item;
 import org.example.structures.IapetusCommand;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 public class UseItemCommand extends IapetusCommand {
     final ItemManager im = Main.itemManager;
     public UseItemCommand() {
         super(Commands.slash("use", "to use an item")
-                .addOptions(new OptionData(OptionType.STRING, "item", "use item", true)
-                        .addChoice("🌹","rose")
-                        .addChoice("🌷", "tulip")
-                        .addChoice("🌸", "cherry_blossom")
-                )
-
+            .addOptions(new OptionData(OptionType.STRING, "item", "use item", true)
+              .addChoices(getChoices())
+            )
         );
     }
 
@@ -32,8 +33,13 @@ public class UseItemCommand extends IapetusCommand {
             return true;
         }
         Item item = im.getItem(choice);
-        im.takeItem(userId, choice);
-        item.use(event);
+        if (item.use(event)) im.takeItem(userId, choice);
         return true;
+    }
+
+    private static Collection<Command.Choice> getChoices() {
+        Collection<Command.Choice> choices = new ArrayList<>();
+        Main.itemManager.getItems().forEach((id,item) -> choices.add(new Command.Choice(item.getString(true),id)));
+        return choices;
     }
 }
