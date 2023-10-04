@@ -70,7 +70,8 @@ public class Main {
           new RemoveIgnoreCommand(),
           new ListIgnoredCommand(),
           new HelpCommand(),
-          new UseItemCommand()
+          new UseItemCommand(),
+          new AdventureCommands()
         );
 
         builder.addEventListeners(cm, bm, new DropHandler(), new TextResponses());
