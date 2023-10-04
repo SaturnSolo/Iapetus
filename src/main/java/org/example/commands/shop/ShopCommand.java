@@ -7,6 +7,10 @@ import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.example.ButtonManager;
 import org.example.Main;
 import org.example.buttons.ShopButton;
+import org.example.items.EggItem;
+import org.example.items.flowers.CherryBlossomItem;
+import org.example.items.flowers.RoseItem;
+import org.example.items.flowers.TulipItem;
 import org.example.structures.IapetusCommand;
 
 public class ShopCommand extends IapetusCommand {
@@ -17,10 +21,10 @@ public class ShopCommand extends IapetusCommand {
 
         // create the buttons, this lets the ButtonManager know what to run when a button with the id is clicked.
         bm.addButtons(
-          new ShopButton("egg", "🥚", 5),
-          new ShopButton("rose", "🌹", 10),
-          new ShopButton("tulip", "🌷", 10),
-          new ShopButton("cherry_blossom", "🌸", 15)
+          new ShopButton("egg", new EggItem(), 5),
+          new ShopButton("rose", new RoseItem(), 10),
+          new ShopButton("tulip", new TulipItem(), 10),
+          new ShopButton("cherry_blossom", new CherryBlossomItem(), 15)
         );
 
     }

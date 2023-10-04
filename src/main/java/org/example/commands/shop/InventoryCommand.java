@@ -3,7 +3,11 @@ package org.example.commands.shop;
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
+import org.example.ItemManager;
+import org.example.Main;
 import org.example.database.SQLiteDataSource;
+import org.example.items.InvalidItem;
+import org.example.items.Item;
 import org.example.structures.IapetusCommand;
 
 import java.awt.*;
@@ -13,6 +17,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class InventoryCommand extends IapetusCommand {
+    private final ItemManager im = Main.itemManager;
     public InventoryCommand() {
         super("inventory","opens your inventory");
     }
@@ -35,7 +40,10 @@ public class InventoryCommand extends IapetusCommand {
                     String itemName = rs.getString("item_name");
                     int itemCount = rs.getInt("item_count");
 
-                    embedBuilder.addField(itemName, "Quantity: " + itemCount, true);
+                    Item item = im.getItem(itemName);
+                    if (item == null) item = new InvalidItem(itemName);
+
+                    embedBuilder.addField(item.getString(), "> " + item.getDescription() + "\nQuantity: " + itemCount, true);
                     hasItems = true;
                 }
 

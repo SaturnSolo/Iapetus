@@ -24,7 +24,9 @@ import org.example.events.TextResponses;
 
 
 public class Main {
+    public static CommandManager commandManager;
     public static ButtonManager buttonManager;
+    public static ItemManager itemManager;
 
     public static void main(String[] args) {
 
@@ -44,6 +46,8 @@ public class Main {
         builder.setActivity(Activity.listening("🍓"));
         builder.enableIntents(GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_EMOJIS_AND_STICKERS, GatewayIntent.GUILD_PRESENCES);
 
+        Main.itemManager = new ItemManager();
+
         // initialize interaction managers.
         ButtonManager bm = new ButtonManager();
         Main.buttonManager = bm;
@@ -52,6 +56,7 @@ public class Main {
         );
 
         CommandManager cm = new CommandManager();
+        Main.commandManager = cm;
         cm.addCommands(
           new PingCommand(),
           new BonkCommand(),
@@ -65,7 +70,8 @@ public class Main {
           new RemoveIgnoreCommand(),
           new ListIgnoredCommand(),
           new HelpCommand(),
-          new HatCommands()
+          new UseItemCommand(),
+          new AdventureCommands()
         );
 
         builder.addEventListeners(cm, bm, new DropHandler(), new TextResponses());
