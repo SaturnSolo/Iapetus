@@ -9,6 +9,7 @@ import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.example.ButtonManager;
 import org.example.Main;
+import org.example.buttons.AdventureButtons;
 import org.example.structures.IapetusButton;
 import org.example.structures.IapetusCommand;
 
@@ -22,6 +23,8 @@ public class AdventureCommands extends IapetusCommand {
 
     public AdventureCommands() {
         super(Commands.slash("adventure", "go on an adventure somewhere"));
+        new AdventureButtons();
+
         bm.addButtons(
                 new IapetusButton(Button.primary("yes", "✅")) {
                     @Override
