@@ -84,30 +84,30 @@ public class AdventureCommands extends IapetusCommand {
 
 
                         Map<String, String> investigations = new HashMap<>();
-                        investigations.put("shiny","**You find something shiny that you can't seem to put into words**");
-                        investigations.put(null, "You found nothing but air");
-                        investigations.put("dice","**You find a random dice sitting upon a stone**");
-                        investigations.put(null,"You kicked some dirt and found nothing");
-                        investigations.put("rock","**You find a rock that you decide to pocket**");
-                        investigations.put(null,"You kicked some dirt and found nothing");
-                        investigations.put("gem","**You find a gem that seems to be sparkling**");
-                        investigations.put(null, "You found nothing but air");
-                        investigations.put("pumpkin","**You find a glowing pumpkin**");
-                        investigations.put(null,"You kicked some dirt and found nothing");
-                        investigations.put("key","**You find an old rusty key**");
-                        investigations.put(null, "You found nothing but air");
+                        investigations.put("**You find something shiny that you can't seem to put into words**","shiny");
+                        investigations.put("You found nothing but air",null);
+                        investigations.put("**You find a random dice sitting upon a stone**","dice");
+                        investigations.put("You kicked some dirt and found nothing",null);
+                        investigations.put("**You find a rock that you decide to pocket**","rock");
+                        investigations.put("You looked around an found nothing...",null);
+                        investigations.put("**You find a gem that seems to be sparkling**","gem");
+                        investigations.put("You did a backflip but nothing showed.",null);
+                        investigations.put("**You find a glowing pumpkin**","pumpkin");
+                        investigations.put("You opened a drawer and found nothing.",null);
+                        investigations.put("**You find an old rusty key**","key");
+                        investigations.put("You breathed, nothing happened.",null);
 
 
 
                         int value = new Random().nextInt(investigations.size());
-                        String selected = investigations.keySet().stream().toList().get(value);
-                        String message = investigations.get(selected);
+                        String message = investigations.keySet().stream().toList().get(value);
+                        String item = investigations.get(message);
                         String building = embedBuilder6.setDescription(message).toString();
                         MessageEmbed embed6 = embedBuilder6.build();
                         event.replyEmbeds(embed6).queue();
 
                         ItemManager im = Main.itemManager;
-                        im.giveItem(userIdCard, selected);
+                        if (item != null) im.giveItem(userIdCard, item);
 
                         event.getInteraction().editButton(bm.getButton("investigate").asDisabled()).queue();
                     }
