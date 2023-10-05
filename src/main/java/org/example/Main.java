@@ -21,6 +21,7 @@ import org.example.commands.shop.InventoryCommand;
 import org.example.commands.shop.ShopCommand;
 import org.example.events.DropHandler;
 import org.example.events.TextResponses;
+import org.example.items.*;
 
 
 public class Main {
@@ -47,6 +48,12 @@ public class Main {
         builder.enableIntents(GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_EMOJIS_AND_STICKERS, GatewayIntent.GUILD_PRESENCES);
 
         Main.itemManager = new ItemManager();
+        new DiceItem();
+        new GemItem();
+        new KeyItem();
+        new PumpkinItem();
+        new RockItem();
+        new ShinyItem();
 
         // initialize interaction managers.
         ButtonManager bm = new ButtonManager();
