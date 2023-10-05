@@ -62,7 +62,7 @@ public class AdventureCommands extends IapetusCommand {
                         event.replyEmbeds(embed6).addActionRow(bm.getButton("investigate"), bm.getButton("leave")).queue();
 
                         event.getInteraction().editButton(bm.getButton("yes").asDisabled()).queue();
-                        
+
 
                     }
                 },

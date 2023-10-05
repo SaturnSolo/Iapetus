@@ -14,31 +14,10 @@ public class DiceItem extends Item {
 
         @Override
         public boolean use(SlashCommandInteractionEvent event) {
-            List<String> rolls = Arrays.asList(
-                    "**You roll a 1**",
-                    "**You roll a 2**",
-                    "**You roll a 3**",
-                    "**You roll a 4**",
-                    "**You roll a 5**",
-                    "**You roll a 6**",
-                    "**You roll a 7**",
-                    "**You roll a 8**",
-                    "**You roll a 9**",
-                    "**You roll a 10**",
-                    "**You roll a 11**",
-                    "**You roll a 12**",
-                    "**You roll a 13**",
-                    "**You roll a 14**",
-                    "**You roll a 15**",
-                    "**You roll a 16**",
-                    "**You roll a 17**",
-                    "**You roll a 18**",
-                    "**You roll a 19**",
-                    "**You roll a 20**"
-            );
+            String user10 = event.getUser().getAsMention();
             Random random = new Random();
-            String diceRoll = rolls.get(random.nextInt(rolls.size()));
-            event.reply(diceRoll).setEphemeral(true).queue();
+            Integer diceRoll = random.nextInt(20) +1;
+            event.reply(user10 + " you rolled a " + diceRoll).queue();
             return false; // item not consumed on use.
         }
     }
