@@ -14,6 +14,7 @@ import net.dv8tion.jda.api.utils.messages.MessageEditBuilder;
 import org.example.ButtonManager;
 import org.example.ItemManager;
 import org.example.Main;
+import org.example.commands.AdventureCommands;
 import org.example.structures.IapetusButton;
 import org.example.utils.BerryUtils;
 import java.util.*;
@@ -391,6 +392,7 @@ public class AdventureButtons {
               ))
               .build();
 
+            AdventureCommands.adventureCooldowns.put(user.getId(), new Date());
             event.editMessage(new MessageEditBuilder().setEmbeds(embed).setReplace(true).build()).queue();
         }
     }
