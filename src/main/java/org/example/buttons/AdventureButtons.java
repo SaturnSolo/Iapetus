@@ -15,8 +15,12 @@ import org.example.ButtonManager;
 import org.example.ItemManager;
 import org.example.Main;
 import org.example.commands.AdventureCommands;
+import org.example.items.Item;
 import org.example.structures.IapetusButton;
 import org.example.utils.BerryUtils;
+import org.example.utils.InventoryUtils;
+import org.example.utils.MemberUtils;
+
 import java.util.*;
 
 public class AdventureButtons {
@@ -38,13 +42,44 @@ public class AdventureButtons {
         );
 
         addLocations(
-          new AdventureLocation("cave", "Cave", "it seems quite deep, it requires you to crawl.", 5).addEvents(
+          new AdventureLocation("cave", "%s stumbled upon a cave.", "it seems quite deep, it requires you to crawl.", 5).addEvents(
             new AdventureEvent("The crawl was quite uncomfortable and you didn't find anything.", 4),
             new AdventureEvent("You couldn't fit through the tiny gap.", 1),
             new FindEvent("You crawled deep into the cave and found a neat rock. You pocketed it.","rock",4),
-            new FindEvent("You noticed a sparkle as you crawled through the dark cave. When you got closer you realized it was a gemstone!","gem",1)
+            new FindEvent("You noticed a sparkle as you crawled through the dark cave. When you got closer you realized it was a gemstone!","gem",1),
+
+            new ChoiceEvent("The path splits in two directions. \nOn the left you see a small glint, on the right darkness.", "cave_split",8).addChoices(
+              new AdventureChoice("Go left", Emoji.fromUnicode("◀"), ButtonStyle.SECONDARY).addEvents(
+                new FindEvent("You walk up to the glint and its a gem!","gem",2),
+                new DeathEvent("You walk up to the glint and its a bear D:\n You attempt to flee but fail.", 1),
+                new AdventureEvent("You walk up to the glint and its a bear D:\n You attempt to flee and succeed!", 1)
+              ),
+              new AdventureChoice("Go right", Emoji.fromUnicode("▶"), ButtonStyle.SECONDARY).addEvents(
+                new FindEvent("You pushed forward and found a neat rock.", "rock", 1),
+                new ChoiceEvent("You pushed forward and found an egg, do you take it?", "cave_find_egg",1).addChoices(
+                  new AdventureChoice("Take it!", Emoji.fromUnicode("🥚")).addEvents(
+                    new FindEvent("You picked up the egg, I wonder whats inside?", "egg", 3, 1),
+                    new DeathEvent("Its mother was just around the corner! It attacked you and took some of your items.", 2)
+                  ),
+                  new AdventureChoice("Leave it be.", ButtonStyle.SECONDARY).addEvents(
+                    new AdventureEvent("You left the egg be and left the cave, light at last!", 1)
+                  )
+                )
+              )
+            ),
+            new ChoiceEvent("The corridor is getting a bit tight, do you continue?", "cave_tight", 8).addChoices(
+              new AdventureChoice("Continue", Emoji.fromUnicode("⏩"), ButtonStyle.DANGER).addEvents(
+                new DeathEvent("You got stuck in the corridor!", 2),
+                new DeathEvent("Another person was trying to get through on the other side. \nBoth of you got trapped.", 1),
+                new AdventureEvent("You made it to the other side, but you didn't find anything", 5),
+                new FindEvent("You made it to the other side and found a massive gem cluster!", "gem", 2, 3)
+              ),
+              new AdventureChoice("Go back", ButtonStyle.SECONDARY).addEvents(
+                new AdventureEvent("You got out safely.", 1)
+              )
+            )
           ),
-          new AdventureLocation("throne", "Throne Room", "its fit for a queen, what riches might you find?", 1).addEvents(
+          new AdventureLocation("throne", "%s walked into a throne room.", "its fit for a queen, what riches might you find?", 1).addEvents(
             new AdventureEvent("You searched around and found nothing", 2),
             new ChoiceEvent("You found a hidden lever that revealed the queens dice collection. Do you take one?", "throne_dice", 1).addChoices(
               new AdventureChoice("Take it!", Emoji.fromUnicode("🎲")).addEvents(
@@ -57,10 +92,22 @@ public class AdventureButtons {
               )
             )
           ),
-          new AdventureLocation("forest", "Forest", "the brush is quite thick, maybe something is inside.", 4).addEvents(
-            new StrawberryEvent("You searched around and found some strawberry bushes, you picked up %s berries",3,4,true),
+          new AdventureLocation("forest", "%s wandered into a forest.", "the brush is quite thick, maybe something is inside.", 4).addEvents(
+            new StrawberryEvent("You searched around and found some strawberry bushes, you picked up %s berries",3,5,true),
+            new ChoiceEvent("In the wild you found a flower! Do you pick it?", "forest_flower", 3).addChoices(
+              new AdventureChoice("Pick it!").addEvents(
+                new FindEvent("You picked the rose, it hurt a little but your ok!", "rose",1)
+              ),
+              new AdventureChoice("Keep searching.", ButtonStyle.SECONDARY).addEvents(
+                new LocationEvent("forest",8),
+                new LocationEvent("cave",2)
+              )
+            ),
             new AdventureEvent("You kicked some brush around and found more brush, you found nothing.", 1)
           )
+//          new AdventureLocation("hell", "Welcome to hell, %s.", "you can't escape...", 1).addEvents(
+//            new DeathEvent("You met the devil, he killed you.", 1)
+//          ).disableLeave()
         );
     }
 
@@ -126,6 +173,7 @@ public class AdventureButtons {
         String name;
         String description;
         int odds;
+        boolean canLeave = true;
 
         // List<IapetusButton> buttons;
         List<AdventureEvent> events;
@@ -158,6 +206,15 @@ public class AdventureButtons {
             events.get(index).run(event);
         }
 
+        public MessageEmbed generateEmbed(User user ) {
+            return new EmbedBuilder()
+              .setTitle(name.replaceAll("%s",user.getEffectiveName()))
+              .setDescription(description)
+              .setFooter("Investigate \uD83D\uDD0D or Leave \uD83D\uDCA8")
+              .setColor(0x474B24)
+              .build();
+        }
+
         public AdventureLocation addEvents(List<AdventureEvent> events) {
             events.forEach(event -> {
                 for (int i = 0; i < event.odds; ++i) this.events.add(event);
@@ -166,6 +223,17 @@ public class AdventureButtons {
         }
         public AdventureLocation addEvents(AdventureEvent... events) {
             return addEvents(Arrays.asList(events));
+        }
+
+        public AdventureLocation setCanLeave(boolean canLeave) {
+            this.canLeave = canLeave;
+            return this;
+        }
+        public AdventureLocation disableLeave() {
+            return setCanLeave(false);
+        }
+        public AdventureLocation enableLeave() {
+            return setCanLeave(true);
         }
 
     }
@@ -243,6 +311,64 @@ public class AdventureButtons {
               .setFooter("+"+found+" Strawberries 🍓")
               .build();
             event.editMessage(new MessageEditBuilder().setEmbeds(embed).setReplace(true).build()).queue();
+        }
+    }
+
+    private class DeathEvent extends AdventureEvent {
+        ItemManager im = Main.itemManager;
+        public DeathEvent(String message, int odds) {
+            super(message, odds);
+        }
+
+        @Override
+        public void run(ButtonInteractionEvent event) {
+            User user = event.getUser();
+            InventoryUtils.Inventory inventory = InventoryUtils.getUserInventory(user.getId());
+
+            String footer = null;
+            if (inventory.size() > 2) {
+                int itemsToTake = (int) Math.floor(Math.sqrt(inventory.size())-0.4);
+                Map<Item, Integer> taken = new HashMap<>();
+                for (int i = 0; i < itemsToTake ; i++) {
+                    Item item = inventory.remove(random.nextInt(inventory.size()));
+                    Integer count = taken.get(item);
+                    if (count == null) count = 0;
+                    taken.put(item, count+1);
+                }
+
+                StringBuilder builder = new StringBuilder();
+                taken.forEach((item,count) -> builder.append("-"+count+" "+item.getString(true)+" "));
+                footer = builder.toString();
+            }
+
+            MessageEmbed embed = new EmbedBuilder(event.getMessage().getEmbeds().get(0))
+              .setDescription(message)
+              .setFooter(footer)
+              .setColor(0xB80C09)
+              .build();
+            event.editMessage(new MessageEditBuilder().setEmbeds(embed).setReplace(true).build()).queue();
+        }
+    }
+
+    private class LocationEvent extends AdventureEvent {
+        private final String locationId;
+
+        public LocationEvent(String locationId, int odds) {
+            super(null, odds);
+            this.locationId = locationId;
+        }
+
+        @Override
+        public void run(ButtonInteractionEvent event) {
+            AdventureLocation location = getLocation(locationId);
+            MessageEmbed embed = location.generateEmbed(event.getUser());
+
+            String investigateButtonId = "adv-"+location.id+"-investigate";
+            if (!bm.buttonExists(investigateButtonId)) bm.addButtons(new InvestigateButton(location.id));
+
+            event.editMessage(new MessageEditBuilder().setEmbeds(embed).setActionRow(
+              bm.getButton(investigateButtonId), bm.getButton("adv-leave").withDisabled(!location.canLeave)
+            ).setReplace(true).build()).queue();
         }
     }
 
@@ -355,18 +481,13 @@ public class AdventureButtons {
 //            event.getMessage().editMessageComponents(update).queue();
 
             AdventureLocation location = getRandomLocation();
-            MessageEmbed embed = new EmbedBuilder()
-              .setTitle(user.getEffectiveName()+" wandered into a "+location.name)
-              .setDescription(location.description)
-              .setFooter("Investigate \uD83D\uDD0D or Leave \uD83D\uDCA8")
-              .setColor(0x474B24)
-              .build();
+            MessageEmbed embed = location.generateEmbed(user);
 
             String investigateButtonId = "adv-"+location.id+"-investigate";
             if (!bm.buttonExists(investigateButtonId)) bm.addButtons(new InvestigateButton(location.id));
 
             event.editMessage(new MessageEditBuilder().setEmbeds(embed).setActionRow(
-                bm.getButton(investigateButtonId), bm.getButton("adv-leave")
+                bm.getButton(investigateButtonId), bm.getButton("adv-leave").withDisabled(!location.canLeave)
               ).setReplace(true).build()).queue();
         }
     }
