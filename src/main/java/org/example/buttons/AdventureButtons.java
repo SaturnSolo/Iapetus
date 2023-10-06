@@ -19,7 +19,6 @@ import org.example.items.Item;
 import org.example.structures.IapetusButton;
 import org.example.utils.BerryUtils;
 import org.example.utils.InventoryUtils;
-import org.example.utils.MemberUtils;
 
 import java.util.*;
 
@@ -43,9 +42,9 @@ public class AdventureButtons {
 
         addLocations(
           new AdventureLocation("cave", "%s stumbled upon a cave.", "it seems quite deep, it requires you to crawl.", 5).addEvents(
-            new AdventureEvent("The crawl was quite uncomfortable and you didn't find anything.", 4),
+            new AdventureEvent("The crawl was quite uncomfortable and you didn't find anything.", 2),
             new AdventureEvent("You couldn't fit through the tiny gap.", 1),
-            new FindEvent("You crawled deep into the cave and found a neat rock. You pocketed it.","rock",4),
+            new FindEvent("You crawled deep into the cave and found a neat rock. You pocketed it.","rock",2),
             new FindEvent("You noticed a sparkle as you crawled through the dark cave. When you got closer you realized it was a gemstone!","gem",1),
 
             new ChoiceEvent("The path splits in two directions. \nOn the left you see a small glint, on the right darkness.", "cave_split",8).addChoices(
@@ -98,14 +97,58 @@ public class AdventureButtons {
               new AdventureChoice("Pick it!").addEvents(
                 new FindEvent("You picked the rose, it hurt a little but your ok!", "rose",1)
               ),
-              new AdventureChoice("Keep searching.", ButtonStyle.SECONDARY).addEvents(
-                new LocationEvent("forest",8),
-                new LocationEvent("cave",2)
+              new AdventureChoice("Keep searching", ButtonStyle.SECONDARY).addEvents(
+                new LocationEvent("forest",2),
+                new LocationEvent("cave",4)
               )
             ),
             new AdventureEvent("You kicked some brush around and found more brush, you found nothing.", 1)
+          ),
+          new AdventureLocation("town", "%s walked into a town.", "there's a lot of places to go!", 3).addEvents(
+            new ChoiceEvent("Looking around the town square you see a couple places you can go.", "town_select", 1).addChoices(
+              new AdventureChoice("Bakery",Emoji.fromUnicode("🧁"), ButtonStyle.SECONDARY).addEvents(
+                new StrawberryEvent("You went into the bakery and they gave you a berry. Yummy!", 1, 1)
+              ),
+              new AdventureChoice("Shop",Emoji.fromUnicode("🛒"), ButtonStyle.SECONDARY).addEvents(
+                new ChoiceEvent("You entered the shop, what will you do?", "town_shop", 1).addChoices(
+                  new AdventureChoice("Steal", ButtonStyle.DANGER).addEvents(
+                    new FindEvent("You looked around and all you could find was a rusty key. I wonder what it's used for?", "key", 1),
+                    new StrawberryEvent("You took from the register when the clerk wasn't looking!", 5, 2),
+                    new DeathEvent("You got caught and the clerk fought you! \nYou lost some of your items.", 1),
+                    new AdventureEvent("You got caugt and the clerk kicked you out!.", 2)
+                  ),
+                  new AdventureChoice("Look around").addEvents(
+                    new AdventureEvent("You looked around the store, but found nothing of interest.", 1)
+                  )
+                )
+              ),
+              new AdventureChoice("Hotel",Emoji.fromUnicode("🛌"), ButtonStyle.SECONDARY).addEvents(
+                new LocationEvent("hotel",1)
+              )
+            )
           )
-//          new AdventureLocation("hell", "Welcome to hell, %s.", "you can't escape...", 1).addEvents(
+
+        );
+
+        addLocations(
+          new AdventureLocation("hotel", "Welcome to the Inn, %s!", "It's a little dusty but still nice. Have a look around!", 0).addEvents(
+            new ChoiceEvent("You talk to the hotel clerk and are given a room. \nYou head to your room, what do you want to do?", "hotel_room", 1).addChoices(
+              new AdventureChoice("Search", Emoji.fromUnicode("🔍")).addEvents(
+                new FindEvent("You searched through your room and found a dice!","dice",1),
+                new StrawberryEvent("Someone left a strawberry behind in your room, what a lucky day!",1,1)
+              ),
+              new AdventureChoice("Sleep", ButtonStyle.SECONDARY).addEvents(
+                new LocationEvent("dream", 1)
+              )
+            )
+          ),
+          new AdventureLocation("dream", "Sweet dreams %s.", "This is quite a pleasant dream, I wonder what this magical world has for us!",0).addEvents(
+            new LocationEvent("nightmare",1),
+            new StrawberryEvent("You dream of strawberries, and when you wake up you magically have more!", 5, 4, true),
+            new AdventureEvent("You dream of strawberries.",4),
+            new AdventureEvent("You've peacefully rested.", 2)
+          ).disableLeave()
+//          new AdventureLocation("hell", "Welcome to hell, %s.", "you're nightmares became real, and you can't escape...", 0).addEvents(
 //            new DeathEvent("You met the devil, he killed you.", 1)
 //          ).disableLeave()
         );
