@@ -144,7 +144,7 @@ public class AdventureCommands extends IapetusCommand {
 
                 },
 
-                new IapetusButton(Button.primary("no", "❌")) {
+                new IapetusButton(Button.secondary("no", "❌")) {
 
                     @Override
                     public void run(ButtonInteractionEvent event) {
@@ -185,7 +185,7 @@ public class AdventureCommands extends IapetusCommand {
         embedBuilder4.setThumbnail(pfp);
         MessageEmbed embed4 = embedBuilder4.build();
 
-        event.replyEmbeds(embed4).addActionRow(bm.getButton("yes"), bm.getButton("no")).queue();
+        event.replyEmbeds(embed4).addActionRow(bm.getButton("confirm-adv"), bm.getButton("cancel-adv")).queue();
 
 
         return true;
