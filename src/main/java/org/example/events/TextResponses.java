@@ -22,7 +22,7 @@ public class TextResponses extends ListenerAdapter {
             channel.sendMessage("A Strawberry :D").queue();
         }
         if (content.contains("@Iapetus")) {
-            channel.sendMessage("**Hello! If you are needing help, type /help!").queue();
+            channel.sendMessage("**Hello! If you are needing help, type /help!**").queue();
         }
         if (content.toLowerCase().contains("moss")) {
             channel.sendMessage("I love moss!").queue();
