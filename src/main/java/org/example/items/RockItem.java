@@ -10,6 +10,7 @@ public class RockItem extends Item {
 
     @Override
     public boolean use(SlashCommandInteractionEvent event) {
+        event.reply("This item doesn't have a use yet").queue();
         return false;
     }
 }

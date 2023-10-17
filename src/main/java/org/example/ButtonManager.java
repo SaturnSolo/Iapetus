@@ -28,6 +28,7 @@ public class ButtonManager extends ListenerAdapter {
     public Button getButton(String id) {
         return getIapetusButton(id).getButton();
     }
+    public boolean buttonExists(String id) { return getIapetusButton(id) != null; }
     public void removeButton(String id) {
         this.buttons.remove(id);
     }
