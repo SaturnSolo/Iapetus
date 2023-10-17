@@ -24,13 +24,16 @@ public class HelpCommand extends IapetusCommand {
                   EmbedBuilder embedBuilder2 = new EmbedBuilder();
                   embedBuilder2.setTitle("**`Commands`**");
                   embedBuilder2.setDescription("**Need help with commands or wondering what the commands are and what they do? I am here to help you!** \n \n" + "**`Fun commands`** \n" +
+                    "**/adventure** takes you on an adventure who knows where it will take you \n"+
                     "**/berries** is a command that will tell you the amount of berries you have \n" +
                     "**/bonk** will let you bonk a user \n" +
                     "**/shop** opens the shop \n" +
                     "**/inventory** opens your inventory \n" +
                     "**/hatch** hatches a pet out of an egg \n" +
+                    "**/use** uses an item \n" +
                     "**/pets** gives a pet menu \n" +
-                    "**/random** gives a random compliment \n \n" +
+                    "**/random** gives a random compliment \n" +
+                    "**/ping** pong\n \n" +
                     "**`Admin only commands`** \n" +
                     "**/ignore-channel** ignores a certain channel for berry drops \n" +
                     "**/remove-ignore** removes an ignored channel for berry drops \n");
