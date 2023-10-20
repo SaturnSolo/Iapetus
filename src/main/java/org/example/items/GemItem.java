@@ -5,12 +5,13 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 public class GemItem extends Item {
     public GemItem() {
-        super("Gem", "Sparkles like a gem", "gem", Emoji.fromUnicode("💎"), 0);
+        super("Gem", "Looks like a gem stone of some kind it's sparkly", "gem", Emoji.fromUnicode("💎"), 0);
     }
 
     @Override
     public boolean use(SlashCommandInteractionEvent event) {
-        event.reply("This item doesn't have a use yet").queue();
+        event.reply("💎✨ \n" +
+                "**Gem sparkles**");
         return false;
     }
 }
