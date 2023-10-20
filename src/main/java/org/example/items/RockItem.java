@@ -25,6 +25,8 @@ public class RockItem extends Item {
                 new RPSButton("paper", "🗞"),
                 new RPSButton("scissors", "✂")
         );
+
+        event.reply("**Rock, paper, or scissors?**").addActionRow(bm.getButton("rock"),bm.getButton("paper"),bm.getButton("scissors")).queue();
         return false;
     }
     private class RPSButton extends IapetusButton {
