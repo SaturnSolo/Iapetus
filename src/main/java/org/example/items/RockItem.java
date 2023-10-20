@@ -63,7 +63,7 @@ public class RockItem extends Item {
 
             // PLAYER DRAWS
             if (result == 0) {
-            event.reply("**You both chose** " + selection + " **it's a draw!**").queue();
+            event.reply("**You both chose** " + selection + "\n **it's a draw!**").queue();
             }
             // PLAYER WINS
             if (result == 1) {
