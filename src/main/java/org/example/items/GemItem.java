@@ -11,7 +11,7 @@ public class GemItem extends Item {
     @Override
     public boolean use(SlashCommandInteractionEvent event) {
         event.reply("💎✨ \n" +
-                "**Gem sparkles**");
+                "**Gem sparkles**").queue();
         return false;
     }
 }
