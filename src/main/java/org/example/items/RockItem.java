@@ -1,6 +1,7 @@
 package org.example.items;
 
 import net.dv8tion.jda.api.entities.emoji.Emoji;
+import net.dv8tion.jda.api.entities.emoji.UnicodeEmoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.interactions.components.buttons.Button;
@@ -31,6 +32,21 @@ public class RockItem extends Item {
     }
     private class RPSButton extends IapetusButton {
         private String selection;
+
+        private enum Emojis {
+            ROCK(Emoji.fromUnicode("\uD83E\uDEA8")),
+            PAPER(Emoji.fromUnicode("🗞")),
+            SCISSORS(Emoji.fromUnicode("✂"));
+
+            private final Emoji emoji;
+            Emojis(UnicodeEmoji emoji) {
+                this.emoji = emoji;
+            }
+
+            public String get() {
+                return emoji.getFormatted();
+            }
+        }
         public RPSButton(String type, String emoji) {
             super(Button.primary(type, Emoji.fromUnicode(emoji)));
             selection = type;
@@ -63,15 +79,15 @@ public class RockItem extends Item {
 
             // PLAYER DRAWS
             if (result == 0) {
-            event.reply("**You both chose** " + selection + "\n **it's a draw!**").queue();
+            event.reply("**You both chose** " + Emojis.valueOf(selection.toUpperCase()).get() + "\n **it's a draw!**").queue();
             }
             // PLAYER WINS
             if (result == 1) {
-                event.reply("**You chose** " + selection + " **The bot chose** " + computer + "\n **You win!**").queue();
+                event.reply("**You chose** " + Emojis.valueOf(selection.toUpperCase()).get() + " **The bot chose** " + Emojis.valueOf(computer.toUpperCase()).get() + "\n **You win!**").queue();
             }
             // PLAYER LOSES
             if (result == -1) {
-                event.reply("**You chose** " + selection + " **The bot chose** " + computer + "\n **You loose!**").queue();
+                event.reply("**You chose** " + Emojis.valueOf(selection.toUpperCase()).get() + " **The bot chose** " + Emojis.valueOf(computer.toUpperCase()).get() + "\n **You lose!**").queue();
             }
         }
 
