@@ -29,7 +29,7 @@ public class UseItemCommand extends IapetusCommand {
         String userId = event.getUser().getId();
 
         if (!im.hasItem(userId, choice)) {
-            event.reply( "**You don't have this item, so instead you ate air.**").setEphemeral(true).queue();
+            event.reply( "**You don't have this item in your inventory.**").setEphemeral(true).queue();
             return true;
         }
         Item item = im.getItem(choice);
