@@ -32,7 +32,7 @@ public class RockItem extends Item {
     private class RPSButton extends IapetusButton {
         private String selection;
         public RPSButton(String type, String emoji) {
-            super(Button.primary(type, emoji));
+            super(Button.primary(type, Emoji.fromUnicode(emoji)));
             selection = type;
         }
         @Override
