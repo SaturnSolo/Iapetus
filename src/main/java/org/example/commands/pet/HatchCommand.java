@@ -79,7 +79,7 @@ public class HatchCommand extends IapetusCommand {
     }
 
     private String hatchRandomPet() {
-            String[] possiblePets = {"🐢", "🦃", "🐈", "🐕","🐑","🦌","🐂","🐄","🦎","🐍","🐣","🦐", "🦩", "🐌", "🦢","🐊","🦙"};
+            String[] possiblePets = {"🐢", "🦃", "🐈", "🐕","🐑","🦌","🐂","🐄","🦎","🐍","🐣","🦐", "🦩", "🐌", "🦢","🐊","🦙", "🕷","🦨", "🦋", "🐸", "🦑", "🦐", "🦞"};
             Random random = new Random();
             int index = random.nextInt(possiblePets.length);
             return possiblePets[index];

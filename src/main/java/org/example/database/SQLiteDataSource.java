@@ -84,6 +84,12 @@ public class SQLiteDataSource {
                     "pet VARCHAR(100) NOT NULL" +
                     ");");
 
+            statement.execute("CREATE TABLE IF NOT EXISTS key_log (" +
+                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
+                    "user_id VARCHAR(20) NOT NULL," +
+                    "loot VARCHAR(100) NOT NULL" +
+                    ");");
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

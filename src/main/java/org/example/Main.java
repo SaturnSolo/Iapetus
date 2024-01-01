@@ -78,7 +78,8 @@ public class Main {
           new ListIgnoredCommand(),
           new HelpCommand(),
           new UseItemCommand(),
-          new AdventureCommands()
+          new AdventureCommands(),
+          new LootChestCommands()
         );
 
         builder.addEventListeners(cm, bm, new DropHandler(), new TextResponses());
