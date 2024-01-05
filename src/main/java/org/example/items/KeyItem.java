@@ -10,7 +10,7 @@ public class KeyItem extends Item {
 
     @Override
     public boolean use(SlashCommandInteractionEvent event) {
-        event.reply("This item doesn't have a use yet").queue();
+        event.reply("Type /lootchest to use a key!").queue();
         return false;
     }
 }
