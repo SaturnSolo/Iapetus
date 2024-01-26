@@ -29,19 +29,17 @@ public class LootChestCommands extends IapetusCommand {
         User user = event.getUser();
         String userId = user.getId();
 
-        // Check if the user has an egg in their inventory (You need to implement this logic)
+
         if (im.hasItem(userId, "key")) {
-            // If the user has an egg, hatch it into a random pet
+
             String loot = openRandomLoot();
 
-            // Log the hatching in the database
+
             logLootInDatabase(userId, loot);
 
-            // Remove the egg from the inventory
-            //removeEggFromInventory(userId); // Add this line
             im.takeItem(userId, "key");
 
-            // Create an embed for the hatched pet
+
             EmbedBuilder embedBuilder = new EmbedBuilder();
             embedBuilder.setTitle("Opening a chest");
             embedBuilder.setDescription("You opened a chest and got: 5 berries and " + loot);
@@ -50,7 +48,7 @@ public class LootChestCommands extends IapetusCommand {
             im.giveItem(userId, loot);
             BerryUtils.giveUserBerries(userId, 5);
 
-            // Send the pet hatching embed
+
             event.replyEmbeds(embedBuilder.build()).queue();
         } else {
             event.reply("You don't have a key.").queue();
@@ -66,8 +64,6 @@ public class LootChestCommands extends IapetusCommand {
     }
 
     private void logLootInDatabase(String userId, String loot) {
-        // Implement logic to log the hatching in your SQLite database
-        // Replace this with your database insertion logic
         try (Connection connection = SQLiteDataSource.getConnection();
              PreparedStatement ps = connection.prepareStatement("INSERT INTO key_log (user_id, loot) VALUES (?, ?)")) {
             ps.setString(1, userId);

@@ -28,7 +28,7 @@ public class Main {
     public static CommandManager commandManager;
     public static ButtonManager buttonManager;
     public static ItemManager itemManager;
-    
+
     public static void main(String[] args) {
 
         Dotenv dotenv = Dotenv.configure().load();
