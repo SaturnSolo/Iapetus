@@ -10,7 +10,7 @@ public class PumpkinItem extends Item {
 
     @Override
     public boolean use(SlashCommandInteractionEvent event) {
-        event.reply("This item doesn't have a use yet").queue();
+        event.reply("This item is a collectable!").queue();
         return false;
     }
 }
