@@ -17,7 +17,7 @@ public class DiceItem extends Item {
             String user10 = event.getUser().getAsMention();
             Random random = new Random();
             Integer diceRoll = random.nextInt(20) +1;
-            event.reply(user10 + " you rolled a " + diceRoll).queue();
+            event.reply(user10 + " **you rolled a** " + diceRoll).queue();
             return false; // item not consumed on use.
         }
     }
