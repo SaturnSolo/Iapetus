@@ -26,7 +26,7 @@ import java.util.concurrent.TimeUnit;
 public class AdventureCommands extends IapetusCommand {
     ButtonManager bm = Main.buttonManager;
     public static Map<String, Date> adventureCooldowns;
-    public static long adventureCooldownTime = TimeUnit.SECONDS.toMillis(20);
+    public static long adventureCooldownTime = TimeUnit.SECONDS.toMillis(5);
 
     public AdventureCommands() {
         super(Commands.slash("adventure", "go on an adventure somewhere"));
