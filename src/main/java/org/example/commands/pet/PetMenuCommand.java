@@ -63,7 +63,7 @@ public class PetMenuCommand extends IapetusCommand {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Hatched Pets");
         embedBuilder.setDescription(petList);
-        embedBuilder.setColor(0xDD2D4A); // Set the embed color to a suitable value
+        embedBuilder.setColor(0x4E5340); // Set the embed color to a suitable value
 
         return embedBuilder.build();
     }
