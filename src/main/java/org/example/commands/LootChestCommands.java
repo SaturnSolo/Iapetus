@@ -57,7 +57,7 @@ public class LootChestCommands extends IapetusCommand {
     }
 
     private String openRandomLoot() {
-        String[] possibleLoot = {"gem", "rose", "dice", "shiny"};
+        String[] possibleLoot = {"gem", "rose", "dice", "shiny", "key"};
         Random random = new Random();
         int index = random.nextInt(possibleLoot.length);
         return possibleLoot[index];
