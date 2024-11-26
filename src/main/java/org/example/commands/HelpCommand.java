@@ -37,7 +37,7 @@ public class HelpCommand extends IapetusCommand {
                     "**/ping** pong\n \n" +
                     "**`Admin only commands`** \n" +
                     "**/ignore-channel** ignores a certain channel for berry drops \n" +
-                    "**/remove-ignore** removes/ an ignored channel for berry drops \n");
+                    "**/remove-ignore** removes an ignored channel for berry drops \n");
 
                   embedBuilder2.setColor(0xD4C2FC);
                   MessageEmbed embed2 = embedBuilder2.build();
