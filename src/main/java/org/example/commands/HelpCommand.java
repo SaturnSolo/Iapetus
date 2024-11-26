@@ -62,7 +62,7 @@ public class HelpCommand extends IapetusCommand {
         EmbedBuilder embedBuilder1 = new EmbedBuilder();
         embedBuilder1.setTitle("**Iapetus**");
         embedBuilder1.setDescription("**`Basic info`** \n" +
-                "**To start your adventures with Iapetus you can type /adventure and /berries to see how many berries you collected. There is also /shop where you can buy items and /inventory to see your items! ** \n \n" +
+                "**To start your adventures with Iapetus you can type /adventure and /berries to see how many berries you collected. There is also /shop where you can buy items and /inventory to see your items!** \n \n" +
                 "**`More info`** \n" +
                 "**The 💚 will take you to the commands menu, the ❔ will take you to the more info tab!**");
         embedBuilder1.setColor(0xD4C2FC);
