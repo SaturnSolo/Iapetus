@@ -37,7 +37,7 @@ public class HelpCommand extends IapetusCommand {
                     "**/ping** pong\n \n" +
                     "**`Admin only commands`** \n" +
                     "**/ignore-channel** ignores a certain channel for berry drops \n" +
-                    "**/remove-ignore** removes an ignored channel for berry drops \n");
+                    "**/remove-ignore** removes/ an ignored channel for berry drops \n");
 
                   embedBuilder2.setColor(0xD4C2FC);
                   MessageEmbed embed2 = embedBuilder2.build();
@@ -49,7 +49,7 @@ public class HelpCommand extends IapetusCommand {
               public void run(ButtonInteractionEvent event) {
                   EmbedBuilder embedBuilder3 = new EmbedBuilder();
                   embedBuilder3.setTitle("**`More Info`**");
-                  embedBuilder3.setDescription("**Iapetus is coded using Java and the jda api. It is 100% java (according to github). Iapetus is based off of the moon Iapetus for it's mossy look, it isn't actual moss but looks like it.**");
+                  embedBuilder3.setDescription("****Iapetus is a strawberry economy bot with pet commands, fun commands and a lot more! It is developed by @saturnsolo, and @msvae. Iapetus is coded using Java and the jda api. It is 100% java (according to github). Iapetus is based off of the moon Iapetus for it's mossy look, it isn't actual moss but looks like it.**");
                   embedBuilder3.setColor(0xD4C2FC);
                   MessageEmbed embed3 = embedBuilder3.build();
                   event.getInteraction().replyEmbeds(embed3).queue();
@@ -62,7 +62,7 @@ public class HelpCommand extends IapetusCommand {
         EmbedBuilder embedBuilder1 = new EmbedBuilder();
         embedBuilder1.setTitle("**Iapetus**");
         embedBuilder1.setDescription("**`Basic info`** \n" +
-                "**Iapetus is a strawberry economy bot with pet commands, fun commands and a lot more! It is developed by @saturnsolo, and @msvae.** \n \n" +
+                "**To start your adventures with Iapetus you can type /adventure and /berries to see how many berries you collected. There is also /shop where you can buy items and /inventory to see your items! ** \n \n" +
                 "**`More info`** \n" +
                 "**The 💚 will take you to the commands menu, the ❔ will take you to the more info tab!**");
         embedBuilder1.setColor(0xD4C2FC);
