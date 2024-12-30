@@ -41,7 +41,7 @@ public class SQLiteDataSource {
         config.addDataSourceProperty("prepStmtCacheSize", "250");
         config.addDataSourceProperty("prepStmtCacheCqlLimit", "2048");
         config.setMaximumPoolSize(15);
-        config.setMaxLifetime(5000);
+        config.setMaxLifetime(1800000);
         config.setMinimumIdle(5);
         ds = new HikariDataSource(config);
 
