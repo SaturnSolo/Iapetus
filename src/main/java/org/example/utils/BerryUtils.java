@@ -13,9 +13,10 @@ public class BerryUtils {
 
     public static void giveUserBerries(String userId, int amount) {
         try (final Connection connection = SQLiteDataSource.getConnection();
-             final PreparedStatement ps = connection.prepareStatement("INSERT INTO user_berries (user_id, berry_count) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET berry_count = berry_count + 1")) {
+             final PreparedStatement ps = connection.prepareStatement("INSERT INTO user_berries (user_id, berry_count) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET berry_count = berry_count + ?")) {
             ps.setString(1, userId);
             ps.setInt(2, amount);
+            ps.setInt(3, amount);
             ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();

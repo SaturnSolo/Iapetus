@@ -14,6 +14,7 @@ import org.example.commands.*;
 import org.example.commands.channel.IgnoreChannelCommand;
 import org.example.commands.channel.ListIgnoredCommand;
 import org.example.commands.channel.RemoveIgnoreCommand;
+import org.example.commands.give.GiveCommand;
 import org.example.commands.pet.HatchCommand;
 import org.example.commands.pet.PetMenuCommand;
 import org.example.commands.shop.BerriesCommand;
@@ -79,7 +80,8 @@ public class Main {
           new HelpCommand(),
           new UseItemCommand(),
           new AdventureCommands(),
-          new LootChestCommands()
+          new LootChestCommands(),
+          new GiveCommand()
         );
 
         builder.addEventListeners(cm, bm, new DropHandler(), new TextResponses());
