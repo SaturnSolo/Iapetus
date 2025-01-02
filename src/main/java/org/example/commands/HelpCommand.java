@@ -32,6 +32,7 @@ public class HelpCommand extends IapetusCommand {
                     "**/hatch** hatches a pet out of an egg \n" +
                     "**/lootchest** opens a loot chest! \n" +
                     "**/use** uses an item \n" +
+                    "**/give** give other users berries \n" +
                     "**/pets** gives a pet menu \n" +
                     "**/random** gives a random compliment \n" +
                     "**/ping** pong\n \n" +
