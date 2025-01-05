@@ -12,9 +12,9 @@ public class CommandsCommand extends IapetusCommand {
 
     @Override
     public boolean runCommand(SlashCommandInteractionEvent event) {
-        EmbedBuilder embedBuilder1 = new EmbedBuilder();
-        embedBuilder1.setTitle("**Iapetus Commands**");
-        embedBuilder1.setDescription("**Need help with commands or wondering what the commands are and what they do? I am here to help you!** \n \n" + "**`Fun commands`** \n" +
+        EmbedBuilder embedBuilder4 = new EmbedBuilder();
+        embedBuilder4.setTitle("**Iapetus Commands**");
+        embedBuilder4.setDescription("**Need help with commands or wondering what the commands are and what they do? I am here to help you!** \n \n" + "**`Fun commands`** \n" +
                 "**/adventure** takes you on an adventure who knows where it will take you \n"+
                 "**/berries** is a command that will tell you the amount of berries you have \n" +
                 "**/bonk** will let you bonk a user \n" +
@@ -32,10 +32,10 @@ public class CommandsCommand extends IapetusCommand {
                 "**/ignore-channel** ignores a certain channel for berry drops \n" +
                 "**/list-ignored** lists ignored channels \n" +
                 "**/remove-ignore** removes an ignored channel for berry drops \n");
-        embedBuilder1.setColor(0xD4C2FC);
-        embedBuilder1.setThumbnail("https://media.discordapp.net/attachments/1274910028888932402/1275871665603088465/iapetusnobackground.png?ex=66c77795&is=66c62615&hm=dd21eb064d66624006faed7bbab8435dbb030cdd2fa3847bcbe2557df9100ba8&=&format=webp&quality=lossless");
-        MessageEmbed embed1 = embedBuilder1.build();
-        event.replyEmbeds(embed1).queue();
-        return false;
+        embedBuilder4.setColor(0xD4C2FC);
+        embedBuilder4.setThumbnail("https://media.discordapp.net/attachments/1274910028888932402/1275871665603088465/iapetusnobackground.png?ex=66c77795&is=66c62615&hm=dd21eb064d66624006faed7bbab8435dbb030cdd2fa3847bcbe2557df9100ba8&=&format=webp&quality=lossless");
+        MessageEmbed embed4 = embedBuilder4.build();
+        event.replyEmbeds(embed4).queue();
+        return true;
     }
 }
