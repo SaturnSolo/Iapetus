@@ -81,7 +81,8 @@ public class Main {
           new UseItemCommand(),
           new AdventureCommands(),
           new LootChestCommands(),
-          new GiveCommand()
+          new GiveCommand(),
+          new CommandsCommand()
         );
 
         builder.addEventListeners(cm, bm, new DropHandler(), new TextResponses());
