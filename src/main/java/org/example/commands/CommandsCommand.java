@@ -36,6 +36,6 @@ public class CommandsCommand extends IapetusCommand {
         embedBuilder1.setThumbnail("https://media.discordapp.net/attachments/1274910028888932402/1275871665603088465/iapetusnobackground.png?ex=66c77795&is=66c62615&hm=dd21eb064d66624006faed7bbab8435dbb030cdd2fa3847bcbe2557df9100ba8&=&format=webp&quality=lossless");
         MessageEmbed embed1 = embedBuilder1.build();
         event.replyEmbeds(embed1).queue();
-        return true;
+        return false;
     }
 }
