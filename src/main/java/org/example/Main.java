@@ -82,7 +82,7 @@ public class Main {
           new AdventureCommands(),
           new LootChestCommands(),
           new GiveCommand(),
-          new CommandsCommand()
+          new ComCommands()
         );
 
         builder.addEventListeners(cm, bm, new DropHandler(), new TextResponses());
