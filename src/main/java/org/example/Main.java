@@ -23,6 +23,7 @@ import org.example.commands.shop.ShopCommand;
 import org.example.events.DropHandler;
 import org.example.events.TextResponses;
 import org.example.items.*;
+import org.example.items.PumpkinItem;
 
 
 public class Main {
