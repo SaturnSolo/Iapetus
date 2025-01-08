@@ -66,7 +66,7 @@ public class TopBerriesCommand extends IapetusCommand {
                 EmbedBuilder embedBuilder = new EmbedBuilder();
                 embedBuilder.setTitle("Top 10 Berry Collectors in " + event.getGuild().getName());
                 embedBuilder.setDescription(leaderboard.toString());
-                embedBuilder.setColor(0x00FF00);
+                embedBuilder.setColor(0x8cae68);
 
                 event.replyEmbeds(embedBuilder.build()).queue();
             }
