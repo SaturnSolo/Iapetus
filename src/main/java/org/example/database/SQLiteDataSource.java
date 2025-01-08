@@ -90,6 +90,12 @@ public class SQLiteDataSource {
                     "loot VARCHAR(100) NOT NULL" +
                     ");");
 
+            statement.execute("CREATE TABLE IF NOT EXISTS user_guilds (" +
+                    "user_id VARCHAR(20) NOT NULL," +
+                    "guild_id VARCHAR(20) NOT NULL," +
+                    "PRIMARY KEY (user_id, guild_id)" +
+                    ");");
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

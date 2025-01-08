@@ -21,55 +21,55 @@ public class TopBerriesCommand extends IapetusCommand {
 
     @Override
     public boolean runCommand(SlashCommandInteractionEvent event) {
-        String query = "SELECT user_id, berry_count FROM user_berries ORDER BY berry_count DESC LIMIT 10";
-
+        String guildId = event.getGuild().getId();
+        String query = "SELECT ub.user_id, ub.berry_count " +
+                "FROM user_berries ub " +
+                "JOIN user_guilds ug ON ub.user_id = ug.user_id " +
+                "WHERE ug.guild_id = ? " +
+                "ORDER BY ub.berry_count DESC LIMIT 10";
 
         try (Connection connection = SQLiteDataSource.getConnection();
-             PreparedStatement ps = connection.prepareStatement(query);
-             ResultSet rs = ps.executeQuery()) {
+             PreparedStatement ps = connection.prepareStatement(query)) {
 
+            ps.setString(1, guildId); // Set the guild ID for filtering
 
-            StringBuilder leaderboard = new StringBuilder();
-            int rank = 1;
+            try (ResultSet rs = ps.executeQuery()) {
+                StringBuilder leaderboard = new StringBuilder();
+                int rank = 1;
+                boolean resultsFound = false;
 
+                while (rs.next()) {
+                    resultsFound = true;
+                    String userId = rs.getString("user_id");
+                    int berryCount = rs.getInt("berry_count");
 
-            boolean resultsFound = false;
+                    // Verify if the user is part of the current guild
+                    Member member = event.getGuild().getMemberById(userId);
 
-
-            while (rs.next()) {
-                resultsFound = true;
-                String userId = rs.getString("user_id");
-                int berryCount = rs.getInt("berry_count");
-
-
-                User user = event.getJDA().getUserById(userId);
-
-                // If the user exists, append to leaderboard
-                if (user != null) {
-                    leaderboard.append("**#").append(rank).append("** ")
-                            .append(user.getAsMention())
-                            .append(" - **").append(berryCount).append("** berries 🍓\n");
-                    rank++;
-                } else {
-                    // If user not found in cache, display a generic mention
-                    leaderboard.append("**#").append(rank).append("** <@").append(userId).append(">")
-                            .append(" - **").append(berryCount).append("** berries 🍓\n");
+                    if (member != null) {
+                        leaderboard.append("**#").append(rank).append("** ")
+                                .append(member.getAsMention())
+                                .append(" - **").append(berryCount).append("** berries 🍓\n");
+                    } else {
+                        leaderboard.append("**#").append(rank).append("** <@").append(userId).append("> ")
+                                .append(" - **").append(berryCount).append("** berries 🍓\n");
+                    }
                     rank++;
                 }
+
+                if (!resultsFound) {
+                    event.reply("No users found in the leaderboard for this server.").setEphemeral(true).queue();
+                    return true;
+                }
+
+                // Build and send the leaderboard embed
+                EmbedBuilder embedBuilder = new EmbedBuilder();
+                embedBuilder.setTitle("Top 10 Berry Collectors in " + event.getGuild().getName());
+                embedBuilder.setDescription(leaderboard.toString());
+                embedBuilder.setColor(0x00FF00);
+
+                event.replyEmbeds(embedBuilder.build()).queue();
             }
-
-            if (!resultsFound) {
-                event.reply("No users found in the leaderboard.").setEphemeral(true).queue();
-                return true;
-            }
-
-
-            EmbedBuilder embedBuilder = new EmbedBuilder();
-            embedBuilder.setTitle("Top 10 Berry Collectors in " + event.getGuild().getName());
-            embedBuilder.setDescription(leaderboard.toString());
-            embedBuilder.setColor(0x00FF00);
-
-            event.replyEmbeds(embedBuilder.build()).queue();
 
         } catch (SQLException e) {
             e.printStackTrace();
