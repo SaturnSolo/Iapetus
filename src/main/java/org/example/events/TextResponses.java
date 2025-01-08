@@ -34,9 +34,9 @@ public class TextResponses extends ListenerAdapter {
         }
 
         if (content.contains("Iapetus")) {
-            List<String> iapetus = Arrays.asList("Hello if you are needing help type /help!",
-                    "Hello I am Iapetus the moss moon! Type /help to get started!",
-                    "Hello I am Iapetus I am coded using Java! Type /help to get started!"
+            List<String> iapetus = Arrays.asList("Hello if you are needing help type /help or /commands!",
+                    "Hello I am Iapetus the moss moon! Type /help or /commands to get started!",
+                    "Hello I am Iapetus I am coded using Java! Type /help or /commands to get started!"
             );
             Random random = new Random();
             String iapetus1 = iapetus.get(random.nextInt(iapetus.size())).toString();

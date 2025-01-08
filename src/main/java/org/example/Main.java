@@ -83,7 +83,8 @@ public class Main {
           new AdventureCommands(),
           new LootChestCommands(),
           new GiveCommand(),
-          new ComCommands()
+          new ComCommands(),
+          new TopBerriesCommand()
         );
 
         builder.addEventListeners(cm, bm, new DropHandler(), new TextResponses());
