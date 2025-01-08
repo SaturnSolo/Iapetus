@@ -21,6 +21,7 @@ import org.example.commands.shop.BerriesCommand;
 import org.example.commands.shop.InventoryCommand;
 import org.example.commands.shop.ShopCommand;
 import org.example.events.DropHandler;
+import org.example.events.InteractionLogger;
 import org.example.events.TextResponses;
 import org.example.items.*;
 import org.example.items.PumpkinItem;
@@ -87,7 +88,7 @@ public class Main {
           new TopBerriesCommand()
         );
 
-        builder.addEventListeners(cm, bm, new DropHandler(), new TextResponses());
+        builder.addEventListeners(cm, bm, new DropHandler(), new TextResponses(), new InteractionLogger());
         JDA jda = builder.build();
         cm.register(jda);
     }
