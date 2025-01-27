@@ -31,33 +31,35 @@ public class TopBerriesCommand extends IapetusCommand {
         try (Connection connection = SQLiteDataSource.getConnection();
              PreparedStatement ps = connection.prepareStatement(query)) {
 
-            ps.setString(1, guildId); // Set the guild ID for filtering
+            ps.setString(1, guildId);
 
             try (ResultSet rs = ps.executeQuery()) {
                 StringBuilder leaderboard = new StringBuilder();
                 int rank = 1;
-                boolean resultsFound = false;
 
                 while (rs.next()) {
-                    resultsFound = true;
                     String userId = rs.getString("user_id");
                     int berryCount = rs.getInt("berry_count");
 
-                    // Verify if the user is part of the current guild
+                    // Attempt to get the Member object
                     Member member = event.getGuild().getMemberById(userId);
+                    String displayName;
 
                     if (member != null) {
-                        leaderboard.append("**#").append(rank).append("** ")
-                                .append(member.getAsMention())
-                                .append(" - **").append(berryCount).append("** berries 🍓\n");
+                        // Member is part of the guild
+                        displayName = member.getAsMention();
                     } else {
-                        leaderboard.append("**#").append(rank).append("** <@").append(userId).append("> ")
-                                .append(" - **").append(berryCount).append("** berries 🍓\n");
+                        // Fallback to raw mention if Member not found
+                        displayName = "<@" + userId + ">";
                     }
+
+                    leaderboard.append("**#").append(rank).append("** ")
+                            .append(displayName)
+                            .append(" - **").append(berryCount).append("** berries 🍓\n");
                     rank++;
                 }
 
-                if (!resultsFound) {
+                if (leaderboard.length() == 0) {
                     event.reply("No users found in the leaderboard for this server.").setEphemeral(true).queue();
                     return true;
                 }
@@ -74,6 +76,9 @@ public class TopBerriesCommand extends IapetusCommand {
         } catch (SQLException e) {
             e.printStackTrace();
             event.reply("An error occurred while fetching the top berry users. Please try again later.").setEphemeral(true).queue();
+        } catch (Exception e) {
+            e.printStackTrace();
+            event.reply("An unexpected error occurred. Please contact the bot administrator.").setEphemeral(true).queue();
         }
 
         return true;
