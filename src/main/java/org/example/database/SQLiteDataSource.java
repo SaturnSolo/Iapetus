@@ -96,6 +96,12 @@ public class SQLiteDataSource {
                     "PRIMARY KEY (user_id, guild_id)" +
                     ");");
 
+            statement.execute("CREATE TABLE IF NOT EXISTS daily_claims (" +
+                    "user_id VARCHAR(20) NOT NULL," +
+                    "last_claim INTEGER NOT NULL," +
+                    "PRIMARY KEY (user_id)" +
+                    ");");
+
         } catch (SQLException e) {
             e.printStackTrace();
         }

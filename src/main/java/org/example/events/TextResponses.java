@@ -33,7 +33,7 @@ public class TextResponses extends ListenerAdapter {
             channel.sendMessage(blueberries).queue();
         }
 
-        if (content.contains("Iapetus")) {
+        if (content.equals("@Iapetus")) {
             List<String> iapetus = Arrays.asList("Hello if you are needing help type /help or /commands!",
                     "Hello I am Iapetus the moss moon! Type /help or /commands to get started!",
                     "Hello I am Iapetus I am coded using Java! Type /help or /commands to get started!"

@@ -85,7 +85,8 @@ public class Main {
           new LootChestCommands(),
           new GiveCommand(),
           new ComCommands(),
-          new TopBerriesCommand()
+          new TopBerriesCommand(),
+          new DailyCommand()
         );
 
         builder.addEventListeners(cm, bm, new DropHandler(), new TextResponses(), new InteractionLogger());
