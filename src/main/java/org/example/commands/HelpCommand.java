@@ -54,7 +54,8 @@ public class HelpCommand extends IapetusCommand {
               public void run(ButtonInteractionEvent event) {
                   EmbedBuilder embedBuilder3 = new EmbedBuilder();
                   embedBuilder3.setTitle("**`More Info`**");
-                  embedBuilder3.setDescription("**Iapetus is a strawberry economy bot with pet commands, fun commands and a lot more! It is developed by `@saturnsolo`, and `@msvae`. \n \n Iapetus is coded using Java and the jda api. It is 100% java (according to [github](https://github.com/SaturnSolo/Iapetus)). \n \n Iapetus is based off of the moon Iapetus for it's dusty mossy look.**");
+                  embedBuilder3.setDescription("Error 404: Message missing!")
+//                  embedBuilder3.setDescription("**Iapetus is a strawberry economy bot with pet commands, fun commands and a lot more! It is developed by `@saturnsolo`, and `@msvae`. \n \n Iapetus is coded using Java and the jda api. It is 100% java (according to [github](https://github.com/SaturnSolo/Iapetus)). \n \n Iapetus is based off of the moon Iapetus for it's dusty mossy look.**");
                   embedBuilder3.setColor(0xD4C2FC);
                   MessageEmbed embed3 = embedBuilder3.build();
                   event.getInteraction().replyEmbeds(embed3).queue();
@@ -65,9 +66,10 @@ public class HelpCommand extends IapetusCommand {
                     public void run(ButtonInteractionEvent event) {
                         EmbedBuilder embedBuilder4 = new EmbedBuilder();
                         embedBuilder4.setTitle("**`Links`**");
-                        embedBuilder4.setDescription("**Here you can find the link to our offical discord server and documentation! !** \n \n" +
-                                "**`Discord` \n Join our [Discord](https://discord.com/invite/Dte5YBv3ej), here you'll find our latest updates and plans for the future!** \n \n" +
-                                "**`Documentation` \n Here you will find the documentation on Iapetus from commands to our Terms Of Service and Privacy policy on our [Gitbook](https://iapetus-bot-development.gitbook.io/iapetus-bot)**");
+                        embedBuilder4.setDescription("Error 404: Message Missing!")
+//                        embedBuilder4.setDescription("**Here you can find the link to our offical discord server and documentation! !** \n \n" +
+//                                "**`Discord` \n Join our [Discord](https://discord.com/invite/Dte5YBv3ej), here you'll find our latest updates and plans for the future!** \n \n" +
+//                                "**`Documentation` \n Here you will find the documentation on Iapetus from commands to our Terms Of Service and Privacy policy on our [Gitbook](https://iapetus-bot-development.gitbook.io/iapetus-bot)**");
                         embedBuilder4.setColor(0xD4C2FC);
                         MessageEmbed embed4 = embedBuilder4.build();
                         event.getInteraction().replyEmbeds(embed4).queue();
@@ -79,10 +81,11 @@ public class HelpCommand extends IapetusCommand {
     public boolean runCommand(SlashCommandInteractionEvent event) {
         EmbedBuilder embedBuilder1 = new EmbedBuilder();
         embedBuilder1.setTitle("**Iapetus**");
-        embedBuilder1.setDescription("**`Basic info`** \n" +
-                "**To start your adventures with Iapetus you can type /adventure and /berries to see how many berries you collected. There is also /shop where you can buy items and /inventory to see your items!** \n \n" +
-                "**`More info`** \n" +
-                "**The 💚 will take you to the commands menu, the ❔ will take you to the more info tab, the 🔗 will take you to the links!**");
+        embedBuilder1.setDescription("Error 404: Message Missing!")
+//        embedBuilder1.setDescription("**`Basic info`** \n" +
+//                "**To start your adventures with Iapetus you can type /adventure and /berries to see how many berries you collected. There is also /shop where you can buy items and /inventory to see your items!** \n \n" +
+//                "**`More info`** \n" +
+//                "**The 💚 will take you to the commands menu, the ❔ will take you to the more info tab, the 🔗 will take you to the links!**");
         embedBuilder1.setColor(0xD4C2FC);
         embedBuilder1.setThumbnail("https://media.discordapp.net/attachments/1274910028888932402/1275871665603088465/iapetusnobackground.png?ex=66c77795&is=66c62615&hm=dd21eb064d66624006faed7bbab8435dbb030cdd2fa3847bcbe2557df9100ba8&=&format=webp&quality=lossless");
         MessageEmbed embed1 = embedBuilder1.build();
