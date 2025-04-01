@@ -24,8 +24,8 @@ public class StrawberryButton extends IapetusButton {
 
         // edit first to avoid duplication (faster response!)
         // if we do decide to fix duplicated strawberries we can put both of these in the same action.
-        event.editButton(Button.secondary("Strawberry claimed", "✨").asDisabled()).queue();
-        message.reply("🍓 **Has been claimed by** " + mention).queue();
+        event.editButton(Button.secondary("Error 404: Missing Message", "✨").asDisabled()).queue();
+        message.reply("🍓 **Error 404: Message Missing** " + mention).queue();
 
 
         try (final Connection connection = SQLiteDataSource.getConnection();
