@@ -23,7 +23,8 @@ public class BerriesCommand extends IapetusCommand {
             try (final ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
                     int berryCount = rs.getInt("berry_count");
-                    event.reply("**You have " + berryCount + " berries** 🍓").queue();
+                    event.reply("**Error 404 " + berryCount + " message missing** 🍓").queue();
+//                    event.reply("**You have " + berryCount + " berries** 🍓").queue();
                 } else {
                     event.reply("**You have 0 berries** 🍓").queue();
                 }
