@@ -33,10 +33,11 @@ public class ShopCommand extends IapetusCommand {
     public boolean runCommand(SlashCommandInteractionEvent event) {
         EmbedBuilder embedBuilder = new EmbedBuilder();
         embedBuilder.setTitle("Welcome to the Shop!");
-        embedBuilder.setDescription("**`A shiny egg it seems to be glowing` **🥚 - 🍓5\n" +
-          "**`Surprisingly no thorns`** 🌹 - 🍓10\n" +
-          "**`A pretty tulip`** 🌷 - 🍓10\n" +
-          "**`Sakura Cherry Blossoms Pretty`** 🌸 - 🍓15");
+        embedBuilder.setDescription("Error 404: Message missing!");
+//        embedBuilder.setDescription("**`A shiny egg it seems to be glowing` **🥚 - 🍓5\n" +
+//          "**`Surprisingly no thorns`** 🌹 - 🍓10\n" +
+//          "**`A pretty tulip`** 🌷 - 🍓10\n" +
+//          "**`Sakura Cherry Blossoms Pretty`** 🌸 - 🍓15");
         embedBuilder.setColor(0xCE6A85); // You can change the color to your preference
 
         // fetch each button from the button manager.

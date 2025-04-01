@@ -54,7 +54,7 @@ public class HelpCommand extends IapetusCommand {
               public void run(ButtonInteractionEvent event) {
                   EmbedBuilder embedBuilder3 = new EmbedBuilder();
                   embedBuilder3.setTitle("**`More Info`**");
-                  embedBuilder3.setDescription("Error 404: Message missing!")
+                  embedBuilder3.setDescription("Error 404: Message missing!");
 //                  embedBuilder3.setDescription("**Iapetus is a strawberry economy bot with pet commands, fun commands and a lot more! It is developed by `@saturnsolo`, and `@msvae`. \n \n Iapetus is coded using Java and the jda api. It is 100% java (according to [github](https://github.com/SaturnSolo/Iapetus)). \n \n Iapetus is based off of the moon Iapetus for it's dusty mossy look.**");
                   embedBuilder3.setColor(0xD4C2FC);
                   MessageEmbed embed3 = embedBuilder3.build();
@@ -66,7 +66,7 @@ public class HelpCommand extends IapetusCommand {
                     public void run(ButtonInteractionEvent event) {
                         EmbedBuilder embedBuilder4 = new EmbedBuilder();
                         embedBuilder4.setTitle("**`Links`**");
-                        embedBuilder4.setDescription("Error 404: Message Missing!")
+                        embedBuilder4.setDescription("Error 404: Message Missing!");
 //                        embedBuilder4.setDescription("**Here you can find the link to our offical discord server and documentation! !** \n \n" +
 //                                "**`Discord` \n Join our [Discord](https://discord.com/invite/Dte5YBv3ej), here you'll find our latest updates and plans for the future!** \n \n" +
 //                                "**`Documentation` \n Here you will find the documentation on Iapetus from commands to our Terms Of Service and Privacy policy on our [Gitbook](https://iapetus-bot-development.gitbook.io/iapetus-bot)**");
@@ -81,7 +81,7 @@ public class HelpCommand extends IapetusCommand {
     public boolean runCommand(SlashCommandInteractionEvent event) {
         EmbedBuilder embedBuilder1 = new EmbedBuilder();
         embedBuilder1.setTitle("**Iapetus**");
-        embedBuilder1.setDescription("Error 404: Message Missing!")
+        embedBuilder1.setDescription("Error 404: Message Missing!");
 //        embedBuilder1.setDescription("**`Basic info`** \n" +
 //                "**To start your adventures with Iapetus you can type /adventure and /berries to see how many berries you collected. There is also /shop where you can buy items and /inventory to see your items!** \n \n" +
 //                "**`More info`** \n" +

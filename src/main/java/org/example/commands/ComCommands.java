@@ -14,7 +14,7 @@ public class ComCommands extends IapetusCommand {
     public boolean runCommand(SlashCommandInteractionEvent event) {
         EmbedBuilder embedBuilder5 = new EmbedBuilder();
         embedBuilder5.setTitle("**Iapetus Commands**");
-        embedBuilder5.setDescription("Error 404: Message missing!")
+        embedBuilder5.setDescription("Error 404: Message missing!");
 //        embedBuilder5.setDescription("**Need help with commands or wondering what the commands are and what they do? I am here to help you!** \n \n" + "**`Fun commands`** \n" +
 //                "**/adventure** takes you on an adventure who knows where it will take you \n"+
 //                "**/berries** is a command that will tell you the amount of berries you have \n" +
