@@ -40,8 +40,8 @@ public class DropHandler extends ListenerAdapter {
             return;
         }
 
-        if (++messageCount == 20) {
-            String sent = event.getChannel().sendMessage("**Error 404: Missing Message**")
+        if (++messageCount == 15) {
+            String sent = event.getChannel().sendMessage("**Error 404: Message missing!**")
                     .addActionRow(
                             Button.primary("strawberry", "🍓"))
                     //.flatMap(message -> message.addReaction(Emoji.fromUnicode("🍓")))
