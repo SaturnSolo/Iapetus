@@ -14,7 +14,7 @@ import java.util.*;
 public class TextResponses extends ListenerAdapter {
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        if (event.getAuthor().isBot()) return;
+        if (event.getAuthor().isBot() || event.isWebhookMessage()) return;
         String content = event.getMessage().getContentDisplay();
         MessageChannel channel = event.getChannel();
         if (content.equals("ping")) {
