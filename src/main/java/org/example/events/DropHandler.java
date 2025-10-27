@@ -40,7 +40,7 @@ public class DropHandler extends ListenerAdapter {
             return;
         }
 
-        if (++messageCount == 26) {
+        if (++messageCount == 1) {
             String sent = event.getChannel().sendMessage("**Strawberry Drop!**")
                     .addActionRow(
                             Button.primary("strawberry", "🍓"))
