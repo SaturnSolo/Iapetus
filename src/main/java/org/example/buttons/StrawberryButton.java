@@ -30,18 +30,14 @@ public class StrawberryButton extends IapetusButton {
         // if we do decide to fix duplicated strawberries we can put both of these in the same action.
         event.editButton(Button.secondary("Strawberry claimed", "✨").asDisabled()).queue();
 
+        event.editButton(Button.secondary("Strawberry claimed", "✨").asDisabled()).queue();
+
         if (Duration.between(message.getTimeCreated(), OffsetDateTime.now()).toDays() == 0) {
             message.reply("🍓 **Has been claimed by** " + mention)
-                    .queue(replyMsg -> {
-                        // delete both after 5 seconds
-                        replyMsg.delete().queueAfter(5, TimeUnit.SECONDS);
-                        message.delete().queueAfter(5, TimeUnit.SECONDS);
-                    });
+                    .queue(msg -> msg.delete().queueAfter(10, TimeUnit.SECONDS));
         } else {
-            message.addReaction(Emoji.fromUnicode("✅")).queue(success -> {
-                // delete the drop message after 5 seconds
-                message.delete().queueAfter(5, TimeUnit.SECONDS);
-            });
+            message.addReaction(Emoji.fromUnicode("✅")).queue();
+            message.delete().queueAfter(10, TimeUnit.SECONDS);
         }
 
         try (final Connection connection = SQLiteDataSource.getConnection();
