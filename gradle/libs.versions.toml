@@ -1,0 +1,22 @@
+[versions]
+shadow = "9.0.0-beta17"
+
+jda = "5.2.2"
+logback = "1.5.20"
+dotenv = "3.2.0"
+json = "20240303"
+junit-jupiter = "6.0.0"
+hikari = "7.0.2"
+sqlite = "3.50.3.0"
+
+[libraries]
+jda = { group = "net.dv8tion", name = "JDA", version.ref = "jda" }
+logback = { group = "ch.qos.logback", name = "logback-classic", version.ref = "logback" }
+dotenv = { group = "io.github.cdimascio", name = "dotenv-java", version.ref = "dotenv" }
+json = { group = "org.json", name = "json", version.ref = "json" }
+junitjupiter = { group = "org.junit.jupiter", name = "junit-jupiter-engine", version.ref = "junit-jupiter" }
+hikari = { group = "com.zaxxer", name = "HikariCP", version.ref = "hikari" }
+sqlite = { group = "org.xerial", name = "sqlite-jdbc", version.ref = "sqlite" }
+
+[plugins]
+shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
