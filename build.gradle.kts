@@ -14,7 +14,6 @@ dependencies {
     implementation(libs.jda)
     implementation(libs.logback)
     implementation(libs.dotenv)
-    implementation(libs.json)
     implementation(libs.junitjupiter)
     implementation(libs.hikari)
     implementation(libs.sqlite)
@@ -22,10 +21,10 @@ dependencies {
 
 java {
     toolchain {
-        languageVersion = JavaLanguageVersion.of(18)
+        languageVersion = JavaLanguageVersion.of(21)
     }
 }
 
 application {
-    mainClass = "org.example.Main"
+    mainClass = "org.example.Iapetus"
 }

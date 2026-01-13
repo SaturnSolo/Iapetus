@@ -3,26 +3,26 @@ package org.example.items;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.example.ItemManager;
-import org.example.Main;
 import org.example.buttons.ShopButton;
 
-import java.lang.reflect.Member;
-
 public abstract class Item {
-    final ItemManager manager = Main.itemManager;
-
+    private static ItemManager itemMgr;
     // these values will show to the user.
-    String name;
-    Emoji icon; // usually an emoji
-    String description;
-    Integer cost;
+    private final String name;
+    private final Emoji icon; // usually an emoji
+    private final String description;
+    private final int cost;
 
     // something like "cherry_blossom" - not shown to user.
-    String id;
+    private final String id;
 
-    ShopButton buyButton;
+    private final ShopButton buyButton;
 
-    public Item(String name, String description, String id, Emoji icon, Integer cost) {
+    public static void init(ItemManager itemMgr) {
+        Item.itemMgr = itemMgr;
+    }
+
+    public Item(String name, String description, String id, Emoji icon, int cost) {
         this.name = name;
         this.description = description;
         this.id = id;
@@ -31,7 +31,7 @@ public abstract class Item {
         this.cost = cost;
         buyButton = new ShopButton(id,this,cost);
 
-        manager.addItem(this);
+        Item.itemMgr.addItem(this);
     }
 
     public Item(String name, String description, String id, Emoji icon) {
@@ -48,8 +48,8 @@ public abstract class Item {
         return getString(false);
     }
     public String getString(boolean reverse) {
-        if (reverse) return name + " " + getIcon();
-        return getIcon() + " " + name;
+        if(reverse) return "%s %s".formatted(name, getIcon());
+        return "%s %s".formatted(getIcon(), name);
     }
 
     public String getName() {
@@ -64,11 +64,6 @@ public abstract class Item {
     public String getIcon() {
         return getIconEmoji().getFormatted();
     }
-
-    public Integer getCost() {
-        return cost;
-    }
-
     public String getId() {
         return id;
     }

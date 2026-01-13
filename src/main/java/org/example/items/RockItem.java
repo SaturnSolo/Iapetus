@@ -1,37 +1,38 @@
 package org.example.items;
 
+import net.dv8tion.jda.api.components.actionrow.ActionRow;
+import net.dv8tion.jda.api.components.buttons.Button;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.entities.emoji.UnicodeEmoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.example.ButtonManager;
-import org.example.Main;
 import org.example.structures.IapetusButton;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
 public class RockItem extends Item {
-    public RockItem() {
+    private final ButtonManager buttonMgr;
+    private final Random rng;
+    public RockItem(ButtonManager buttonMgr, Random rng) {
         super("Rock", "It's a rock", "rock", Emoji.fromUnicode("\uD83E\uDEA8"), 0);
+        this.buttonMgr = buttonMgr;
+        this.rng = rng;
     }
 
     @Override
     public boolean use(SlashCommandInteractionEvent event) {
-        ButtonManager bm = Main.buttonManager;
-        bm.addButtons(
-                new RPSButton("rock", "\uD83E\uDEA8"),
-                new RPSButton("paper", "🗞"),
-                new RPSButton("scissors", "✂")
+        buttonMgr.addButtons(
+            new RPSButton("rock", "\uD83E\uDEA8"),
+            new RPSButton("paper", "🗞"),
+            new RPSButton("scissors", "✂")
         );
 
-        event.reply("**Rock, paper, or scissors?**").addActionRow(bm.getButton("rock"),bm.getButton("paper"),bm.getButton("scissors")).queue();
+        event.reply("**Rock, paper, or scissors?**").addComponents(ActionRow.of(buttonMgr.getButton("rock"), buttonMgr.getButton("paper"), buttonMgr.getButton("scissors"))).queue();
         return false;
     }
     private class RPSButton extends IapetusButton {
-        private String selection;
+        private final String selection;
 
         private enum Emojis {
             ROCK(Emoji.fromUnicode("\uD83E\uDEA8")),
@@ -75,7 +76,7 @@ public class RockItem extends Item {
                 return;
             }
 
-            event.getMessage().editMessageComponents(event.getMessage().getActionRows().get(0).asDisabled()).queue(); // this disables the buttons so they can't be used again.
+            event.getMessage().editMessageComponents(event.getMessage().getComponents().getFirst().asActionRow().asDisabled()).queue(); // this disables the buttons so they can't be used again.
 
             // PLAYER DRAWS
             if (result == 0) {
@@ -92,9 +93,7 @@ public class RockItem extends Item {
         }
 
         public String selectRandom(String... strings) {
-            List<String> list = Arrays.asList(strings);
-            int index = new Random().nextInt(list.size());
-            return list.get(index);
+            return strings[rng.nextInt(strings.length)];
         }
     }
 }

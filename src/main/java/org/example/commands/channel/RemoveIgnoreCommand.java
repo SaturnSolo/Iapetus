@@ -7,31 +7,35 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
+import org.example.database.Database;
 import org.example.structures.IapetusCommand;
-import org.example.utils.ChannelUtils;
 import org.example.utils.MemberUtils;
 
 public class RemoveIgnoreCommand extends IapetusCommand {
 
     public RemoveIgnoreCommand() {
         super(Commands.slash("remove-ignore", "remove from ignored channels")
-          .addOption(OptionType.CHANNEL, "channel-1", "choose channels for to remove from ignored", true));
+          .addOption(OptionType.CHANNEL, "channel", "choose channels for to remove from ignored", true));
     }
 
     @Override
     public boolean runCommand(SlashCommandInteractionEvent event) {
-        Member member = event.getMember();
         Guild guild = event.getGuild();
-        Channel channel = event.getOption("channel-1").getAsChannel();
+        if(guild == null) {
+            event.reply("This command can only be used in a server.").queue();
+            return true;
+        }
+        Member member = event.getMember();
+        Channel channel = event.getOption("channel").getAsChannel();
         String mention = channel.getAsMention();
 
-        if (!MemberUtils.hasAdminPermission(member)) {
+        if (!MemberUtils.isAdmin(member)) {
             event.reply("**You need administrator permission to use this command.**").setEphemeral(true).queue();
             return true;
         }
 
-        ChannelUtils.removeIgnoredChannel(guild, channel);
-        event.reply(mention + "** has been removed from ignore channel list.**").setEphemeral(true).queue();
+        Database.removeIgnoredChannel(guild, channel);
+        event.reply("%s **has been removed from ignore channel list.**".formatted(mention)).setEphemeral(true).queue();
         return true;
     }
 }

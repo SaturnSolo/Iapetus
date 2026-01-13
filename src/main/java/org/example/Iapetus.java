@@ -26,72 +26,82 @@ import org.example.events.TextResponses;
 import org.example.items.*;
 import org.example.items.PumpkinItem;
 
+import java.security.SecureRandom;
+import java.util.Random;
 
-public class Main {
-    public static CommandManager commandManager;
-    public static ButtonManager buttonManager;
-    public static ItemManager itemManager;
 
-    public static void main(String[] args) {
+public class Iapetus {
+    private static Iapetus INSTANCE;
 
+    private final CommandManager commandMgr;
+    private final ButtonManager buttonMgr;
+    private final ItemManager itemMgr;
+    private final Random rng;
+
+    private Iapetus() {
+        INSTANCE = this;
         Dotenv dotenv = Dotenv.configure().load();
         String token = dotenv.get("TOKEN");
 
-        if (token == null) {
-            throw new IllegalArgumentException("TOKEN environment variable not found.");
-        }
+        if (token == null) throw new IllegalArgumentException("TOKEN environment variable not found.");
 
         JDABuilder builder = JDABuilder.createDefault(token);
-
-
-
         builder.setBulkDeleteSplittingEnabled(false);
+
+        rng = new SecureRandom();
+
+        // initialize interaction managers.
+        itemMgr = new ItemManager();
+        buttonMgr = new ButtonManager();
+        commandMgr = new CommandManager();
+
+        // Initialize Item
+        Item.init(itemMgr);
+
         // Set activity (like "playing Something")
         builder.setActivity(Activity.listening("🍓"));
         builder.enableIntents(GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_PRESENCES, GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MEMBERS, GatewayIntent.GUILD_PRESENCES);
 
-        Main.itemManager = new ItemManager();
-        new DiceItem();
+        new DiceItem(rng);
         new GemItem();
         new KeyItem();
         new PumpkinItem();
-        new RockItem();
-        new ShinyItem();
+        new RockItem(buttonMgr, rng);
+        new ShinyItem(itemMgr);
 
-        // initialize interaction managers.
-        ButtonManager bm = new ButtonManager();
-        Main.buttonManager = bm;
-        bm.addButtons(
-          new StrawberryButton()
+        // Add stuff to the respective managers
+        buttonMgr.addButtons(
+            new StrawberryButton()
+        );
+        commandMgr.addCommands(
+            new PingCommand(),
+            new BonkCommand(),
+            new RandomCommand(rng),
+            new ShopCommand(buttonMgr),
+            new InventoryCommand(),
+            new BerriesCommand(),
+            new PetMenuCommand(),
+            new HatchCommand(itemMgr, rng),
+            new IgnoreChannelCommand(),
+            new RemoveIgnoreCommand(),
+            new ListIgnoredCommand(),
+            new HelpCommand(buttonMgr),
+            new UseItemCommand(itemMgr),
+            new AdventureCommands(buttonMgr, itemMgr, rng),
+            new LootChestCommands(itemMgr, rng),
+            new GiveCommand(),
+            new ComCommands(),
+            new TopBerriesCommand(),
+            new DailyCommand()
         );
 
-        CommandManager cm = new CommandManager();
-        Main.commandManager = cm;
-        cm.addCommands(
-          new PingCommand(),
-          new BonkCommand(),
-          new RandomCommand(),
-          new ShopCommand(),
-          new InventoryCommand(),
-          new BerriesCommand(),
-          new PetMenuCommand(),
-          new HatchCommand(),
-          new IgnoreChannelCommand(),
-          new RemoveIgnoreCommand(),
-          new ListIgnoredCommand(),
-          new HelpCommand(),
-          new UseItemCommand(),
-          new AdventureCommands(),
-          new LootChestCommands(),
-          new GiveCommand(),
-          new ComCommands(),
-          new TopBerriesCommand(),
-          new DailyCommand()
-        );
-
-        builder.addEventListeners(cm, bm, new DropHandler(), new TextResponses(), new InteractionLogger());
+        builder.addEventListeners(commandMgr, buttonMgr, new DropHandler(), new TextResponses(rng), new InteractionLogger());
         JDA jda = builder.build();
-        cm.register(jda);
+        commandMgr.register(jda);
+    }
+
+    public static void main(String[] args) {
+        if(INSTANCE == null) INSTANCE = new Iapetus();
     }
 
 

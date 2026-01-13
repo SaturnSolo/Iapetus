@@ -1,13 +1,12 @@
 package org.example;
 
+import net.dv8tion.jda.api.components.buttons.Button;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
 import org.example.structures.IapetusButton;
 
 import java.util.Arrays;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 public class ButtonManager extends ListenerAdapter {
@@ -15,7 +14,7 @@ public class ButtonManager extends ListenerAdapter {
 
     @Override
     public void onButtonInteraction(ButtonInteractionEvent event) {
-        String buttonId = event.getButton().getId();
+        String buttonId = event.getButton().getCustomId();
         IapetusButton button = getIapetusButton(buttonId);
         if (button == null) return;
 
@@ -29,19 +28,8 @@ public class ButtonManager extends ListenerAdapter {
         return getIapetusButton(id).getButton();
     }
     public boolean buttonExists(String id) { return getIapetusButton(id) != null; }
-    public void removeButton(String id) {
-        this.buttons.remove(id);
-    }
-
-    public void addButtons(List<IapetusButton> commands) {
-        commands.forEach(button -> this.buttons.put(button.getId(), button));
-    }
-    public void addButtons(IapetusButton... buttons) {
-        addButtons(Arrays.asList(buttons));
-    }
-
+    public void addButtons(IapetusButton... buttons) { Arrays.stream(buttons).forEach(button -> this.buttons.put(button.getId(), button)); }
     public Map<String, IapetusButton> getButtons() {
         return this.buttons;
     }
-
 }

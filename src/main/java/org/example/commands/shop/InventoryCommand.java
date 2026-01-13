@@ -2,61 +2,40 @@ package org.example.commands.shop;
 
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.hooks.ListenerAdapter;
-import org.example.ItemManager;
-import org.example.Main;
-import org.example.database.SQLiteDataSource;
-import org.example.items.InvalidItem;
+import org.example.database.Database;
 import org.example.items.Item;
 import org.example.structures.IapetusCommand;
+import org.example.structures.Inventory;
+import org.example.utils.IapetusColor;
 
-import java.awt.*;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class InventoryCommand extends IapetusCommand {
-    private final ItemManager im = Main.itemManager;
     public InventoryCommand() {
         super("inventory","opens your inventory");
     }
 
     @Override
     public boolean runCommand(SlashCommandInteractionEvent event) {
-        String userId = event.getMember().getId();
+        String userId = event.getUser().getId();
 
-        try (final Connection connection = SQLiteDataSource.getConnection();
-             final PreparedStatement ps = connection.prepareStatement("SELECT item_name, COUNT(*) AS item_count FROM inventory WHERE user_id = ? GROUP BY item_name")) {
-            ps.setString(1, userId);
+        Inventory inventory = Database.getUserInventory(userId);
+        EmbedBuilder embed = new EmbedBuilder()
+                .setTitle("Inventory")
+                .setColor(IapetusColor.BODY)
+                .setDescription(inventory.isEmpty() ? "Your inventory is empty." : "");
 
-            try (final ResultSet rs = ps.executeQuery()) {
-                EmbedBuilder embedBuilder = new EmbedBuilder();
-                embedBuilder.setTitle("Inventory");
-                embedBuilder.setColor(0xFAA275);
+        // Quantity map
+        Map<Item, Integer> itemCounts = inventory.getItems().stream()
+                        .collect(Collectors.groupingBy(
+                            item -> item,
+                            Collectors.summingInt(item -> 1)
+                        ));
 
-                boolean hasItems = false;
-                while (rs.next()) {
-                    String itemName = rs.getString("item_name");
-                    int itemCount = rs.getInt("item_count");
+        itemCounts.forEach((item, count) -> embed.addField(item.getString(), "> " + item.getDescription() + "\nQuantity: %d".formatted(count), true));
+        event.replyEmbeds(embed.build()).queue();
 
-                    Item item = im.getItem(itemName);
-                    if (item == null) item = new InvalidItem(itemName);
-
-                    embedBuilder.addField(item.getString(), "> " + item.getDescription() + "\nQuantity: " + itemCount, true);
-                    hasItems = true;
-                }
-
-                if (!hasItems) {
-                    embedBuilder.setDescription("Your inventory is empty.");
-                }
-
-                event.replyEmbeds(embedBuilder.build()).queue();
-            }
-        } catch (SQLException e) {
-            e.printStackTrace();
-            event.reply("An error occurred while retrieving your inventory.").queue();
-        }
         return true;
     }
 }

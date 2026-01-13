@@ -1,9 +1,7 @@
 package org.example.structures;
 
+import net.dv8tion.jda.api.components.buttons.Button;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import net.dv8tion.jda.api.interactions.components.buttons.Button;
-import org.example.ButtonManager;
-import org.example.Main;
 
 
 /** Represents a button to the <b>ButtonManager</b> class. <br><br>
@@ -48,16 +46,11 @@ import org.example.Main;
  * @see org.example.ButtonManager
  */
 public abstract class IapetusButton {
-    String id;
-    Button button;
-    // Button button;
-
-    public IapetusButton(String id) {
-        this.id = id;
-    }
+    private final String id;
+    private final Button button;
 
     public IapetusButton(Button button) {
-        this.id = button.getId();
+        this.id = button.getCustomId();
         this.button = button;
     }
 
@@ -67,12 +60,6 @@ public abstract class IapetusButton {
     }
 
     public abstract void run(ButtonInteractionEvent event);
-
-    public void dissolve() {
-        ButtonManager bm = Main.buttonManager;
-        bm.removeButton(this.id);
-    }
-
     public String getId() {
         return id;
     }

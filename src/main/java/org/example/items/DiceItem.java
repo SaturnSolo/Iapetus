@@ -3,22 +3,20 @@ package org.example.items;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 
-import java.util.Arrays;
-import java.util.List;
 import java.util.Random;
 
 public class DiceItem extends Item {
-        public DiceItem() {
-            super("Dice","Seems rollable.","dice", Emoji.fromUnicode("🎲"), 0);
-        }
+    private final Random rng;
 
-        @Override
-        public boolean use(SlashCommandInteractionEvent event) {
-            String user10 = event.getUser().getAsMention();
-            Random random = new Random();
-            Integer diceRoll = random.nextInt(20) +1;
-            event.reply(user10 + " **you rolled a** " + diceRoll).queue();
-            return false; // item not consumed on use.
-        }
+    public DiceItem(Random rng) {
+        super("Dice","Seems rollable.","dice", Emoji.fromUnicode("🎲"), 0);
+        this.rng = rng;
     }
+
+    @Override
+    public boolean use(SlashCommandInteractionEvent event) {
+        event.reply("%s **you rolled a** %d".formatted(event.getUser().getAsMention(), rng.nextInt(20) + 1)).queue();
+        return false; // item not consumed on use.
+    }
+}
 

@@ -13,8 +13,10 @@ public class SQLiteDataSource {
     private static final Logger LOGGER = LoggerFactory.getLogger(SQLiteDataSource.class);
     private static final HikariConfig config = new HikariConfig();
     private static final HikariDataSource ds;
-//if it doesn't work put ../
-    //also if you are going to export put ./
+    /*
+     *   if it doesn't work put ../
+     *   also if you are going to export put ./
+    */
     static {
         String databasePath = "./database.db"; // Update the path to the desired location of the database file
         File dbFile = new File(databasePath);
@@ -22,14 +24,9 @@ public class SQLiteDataSource {
         try {
             if (!dbFile.exists()) {
                 File parentDir = dbFile.getParentFile();
-                if (!parentDir.exists()) {
-                    parentDir.mkdirs();
-                }
-                if (dbFile.createNewFile()) {
-                    LOGGER.info("Created database file");
-                } else {
-                    LOGGER.info("Could not create database file");
-                }
+                if (!parentDir.exists()) parentDir.mkdirs();
+                if (dbFile.createNewFile()) LOGGER.info("Created database file");
+                else LOGGER.info("Could not create database file");
             }
         } catch (IOException e) {
             e.printStackTrace();

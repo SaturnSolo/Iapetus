@@ -10,8 +10,10 @@ public class GemItem extends Item {
 
     @Override
     public boolean use(SlashCommandInteractionEvent event) {
-        event.reply("💎✨ \n" +
-                "**Gem sparkles**").queue();
+        event.reply("""
+                            💎✨
+                            **Gem sparkles**"""
+        ).queue();
         return false;
     }
 }
