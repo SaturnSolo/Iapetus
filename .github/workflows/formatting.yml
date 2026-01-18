@@ -1,4 +1,4 @@
-name: formatting.yml
+name: formatting
 on:
   push:
     branches: [ "main" ]
@@ -44,3 +44,7 @@ jobs:
           git add . 
           git commit -m "Apply Spotless formatting" 
           git push
+
+      - name: Fail if formatting was required
+        if: steps.spotless.outcome == 'failure'
+        run: exit 1
