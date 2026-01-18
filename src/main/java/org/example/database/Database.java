@@ -255,13 +255,14 @@ public class Database {
         }
     }
 
-    public static void removeIgnoredChannel(Guild guild, Channel channel) {
+    public static int removeIgnoredChannel(Guild guild, Channel channel) {
         try (Connection connection = SQLiteDataSource.getConnection(); PreparedStatement ps = connection.prepareStatement("DELETE FROM ignored_channels WHERE guild_id = ? AND channel_id = ?")) {
             ps.setString(1, guild.getId());
             ps.setString(2, channel.getId());
-            ps.executeUpdate();
+            return ps.executeUpdate();
         } catch (SQLException e) {
             e.printStackTrace();
+            return -1;
         }
     }
 
