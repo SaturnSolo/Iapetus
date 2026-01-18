@@ -24,8 +24,7 @@ public class Database {
     public static Inventory getUserInventory(String userId) {
         List<Item> itemList = new ArrayList<>();
         try (
-            final Connection connection = SQLiteDataSource.getConnection();
-            final PreparedStatement ps = connection.prepareStatement("SELECT item_name, COUNT(*) AS item_count FROM inventory WHERE user_id = ? GROUP BY item_name")
+             final Connection connection = SQLiteDataSource.getConnection(); final PreparedStatement ps = connection.prepareStatement("SELECT item_name, COUNT(*) AS item_count FROM inventory WHERE user_id = ? GROUP BY item_name")
         ) {
             ps.setString(1, userId);
             try (final ResultSet rs = ps.executeQuery()) {
@@ -52,8 +51,7 @@ public class Database {
     }
 
     public static void addToInventory(String userId, String itemName) {
-        try (Connection connection = SQLiteDataSource.getConnection();
-             PreparedStatement ps = connection.prepareStatement("INSERT INTO inventory (user_id, item_name) VALUES (?, ?)")) {
+        try (Connection connection = SQLiteDataSource.getConnection(); PreparedStatement ps = connection.prepareStatement("INSERT INTO inventory (user_id, item_name) VALUES (?, ?)")) {
             ps.setString(1, userId);
             ps.setString(2, itemName);
             ps.executeUpdate();
@@ -61,15 +59,14 @@ public class Database {
             e.printStackTrace();
         }
     }
-    
+
     public static void addToInventory(User user, String itemName) {
         addToInventory(user.getId(), itemName);
     }
 
     public static boolean hasItem(String userId, String id, int amount) {
         try (
-            final Connection connection = SQLiteDataSource.getConnection();
-            final PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) FROM inventory WHERE user_id = ? AND item_name = ?")
+             final Connection connection = SQLiteDataSource.getConnection(); final PreparedStatement ps = connection.prepareStatement("SELECT COUNT(*) FROM inventory WHERE user_id = ? AND item_name = ?")
         ) {
             ps.setString(1, userId);
             ps.setString(2, id);
@@ -88,8 +85,7 @@ public class Database {
 
     public static void giveItem(String userId, String id) {
         try (
-            final Connection connection = SQLiteDataSource.getConnection();
-            final PreparedStatement ps = connection.prepareStatement("INSERT INTO inventory (user_id, item_name) VALUES (?, ?)")
+             final Connection connection = SQLiteDataSource.getConnection(); final PreparedStatement ps = connection.prepareStatement("INSERT INTO inventory (user_id, item_name) VALUES (?, ?)")
         ) {
             ps.setString(1, userId);
             ps.setString(2, id);
@@ -101,8 +97,7 @@ public class Database {
 
     public static void takeItem(String userId, String id) {
         try (
-            final Connection connection = SQLiteDataSource.getConnection();
-            final PreparedStatement ps = connection.prepareStatement("DELETE FROM inventory WHERE rowid = ( SELECT rowid from inventory where user_id = ? AND item_name = ? LIMIT 1 )") // "DELETE FROM inventory WHERE user_id = ? AND item_name = ? LIMIT ?"
+             final Connection connection = SQLiteDataSource.getConnection(); final PreparedStatement ps = connection.prepareStatement("DELETE FROM inventory WHERE rowid = ( SELECT rowid from inventory where user_id = ? AND item_name = ? LIMIT 1 )") // "DELETE FROM inventory WHERE user_id = ? AND item_name = ? LIMIT ?"
         ) {
             ps.setString(1, userId);
             ps.setString(2, id);
@@ -118,8 +113,7 @@ public class Database {
         // Replace this with your database retrieval logic
         List<String> petList = new ArrayList<>();
 
-        try (Connection connection = SQLiteDataSource.getConnection();
-             PreparedStatement ps = connection.prepareStatement("SELECT pet FROM hatch_log WHERE user_id = ?")) {
+        try (Connection connection = SQLiteDataSource.getConnection(); PreparedStatement ps = connection.prepareStatement("SELECT pet FROM hatch_log WHERE user_id = ?")) {
             ps.setString(1, userId);
 
             try (ResultSet rs = ps.executeQuery()) {
@@ -139,8 +133,7 @@ public class Database {
     }
 
     private void removeEggFromInventory(String userId) {
-        try (final Connection connection = SQLiteDataSource.getConnection();
-             final PreparedStatement ps = connection.prepareStatement("DELETE FROM inventory WHERE user_id = ? AND item_name = '🥚'")) {
+        try (final Connection connection = SQLiteDataSource.getConnection(); final PreparedStatement ps = connection.prepareStatement("DELETE FROM inventory WHERE user_id = ? AND item_name = '🥚'")) {
             ps.setString(1, userId);
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -150,8 +143,7 @@ public class Database {
 
     // Berries
     public static void giveBerries(String userId, int amount) {
-        try (final Connection connection = SQLiteDataSource.getConnection();
-             final PreparedStatement ps = connection.prepareStatement("INSERT INTO user_berries (user_id, berry_count) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET berry_count = berry_count + ?")) {
+        try (final Connection connection = SQLiteDataSource.getConnection(); final PreparedStatement ps = connection.prepareStatement("INSERT INTO user_berries (user_id, berry_count) VALUES (?, ?) ON CONFLICT(user_id) DO UPDATE SET berry_count = berry_count + ?")) {
             ps.setString(1, userId);
             ps.setInt(2, amount);
             ps.setInt(3, amount);
@@ -160,21 +152,22 @@ public class Database {
             e.printStackTrace();
         }
     }
+
     public static void giveBerries(User user, int amount) {
-        giveBerries(user.getId(),amount);
+        giveBerries(user.getId(), amount);
     }
 
     public static void takeBerries(String userId, int amount) {
         giveBerries(userId, -amount);
     }
+
     public static void takeBerries(User user, int amount) {
-        takeBerries(user.getId(),amount);
+        takeBerries(user.getId(), amount);
     }
 
     public static int getBerryAmount(String userId) {
         try (
-            final Connection connection = SQLiteDataSource.getConnection();
-            final PreparedStatement ps = connection.prepareStatement("SELECT berry_count FROM user_berries WHERE user_id = ?")
+             final Connection connection = SQLiteDataSource.getConnection(); final PreparedStatement ps = connection.prepareStatement("SELECT berry_count FROM user_berries WHERE user_id = ?")
         ) {
             ps.setString(1, userId);
             try (final ResultSet rs = ps.executeQuery()) {
@@ -195,8 +188,7 @@ public class Database {
     }
 
     public static LocalDate getLastClaimDate(String userId) {
-        try (Connection connection = SQLiteDataSource.getConnection();
-             PreparedStatement ps = connection.prepareStatement("SELECT last_claim FROM daily_claims WHERE user_id = ?")) {
+        try (Connection connection = SQLiteDataSource.getConnection(); PreparedStatement ps = connection.prepareStatement("SELECT last_claim FROM daily_claims WHERE user_id = ?")) {
             ps.setString(1, userId);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -214,9 +206,7 @@ public class Database {
     }
 
     public static void updateLastClaimDate(String userId, LocalDate currentDate) {
-        try (Connection connection = SQLiteDataSource.getConnection();
-             PreparedStatement ps = connection.prepareStatement("INSERT INTO daily_claims (user_id, last_claim) VALUES (?, ?) " +
-                     "ON CONFLICT(user_id) DO UPDATE SET last_claim = ?")) {
+        try (Connection connection = SQLiteDataSource.getConnection(); PreparedStatement ps = connection.prepareStatement("INSERT INTO daily_claims (user_id, last_claim) VALUES (?, ?) " + "ON CONFLICT(user_id) DO UPDATE SET last_claim = ?")) {
             ps.setString(1, userId);
             ps.setLong(2, currentDate.toEpochDay());  // Store the date as epoch day
             ps.setLong(3, currentDate.toEpochDay());
@@ -228,14 +218,9 @@ public class Database {
 
     public static Map<Long, Integer> getUserBerryMap(long guildId) {
         Map<Long, Integer> result = new LinkedHashMap<>();
-        try (Connection connection = SQLiteDataSource.getConnection();
-             PreparedStatement ps = connection.prepareStatement(
-                 "SELECT ub.user_id, ub.berry_count " +
-                     "FROM user_berries ub " +
-                     "JOIN user_guilds ug ON ub.user_id = ug.user_id " +
-                     "WHERE ug.guild_id = ? " +
-                     "ORDER BY ub.berry_count"
-             )) {
+        try (Connection connection = SQLiteDataSource.getConnection(); PreparedStatement ps = connection.prepareStatement(
+                "SELECT ub.user_id, ub.berry_count " + "FROM user_berries ub " + "JOIN user_guilds ug ON ub.user_id = ug.user_id " + "WHERE ug.guild_id = ? " + "ORDER BY ub.berry_count"
+        )) {
 
             ps.setLong(1, guildId);
 
@@ -253,20 +238,15 @@ public class Database {
     }
 
     public static Map<Long, Integer> getTopNBerryHolders(long guildId, int n) {
-        return getUserBerryMap(guildId).entrySet().stream()
-                .limit(n)
-                .collect(Collectors.toMap(
-                    Map.Entry::getKey,
-                    Map.Entry::getValue,
-                    (a, b) -> a, // Dedupe, duplicate not possible
-                    LinkedHashMap::new
-                ));
+        return getUserBerryMap(guildId).entrySet().stream().limit(n).collect(Collectors.toMap(
+                Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, // Dedupe, duplicate not possible
+                LinkedHashMap::new
+        ));
     }
 
     // Ignored channels
     public static void addIgnoredChannel(Guild guild, Channel channel) {
-        try (Connection connection = SQLiteDataSource.getConnection();
-             PreparedStatement ps = connection.prepareStatement("INSERT INTO ignored_channels (guild_id, channel_id) VALUES (?, ?)")) {
+        try (Connection connection = SQLiteDataSource.getConnection(); PreparedStatement ps = connection.prepareStatement("INSERT INTO ignored_channels (guild_id, channel_id) VALUES (?, ?)")) {
             ps.setString(1, guild.getId());
             ps.setString(2, channel.getId());
             ps.executeUpdate();
@@ -276,8 +256,7 @@ public class Database {
     }
 
     public static void removeIgnoredChannel(Guild guild, Channel channel) {
-        try (Connection connection = SQLiteDataSource.getConnection();
-             PreparedStatement ps = connection.prepareStatement("DELETE FROM ignored_channels WHERE guild_id = ? AND channel_id = ?")) {
+        try (Connection connection = SQLiteDataSource.getConnection(); PreparedStatement ps = connection.prepareStatement("DELETE FROM ignored_channels WHERE guild_id = ? AND channel_id = ?")) {
             ps.setString(1, guild.getId());
             ps.setString(2, channel.getId());
             ps.executeUpdate();
@@ -289,8 +268,7 @@ public class Database {
     public static List<Long> getIgnoredChannels(Guild guild) {
         List<Long> channels = new ArrayList<>();
         try (
-            Connection connection = SQLiteDataSource.getConnection();
-            PreparedStatement ps = connection.prepareStatement("SELECT channel_id FROM ignored_channels WHERE guild_id = ?");
+             Connection connection = SQLiteDataSource.getConnection(); PreparedStatement ps = connection.prepareStatement("SELECT channel_id FROM ignored_channels WHERE guild_id = ?");
         ) {
             ps.setString(1, guild.getId());
             try (ResultSet rs = ps.executeQuery()) {
@@ -308,8 +286,7 @@ public class Database {
     public static void logUserGuild(String userId, String guildId) {
         String query = "INSERT OR IGNORE INTO user_guilds (user_id, guild_id) VALUES (?, ?)";
 
-        try (Connection connection = SQLiteDataSource.getConnection();
-             PreparedStatement ps = connection.prepareStatement(query)) {
+        try (Connection connection = SQLiteDataSource.getConnection(); PreparedStatement ps = connection.prepareStatement(query)) {
             ps.setString(1, userId);
             ps.setString(2, guildId);
             ps.executeUpdate();
@@ -319,8 +296,7 @@ public class Database {
     }
 
     public static void logLootInDatabase(String userId, String loot) {
-        try (Connection connection = SQLiteDataSource.getConnection();
-             PreparedStatement ps = connection.prepareStatement("INSERT INTO key_log (user_id, loot) VALUES (?, ?)")) {
+        try (Connection connection = SQLiteDataSource.getConnection(); PreparedStatement ps = connection.prepareStatement("INSERT INTO key_log (user_id, loot) VALUES (?, ?)")) {
             ps.setString(1, userId);
             ps.setString(2, loot);
             ps.executeUpdate();
@@ -332,8 +308,7 @@ public class Database {
     public static void logHatchInDatabase(String userId, String pet) {
         // Implement logic to log the hatching in your SQLite database
         // Replace this with your database insertion logic
-        try (Connection connection = SQLiteDataSource.getConnection();
-             PreparedStatement ps = connection.prepareStatement("INSERT INTO hatch_log (user_id, pet) VALUES (?, ?)")) {
+        try (Connection connection = SQLiteDataSource.getConnection(); PreparedStatement ps = connection.prepareStatement("INSERT INTO hatch_log (user_id, pet) VALUES (?, ?)")) {
             ps.setString(1, userId);
             ps.setString(2, pet);
             ps.executeUpdate();

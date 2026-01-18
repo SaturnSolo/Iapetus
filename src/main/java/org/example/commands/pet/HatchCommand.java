@@ -1,4 +1,5 @@
 package org.example.commands.pet;
+
 import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
@@ -26,7 +27,7 @@ public class HatchCommand extends IapetusCommand {
         User user = event.getUser();
         String userId = user.getId();
 
-        if(!itemMgr.hasItem(userId, "egg")) {
+        if (!itemMgr.hasItem(userId, "egg")) {
             event.reply("You don't have an egg to hatch.").queue();
             return true;
         }
@@ -40,21 +41,15 @@ public class HatchCommand extends IapetusCommand {
         // Remove the egg from the inventory
         itemMgr.takeItem(userId, "egg");
 
-        MessageEmbed embed = new EmbedBuilder()
-                .setTitle("Hatching a Pet")
-                .setDescription("You hatched a new pet: %s".formatted(hatchedPet))
-                .setColor(IapetusColor.RED)
-                .build();
+        MessageEmbed embed = new EmbedBuilder().setTitle("Hatching a Pet").setDescription("You hatched a new pet: %s".formatted(hatchedPet)).setColor(IapetusColor.RED).build();
 
         event.replyEmbeds(embed).queue();
         return true;
     }
 
     private String hatchRandomPet() {
-        String[] possiblePets = {"🐢", "🦃", "🐈", "🐕","🐑","🦌","🐂","🐄","🦎","🐍","🐣","🦐", "🦩", "🐌", "🦢","🐊","🦙", "🕷","🦨", "🦋", "🐸", "🦑", "🦐", "🦞", "🐖", "🦝", "🐙", "🦦","🐚","🦌","🦔", "🌻"};
+        String[] possiblePets = {"🐢", "🦃", "🐈", "🐕", "🐑", "🦌", "🐂", "🐄", "🦎", "🐍", "🐣", "🦐", "🦩", "🐌", "🦢", "🐊", "🦙", "🕷", "🦨", "🦋", "🐸", "🦑", "🦐", "🦞", "🐖", "🦝", "🐙", "🦦", "🐚", "🦌", "🦔", "🌻"};
         return possiblePets[rng.nextInt(possiblePets.length)];
     }
 }
-
-
 

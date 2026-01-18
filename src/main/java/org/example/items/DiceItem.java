@@ -9,7 +9,7 @@ public class DiceItem extends Item {
     private final Random rng;
 
     public DiceItem(Random rng) {
-        super("Dice","Seems rollable.","dice", Emoji.fromUnicode("🎲"), 0);
+        super("Dice", "Seems rollable.", "dice", Emoji.fromUnicode("🎲"), 0);
         this.rng = rng;
     }
 

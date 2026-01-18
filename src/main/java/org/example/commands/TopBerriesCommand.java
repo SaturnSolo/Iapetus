@@ -18,7 +18,7 @@ public class TopBerriesCommand extends IapetusCommand {
     @Override
     public boolean runCommand(SlashCommandInteractionEvent event) {
         Guild guild = event.getGuild();
-        if(guild == null) {
+        if (guild == null) {
             event.reply("You're alone here in DMs, of course you are #1. You have %d berries.".formatted(Database.getBerryAmount(event.getUser()))).setEphemeral(true).queue();
             return true;
         }
@@ -26,7 +26,7 @@ public class TopBerriesCommand extends IapetusCommand {
         Map<Long, Integer> topBerries = Database.getTopNBerryHolders(guild.getIdLong(), 10);
         StringBuilder leaderboard = new StringBuilder();
 
-        if(topBerries.isEmpty()) {
+        if (topBerries.isEmpty()) {
             event.reply("No users found in the leaderboard for this server.").setEphemeral(true).queue();
             return true;
         }
@@ -38,11 +38,7 @@ public class TopBerriesCommand extends IapetusCommand {
             rank++;
         }
 
-        MessageEmbed embed = new EmbedBuilder()
-                .setTitle("Top 10 Berry Collectors in %s".formatted(event.getGuild().getName()))
-                .setDescription(leaderboard.toString())
-                .setColor(IapetusColor.RED)
-                .build();
+        MessageEmbed embed = new EmbedBuilder().setTitle("Top 10 Berry Collectors in %s".formatted(event.getGuild().getName())).setDescription(leaderboard.toString()).setColor(IapetusColor.RED).build();
 
         event.replyEmbeds(embed).queue();
         return true;

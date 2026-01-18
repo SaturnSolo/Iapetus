@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 public class InventoryCommand extends IapetusCommand {
     public InventoryCommand() {
-        super("inventory","opens your inventory");
+        super("inventory", "opens your inventory");
     }
 
     @Override
@@ -21,17 +21,12 @@ public class InventoryCommand extends IapetusCommand {
         String userId = event.getUser().getId();
 
         Inventory inventory = Database.getUserInventory(userId);
-        EmbedBuilder embed = new EmbedBuilder()
-                .setTitle("Inventory")
-                .setColor(IapetusColor.BODY)
-                .setDescription(inventory.isEmpty() ? "Your inventory is empty." : "");
+        EmbedBuilder embed = new EmbedBuilder().setTitle("Inventory").setColor(IapetusColor.BODY).setDescription(inventory.isEmpty() ? "Your inventory is empty." : "");
 
         // Quantity map
-        Map<Item, Integer> itemCounts = inventory.getItems().stream()
-                        .collect(Collectors.groupingBy(
-                            item -> item,
-                            Collectors.summingInt(item -> 1)
-                        ));
+        Map<Item, Integer> itemCounts = inventory.getItems().stream().collect(Collectors.groupingBy(
+                item -> item, Collectors.summingInt(item -> 1)
+        ));
 
         itemCounts.forEach((item, count) -> embed.addField(item.getString(), "> " + item.getDescription() + "\nQuantity: %d".formatted(count), true));
         event.replyEmbeds(embed.build()).queue();

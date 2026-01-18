@@ -36,7 +36,7 @@ public class AdventureCommands extends IapetusCommand {
                         embedBuilder5.setColor(0x474B24);
                         embedBuilder5.setThumbnail(pfp1);
                         embedBuilder5.setTitle(userName + " wonders into");
-
+        
                         List<String> areas = Arrays.asList(
                                 "**a cave that seems to go down a long way \n What would you like to do? \n Investigate \uD83D\uDD0D or Leave \uD83D\uDCA8**",
                                 "**a forest that seems to be enchanted \n What would you like to do? \n Investigate \uD83D\uDD0D or Leave \uD83D\uDCA8**",
@@ -53,22 +53,22 @@ public class AdventureCommands extends IapetusCommand {
                         );
                         //add seasonal things here
                         // Investigate 🔍 or Leave 💨
-
-
+        
+        
                         // Select a random compliment
                         Random random = new Random();
                         String area = areas.get(random.nextInt(areas.size()));
                         String ahhh = embedBuilder5.setDescription(area).toString();
                         MessageEmbed embed6 = embedBuilder5.build();
                         event.replyEmbeds(embed6).addActionRow(bm.getButton("investigate"), bm.getButton("leave")).queue();
-
+        
                         event.getInteraction().editButton(bm.getButton("yes").asDisabled()).queue();
-
-
+        
+        
                     }
                 },
                 new IapetusButton(Button.primary("investigate", "🔍")) {
-
+        
                     @Override
                     public void run(ButtonInteractionEvent event) {
                         String userIdCard = event.getUser().getId();
@@ -78,12 +78,12 @@ public class AdventureCommands extends IapetusCommand {
                         embedBuilder6.setColor(0x474B24);
                         embedBuilder6.setThumbnail(pfp2);
                         embedBuilder6.setTitle(userName + " investigates the area");
-
-
+        
+        
                         //Wow, there is a random comment here
-
-
-
+        
+        
+        
                         Map<String, String> investigations = new HashMap<>();
                         investigations.put("**You find something shiny that you can't seem to put into words**","shiny");
                         investigations.put("You found nothing but air",null);
@@ -97,32 +97,32 @@ public class AdventureCommands extends IapetusCommand {
                         investigations.put("You opened a drawer and found nothing.",null);
                         investigations.put("**You find an old rusty key**","key");
                         investigations.put("You breathed, nothing happened.",null);
-
-
-
+        
+        
+        
                         int value = new Random().nextInt(investigations.size());
                         String message = investigations.keySet().stream().toList().get(value);
                         String item = investigations.get(message);
                         String building = embedBuilder6.setDescription(message).toString();
                         MessageEmbed embed6 = embedBuilder6.build();
                         event.replyEmbeds(embed6).queue();
-
+        
                         ItemManager im = Main.itemManager;
                         if (item != null) im.giveItem(userIdCard, item);
-
+        
                         event.getInteraction().editButton(bm.getButton("investigate").asDisabled()).queue();
                     }
                 },
                 new IapetusButton(Button.primary("leave", "💨")) {
-
+        
                     @Override
                     public void run(ButtonInteractionEvent event) {
                         String userName1 = event.getUser().getEffectiveName();
                         EmbedBuilder embedBuilder7 = new EmbedBuilder();
                         embedBuilder7.setTitle(userName1 + " leaves the area");
                         embedBuilder7.setColor(0x474B24);
-
-
+        
+        
                         List<String> leave = Arrays.asList(
                                 "**You left the area finding nothing of interest, who knows what you left behind**",
                                 "**Endless possibles of what you could find**",
@@ -131,20 +131,20 @@ public class AdventureCommands extends IapetusCommand {
                                 "**Did you have a safe journey?**",
                                 "**What a lovely adventure**"
                         );
-
+        
                         Random random = new Random();
                         String leaf = leave.get(random.nextInt(leave.size()));
                         String building = embedBuilder7.setDescription(leaf).toString();
                         MessageEmbed embed6 = embedBuilder7.build();
                         event.replyEmbeds(embed6).queue();
-
+        
                         event.getInteraction().editButton(bm.getButton("leave").asDisabled()).queue();
-
-
+        
+        
                     }
-
+        
                 },
-
+        
                 new IapetusButton(Button.secondary("no", "❌")) {
                     @Override
                     public void run(ButtonInteractionEvent event) {
@@ -159,16 +159,16 @@ public class AdventureCommands extends IapetusCommand {
                                 "**Adventure when you are ready**",
                                 "**There is no rush to rush out into the adventure relax while you can**",
                                 "**Not ready for adventure yet? That's fine!**"
-
+        
                         );
                         Random random = new Random();
                         String no = nope.get(random.nextInt(nope.size()));
                         String nop = embedBuilder9.setDescription(no).toString();
                         MessageEmbed embed9 = embedBuilder9.build();
                         event.replyEmbeds(embed9).setEphemeral(true).queue();
-
+        
                         event.getInteraction().editButton(bm.getButton("no").asDisabled()).queue();
-
+        
                     }
                 });*/
     }
@@ -177,19 +177,14 @@ public class AdventureCommands extends IapetusCommand {
     public boolean runCommand(SlashCommandInteractionEvent event) {
         String userId = event.getUser().getId();
 
-        MessageEmbed embed = new EmbedBuilder()
-                .setTitle("**Welcome Adventurer**")
-                .setDescription("Welcome %s to the adventure menu. Are you ready and prepared to go on an adventure?".formatted(event.getUser().getAsMention()))
-                .setColor(IapetusColor.DARK_GREEN)
-                .setThumbnail(event.getUser().getAvatarUrl())
-                .build();
+        MessageEmbed embed = new EmbedBuilder().setTitle("**Welcome Adventurer**").setDescription("Welcome %s to the adventure menu. Are you ready and prepared to go on an adventure?".formatted(event.getUser().getAsMention())).setColor(IapetusColor.DARK_GREEN).setThumbnail(event.getUser().getAvatarUrl()).build();
 
         Date cooldownEnd = adventureCooldowns.get(userId);
         if (cooldownEnd != null && new Date().before(cooldownEnd)) {
-            event.reply("You need to rest! You can adventure again <t:"+ cooldownEnd.getTime()/1000 +":R>.").queue();
+            event.reply("You need to rest! You can adventure again <t:" + cooldownEnd.getTime() / 1000 + ":R>.").queue();
             return true;
         }
-        adventureCooldowns.put(userId, new Date(System.currentTimeMillis()+adventureCooldownTime));
+        adventureCooldowns.put(userId, new Date(System.currentTimeMillis() + adventureCooldownTime));
         event.replyEmbeds(embed).addComponents(ActionRow.of(buttonMgr.getButton("confirm-adv"), buttonMgr.getButton("cancel-adv"))).queue();
         return true;
     }

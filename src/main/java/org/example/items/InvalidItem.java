@@ -7,7 +7,7 @@ import java.lang.reflect.Member;
 
 public class InvalidItem extends Item {
     public InvalidItem(String name) {
-        super(name, "a mysterious item... it hasn't been registered", "invaliditem-"+name, Emoji.fromUnicode("❓"));
+        super(name, "a mysterious item... it hasn't been registered", "invaliditem-" + name, Emoji.fromUnicode("❓"));
     }
 
     @Override

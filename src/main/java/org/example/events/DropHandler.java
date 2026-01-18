@@ -25,16 +25,11 @@ public class DropHandler extends ListenerAdapter {
         if (ignoredChannels.contains(event.getChannel().getIdLong())) return;
 
         if (++messageCount == 26) {
-            event.getChannel().sendMessage("**Strawberry Drop!**")
-                    .addComponents(ActionRow.of(Button.primary("strawberry", "🍓")))
+            event.getChannel().sendMessage("**Strawberry Drop!**").addComponents(ActionRow.of(Button.primary("strawberry", "🍓")))
                     //.flatMap(message -> message.addReaction(Emoji.fromUnicode("🍓")))
                     .queueAfter(1, TimeUnit.SECONDS);
             messageCount = 0; // reset message count
         }
     }
 }
-
-
-
-
 

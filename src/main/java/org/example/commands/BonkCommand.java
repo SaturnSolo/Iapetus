@@ -8,8 +8,7 @@ import org.example.structures.IapetusCommand;
 
 public class BonkCommand extends IapetusCommand {
     public BonkCommand() {
-        super(Commands.slash("bonk","bonk someone")
-          .addOption(OptionType.MENTIONABLE, "name", "who to bonk", true)
+        super(Commands.slash("bonk", "bonk someone").addOption(OptionType.MENTIONABLE, "name", "who to bonk", true)
         );
     }
 

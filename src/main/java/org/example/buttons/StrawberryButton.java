@@ -13,7 +13,7 @@ import java.util.concurrent.TimeUnit;
 
 public class StrawberryButton extends IapetusButton {
     public StrawberryButton() {
-        super(Button.primary("strawberry","🍓"));
+        super(Button.primary("strawberry", "🍓"));
     }
 
     @Override
@@ -25,12 +25,12 @@ public class StrawberryButton extends IapetusButton {
         event.editButton(Button.secondary("Strawberry claimed", "✨").asDisabled()).queue();
 
         if (Duration.between(message.getTimeCreated(), OffsetDateTime.now()).toDays() == 0) {
-            message.reply("🍓 **Has been claimed by** %s".formatted(event.getUser().getAsMention()))
-                    .queue(replyMsg -> {
-                        replyMsg.delete().queueAfter(1, TimeUnit.SECONDS);
-                        message.delete().queueAfter(1, TimeUnit.SECONDS);
-                    });
-        } else message.addReaction(Emoji.fromUnicode("✅")).queue(success -> message.delete().queueAfter(1, TimeUnit.SECONDS));
+            message.reply("🍓 **Has been claimed by** %s".formatted(event.getUser().getAsMention())).queue(replyMsg -> {
+                replyMsg.delete().queueAfter(1, TimeUnit.SECONDS);
+                message.delete().queueAfter(1, TimeUnit.SECONDS);
+            });
+        } else
+            message.addReaction(Emoji.fromUnicode("✅")).queue(success -> message.delete().queueAfter(1, TimeUnit.SECONDS));
 
         Database.giveBerries(event.getUser(), 1);
     }

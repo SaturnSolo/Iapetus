@@ -10,11 +10,10 @@ import org.example.structures.IapetusCommand;
 
 public class GiveCommand extends IapetusCommand {
     public GiveCommand() {
-        super(Commands.slash("give","give berries to user")
-                .addOption(OptionType.MENTIONABLE, "mention", "who to give berries to", true)
-                .addOption(OptionType.INTEGER, "give", "number of berries to give", true)
+        super(Commands.slash("give", "give berries to user").addOption(OptionType.MENTIONABLE, "mention", "who to give berries to", true).addOption(OptionType.INTEGER, "give", "number of berries to give", true)
         );
     }
+
     @Override
     public boolean runCommand(SlashCommandInteractionEvent event) {
         String sourceUserId = event.getUser().getId();

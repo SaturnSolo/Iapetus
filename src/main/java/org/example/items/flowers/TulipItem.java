@@ -13,7 +13,7 @@ public class TulipItem extends Item {
 
     @Override
     public boolean use(SlashCommandInteractionEvent event) {
-        event.reply( event.getUser().getAsMention() + "** has eaten " + this.getString(true)+ "**").queue();
+        event.reply(event.getUser().getAsMention() + "** has eaten " + this.getString(true) + "**").queue();
         return true;
     }
 }

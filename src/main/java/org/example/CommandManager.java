@@ -33,6 +33,7 @@ public class CommandManager extends ListenerAdapter {
     public void addCommands(List<IapetusCommand> commands) {
         commands.forEach(command -> this.commands.put(command.getName(), command));
     }
+
     public void addCommands(IapetusCommand... commands) {
         addCommands(Arrays.asList(commands));
     }
@@ -40,6 +41,7 @@ public class CommandManager extends ListenerAdapter {
     public Map<String, IapetusCommand> getCommands() {
         return this.commands;
     }
+
     public IapetusCommand getCommand(String name) {
         return this.commands.get(name);
     }

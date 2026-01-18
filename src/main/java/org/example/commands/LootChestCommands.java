@@ -31,11 +31,7 @@ public class LootChestCommands extends IapetusCommand {
             Database.logLootInDatabase(userId, loot);
 
             itemMgr.takeItem(userId, "key");
-            MessageEmbed embed = new EmbedBuilder()
-                    .setTitle("Opening a chest")
-                    .setDescription("You opened a chest and got: 5 berries and %s".formatted(loot))
-                    .setColor(IapetusColor.RED)
-                    .build();
+            MessageEmbed embed = new EmbedBuilder().setTitle("Opening a chest").setDescription("You opened a chest and got: 5 berries and %s".formatted(loot)).setColor(IapetusColor.RED).build();
 
             Database.giveBerries(userId, 5);
             itemMgr.giveItem(userId, loot);

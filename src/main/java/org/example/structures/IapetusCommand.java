@@ -16,16 +16,19 @@ public abstract class IapetusCommand extends ListenerAdapter {
         this.description = description;
         this.data = data;
     }
+
     public IapetusCommand(String name, String description) {
         this.name = name;
         this.description = description;
         this.data = getSlash();
     }
+
     public IapetusCommand(SlashCommandData data) {
         this.name = data.getName();
         this.description = data.getDescription();
         this.data = data;
     }
+
     public abstract boolean runCommand(SlashCommandInteractionEvent event);
 //    {
 //        event.reply("This command hasn't been created yet.").queue();
@@ -35,6 +38,7 @@ public abstract class IapetusCommand extends ListenerAdapter {
     public String getName() {
         return this.name;
     }
+
     public String getDescription() {
         return this.description;
     }

@@ -14,14 +14,13 @@ import org.example.utils.MemberUtils;
 public class RemoveIgnoreCommand extends IapetusCommand {
 
     public RemoveIgnoreCommand() {
-        super(Commands.slash("remove-ignore", "remove from ignored channels")
-          .addOption(OptionType.CHANNEL, "channel", "choose channels for to remove from ignored", true));
+        super(Commands.slash("remove-ignore", "remove from ignored channels").addOption(OptionType.CHANNEL, "channel", "choose channels for to remove from ignored", true));
     }
 
     @Override
     public boolean runCommand(SlashCommandInteractionEvent event) {
         Guild guild = event.getGuild();
-        if(guild == null) {
+        if (guild == null) {
             event.reply("This command can only be used in a server.").queue();
             return true;
         }

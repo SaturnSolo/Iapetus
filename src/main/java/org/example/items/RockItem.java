@@ -14,6 +14,7 @@ import java.util.Random;
 public class RockItem extends Item {
     private final ButtonManager buttonMgr;
     private final Random rng;
+
     public RockItem(ButtonManager buttonMgr, Random rng) {
         super("Rock", "It's a rock", "rock", Emoji.fromUnicode("\uD83E\uDEA8"), 0);
         this.buttonMgr = buttonMgr;
@@ -23,23 +24,21 @@ public class RockItem extends Item {
     @Override
     public boolean use(SlashCommandInteractionEvent event) {
         buttonMgr.addButtons(
-            new RPSButton("rock", "\uD83E\uDEA8"),
-            new RPSButton("paper", "🗞"),
-            new RPSButton("scissors", "✂")
+                new RPSButton("rock", "\uD83E\uDEA8"), new RPSButton("paper", "🗞"), new RPSButton("scissors", "✂")
         );
 
         event.reply("**Rock, paper, or scissors?**").addComponents(ActionRow.of(buttonMgr.getButton("rock"), buttonMgr.getButton("paper"), buttonMgr.getButton("scissors"))).queue();
         return false;
     }
+
     private class RPSButton extends IapetusButton {
         private final String selection;
 
         private enum Emojis {
-            ROCK(Emoji.fromUnicode("\uD83E\uDEA8")),
-            PAPER(Emoji.fromUnicode("🗞")),
-            SCISSORS(Emoji.fromUnicode("✂"));
+            ROCK(Emoji.fromUnicode("\uD83E\uDEA8")), PAPER(Emoji.fromUnicode("🗞")), SCISSORS(Emoji.fromUnicode("✂"));
 
             private final Emoji emoji;
+
             Emojis(UnicodeEmoji emoji) {
                 this.emoji = emoji;
             }
@@ -48,10 +47,12 @@ public class RockItem extends Item {
                 return emoji.getFormatted();
             }
         }
+
         public RPSButton(String type, String emoji) {
             super(Button.primary(type, Emoji.fromUnicode(emoji)));
             selection = type;
         }
+
         @Override
         public void run(ButtonInteractionEvent event) {
             String computer = selectRandom("rock", "paper", "scissors");
@@ -80,7 +81,7 @@ public class RockItem extends Item {
 
             // PLAYER DRAWS
             if (result == 0) {
-            event.reply("**You both chose** " + Emojis.valueOf(selection.toUpperCase()).get() + "\n **it's a draw!**").queue();
+                event.reply("**You both chose** " + Emojis.valueOf(selection.toUpperCase()).get() + "\n **it's a draw!**").queue();
             }
             // PLAYER WINS
             if (result == 1) {

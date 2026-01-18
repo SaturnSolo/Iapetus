@@ -23,26 +23,19 @@ public class ShopCommand extends IapetusCommand {
 
         // create the buttons, this lets the ButtonManager know what to run when a button with the id is clicked.
         buttonMgr.addButtons(
-          new ShopButton("egg", new EggItem(), 5),
-          new ShopButton("rose", new RoseItem(), 10),
-          new ShopButton("tulip", new TulipItem(), 10),
-          new ShopButton("cherry_blossom", new CherryBlossomItem(), 15)
+                new ShopButton("egg", new EggItem(), 5), new ShopButton("rose", new RoseItem(), 10), new ShopButton("tulip", new TulipItem(), 10), new ShopButton("cherry_blossom", new CherryBlossomItem(), 15)
         );
 
     }
 
     @Override
     public boolean runCommand(SlashCommandInteractionEvent event) {
-        MessageEmbed embed = new EmbedBuilder()
-                .setTitle("Welcome to the Shop!")
-                .setDescription("""
-                        **`A shiny egg it seems to be glowing` **🥚 - 🍓5
-                        **`Surprisingly no thorns`** 🌹 - 🍓10
-                        **`A pretty tulip`** 🌷 - 🍓10
-                        **`Sakura Cherry Blossoms Pretty`** 🌸 - 🍓15"""
-                )
-                .setColor(IapetusColor.PINK)
-                .build();
+        MessageEmbed embed = new EmbedBuilder().setTitle("Welcome to the Shop!").setDescription("""
+                **`A shiny egg it seems to be glowing` **🥚 - 🍓5
+                **`Surprisingly no thorns`** 🌹 - 🍓10
+                **`A pretty tulip`** 🌷 - 🍓10
+                **`Sakura Cherry Blossoms Pretty`** 🌸 - 🍓15"""
+        ).setColor(IapetusColor.PINK).build();
 
         // fetch each button from the button manager.
         Button eggButton = buttonMgr.getButton("egg");

@@ -16,10 +16,8 @@ public class UseItemCommand extends IapetusCommand {
     private final ItemManager itemMgr;
 
     public UseItemCommand(ItemManager itemMgr) {
-        super(Commands.slash("use", "to use an item")
-            .addOptions(new OptionData(OptionType.STRING, "item", "use item", true)
-              .addChoices(getChoices(itemMgr))
-            )
+        super(Commands.slash("use", "to use an item").addOptions(new OptionData(OptionType.STRING, "item", "use item", true).addChoices(getChoices(itemMgr))
+        )
         );
 
         this.itemMgr = itemMgr;
@@ -31,7 +29,7 @@ public class UseItemCommand extends IapetusCommand {
         String userId = event.getUser().getId();
 
         if (!itemMgr.hasItem(userId, choice)) {
-            event.reply( "**You don't have this item in your inventory.**").setEphemeral(true).queue();
+            event.reply("**You don't have this item in your inventory.**").setEphemeral(true).queue();
             return true;
         }
         Item item = itemMgr.getItem(choice);
@@ -41,7 +39,7 @@ public class UseItemCommand extends IapetusCommand {
 
     private static Collection<Command.Choice> getChoices(ItemManager itemMgr) {
         Collection<Command.Choice> choices = new ArrayList<>();
-        itemMgr.getItems().forEach((id, item) -> choices.add(new Command.Choice(item.getString(true),id)));
+        itemMgr.getItems().forEach((id, item) -> choices.add(new Command.Choice(item.getString(true), id)));
         return choices;
     }
 }

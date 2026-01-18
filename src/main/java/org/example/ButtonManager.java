@@ -24,11 +24,19 @@ public class ButtonManager extends ListenerAdapter {
     public IapetusButton getIapetusButton(String id) {
         return this.buttons.get(id);
     }
+
     public Button getButton(String id) {
         return getIapetusButton(id).getButton();
     }
-    public boolean buttonExists(String id) { return getIapetusButton(id) != null; }
-    public void addButtons(IapetusButton... buttons) { Arrays.stream(buttons).forEach(button -> this.buttons.put(button.getId(), button)); }
+
+    public boolean buttonExists(String id) {
+        return getIapetusButton(id) != null;
+    }
+
+    public void addButtons(IapetusButton... buttons) {
+        Arrays.stream(buttons).forEach(button -> this.buttons.put(button.getId(), button));
+    }
+
     public Map<String, IapetusButton> getButtons() {
         return this.buttons;
     }

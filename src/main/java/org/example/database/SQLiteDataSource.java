@@ -1,4 +1,5 @@
 package org.example.database;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import com.zaxxer.hikari.HikariConfig;
@@ -42,62 +43,26 @@ public class SQLiteDataSource {
         config.setMinimumIdle(5);
         ds = new HikariDataSource(config);
 
-        try (final Connection connection = getConnection();
-             final Statement statement = connection.createStatement()) {
+        try (final Connection connection = getConnection(); final Statement statement = connection.createStatement()) {
 
-            statement.execute("CREATE TABLE IF NOT EXISTS guild_settings (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "guild_id VARCHAR(20) NOT NULL," +
-                    "prefix VARCHAR(255) NOT NULL DEFAULT 'i!'" +
-                    ");");
+            statement.execute("CREATE TABLE IF NOT EXISTS guild_settings (" + "id INTEGER PRIMARY KEY AUTOINCREMENT," + "guild_id VARCHAR(20) NOT NULL," + "prefix VARCHAR(255) NOT NULL DEFAULT 'i!'" + ");");
 
-            statement.execute("CREATE TABLE IF NOT EXISTS user_berries (" +
-                    "user_id VARCHAR(20) PRIMARY KEY," +
-                    "berry_count INTEGER NOT NULL DEFAULT 0" +
-                    ");");
+            statement.execute("CREATE TABLE IF NOT EXISTS user_berries (" + "user_id VARCHAR(20) PRIMARY KEY," + "berry_count INTEGER NOT NULL DEFAULT 0" + ");");
 
-            statement.execute("CREATE TABLE IF NOT EXISTS ignored_channels (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "guild_id VARCHAR(20) NOT NULL," +
-                    "channel_id VARCHAR(20) NOT NULL" +
-                    ");");
+            statement.execute("CREATE TABLE IF NOT EXISTS ignored_channels (" + "id INTEGER PRIMARY KEY AUTOINCREMENT," + "guild_id VARCHAR(20) NOT NULL," + "channel_id VARCHAR(20) NOT NULL" + ");");
 
-            statement.execute("CREATE TABLE IF NOT EXISTS inventory (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "user_id VARCHAR(20) NOT NULL," +
-                    "item_name VARCHAR(100) NOT NULL" +
-                    ");");
+            statement.execute("CREATE TABLE IF NOT EXISTS inventory (" + "id INTEGER PRIMARY KEY AUTOINCREMENT," + "user_id VARCHAR(20) NOT NULL," + "item_name VARCHAR(100) NOT NULL" + ");");
 
-            statement.execute("CREATE TABLE IF NOT EXISTS items (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "name VARCHAR(100) NOT NULL," +
-                    "price INTEGER NOT NULL" +
-                    ");");
+            statement.execute("CREATE TABLE IF NOT EXISTS items (" + "id INTEGER PRIMARY KEY AUTOINCREMENT," + "name VARCHAR(100) NOT NULL," + "price INTEGER NOT NULL" + ");");
 
 
-            statement.execute("CREATE TABLE IF NOT EXISTS hatch_log (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "user_id VARCHAR(20) NOT NULL," +
-                    "pet VARCHAR(100) NOT NULL" +
-                    ");");
+            statement.execute("CREATE TABLE IF NOT EXISTS hatch_log (" + "id INTEGER PRIMARY KEY AUTOINCREMENT," + "user_id VARCHAR(20) NOT NULL," + "pet VARCHAR(100) NOT NULL" + ");");
 
-            statement.execute("CREATE TABLE IF NOT EXISTS key_log (" +
-                    "id INTEGER PRIMARY KEY AUTOINCREMENT," +
-                    "user_id VARCHAR(20) NOT NULL," +
-                    "loot VARCHAR(100) NOT NULL" +
-                    ");");
+            statement.execute("CREATE TABLE IF NOT EXISTS key_log (" + "id INTEGER PRIMARY KEY AUTOINCREMENT," + "user_id VARCHAR(20) NOT NULL," + "loot VARCHAR(100) NOT NULL" + ");");
 
-            statement.execute("CREATE TABLE IF NOT EXISTS user_guilds (" +
-                    "user_id VARCHAR(20) NOT NULL," +
-                    "guild_id VARCHAR(20) NOT NULL," +
-                    "PRIMARY KEY (user_id, guild_id)" +
-                    ");");
+            statement.execute("CREATE TABLE IF NOT EXISTS user_guilds (" + "user_id VARCHAR(20) NOT NULL," + "guild_id VARCHAR(20) NOT NULL," + "PRIMARY KEY (user_id, guild_id)" + ");");
 
-            statement.execute("CREATE TABLE IF NOT EXISTS daily_claims (" +
-                    "user_id VARCHAR(20) NOT NULL," +
-                    "last_claim INTEGER NOT NULL," +
-                    "PRIMARY KEY (user_id)" +
-                    ");");
+            statement.execute("CREATE TABLE IF NOT EXISTS daily_claims (" + "user_id VARCHAR(20) NOT NULL," + "last_claim INTEGER NOT NULL," + "PRIMARY KEY (user_id)" + ");");
 
         } catch (SQLException e) {
             e.printStackTrace();

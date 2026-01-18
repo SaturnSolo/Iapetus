@@ -24,11 +24,7 @@ public class PetMenuCommand extends IapetusCommand {
             return true;
         }
 
-        MessageEmbed embed = new EmbedBuilder()
-                .setTitle("Hatched Pets")
-                .setDescription(String.join("\n", petList))
-                .setColor(IapetusColor.RED)
-                .build();
+        MessageEmbed embed = new EmbedBuilder().setTitle("Hatched Pets").setDescription(String.join("\n", petList)).setColor(IapetusColor.RED).build();
 
         event.replyEmbeds(embed).queue();
         return true;

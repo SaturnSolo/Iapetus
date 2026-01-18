@@ -12,14 +12,13 @@ import org.example.utils.MemberUtils;
 
 public class IgnoreChannelCommand extends IapetusCommand {
     public IgnoreChannelCommand() {
-        super(Commands.slash("ignore-channel", "ignore channels")
-          .addOption(OptionType.CHANNEL, "channel", "choose channels for to ignore", true));
+        super(Commands.slash("ignore-channel", "ignore channels").addOption(OptionType.CHANNEL, "channel", "choose channels for to ignore", true));
     }
 
     @Override
     public boolean runCommand(SlashCommandInteractionEvent event) {
         Guild guild = event.getGuild();
-        if(guild == null) {
+        if (guild == null) {
             event.reply("This command can only be used in a server.").queue();
             return true;
         }

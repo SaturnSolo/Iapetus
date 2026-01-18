@@ -13,10 +13,7 @@ public class ComCommands extends IapetusCommand {
 
     @Override
     public boolean runCommand(SlashCommandInteractionEvent event) {
-        MessageEmbed embed = new EmbedBuilder()
-            .setTitle("**Iapetus Commands**")
-            .setDescription("Error 404: Message missing!")
-            .setDescription("""
+        MessageEmbed embed = new EmbedBuilder().setTitle("**Iapetus Commands**").setDescription("Error 404: Message missing!").setDescription("""
                 **Need help with commands or wondering what the commands are and what they do? I am here to help you!**\s
                 \s
                 **`Fun commands`**\s
@@ -40,10 +37,7 @@ public class ComCommands extends IapetusCommand {
                 **/ignore-channel** ignores a certain channel for berry drops\s
                 **/list-ignored** lists ignored channels\s
                 **/remove-ignore** removes an ignored channel for berry drops\s"""
-            )
-            .setColor(IapetusColor.LILA)
-            .setThumbnail("https://media.discordapp.net/attachments/1274910028888932402/1275871665603088465/iapetusnobackground.png?ex=66c77795&is=66c62615&hm=dd21eb064d66624006faed7bbab8435dbb030cdd2fa3847bcbe2557df9100ba8&=&format=webp&quality=lossless")
-            .build();
+        ).setColor(IapetusColor.LILA).setThumbnail("https://media.discordapp.net/attachments/1274910028888932402/1275871665603088465/iapetusnobackground.png?ex=66c77795&is=66c62615&hm=dd21eb064d66624006faed7bbab8435dbb030cdd2fa3847bcbe2557df9100ba8&=&format=webp&quality=lossless").build();
 
         event.replyEmbeds(embed).queue();
         return true;

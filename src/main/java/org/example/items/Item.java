@@ -29,16 +29,17 @@ public abstract class Item {
 
         this.icon = icon;
         this.cost = cost;
-        buyButton = new ShopButton(id,this,cost);
+        buyButton = new ShopButton(id, this, cost);
 
         Item.itemMgr.addItem(this);
     }
 
     public Item(String name, String description, String id, Emoji icon) {
-        this(name,description,id,icon,0);
+        this(name, description, id, icon, 0);
     }
+
     public Item(String name, String description, String id) {
-        this(name,description,id,null,0);
+        this(name, description, id, null, 0);
     }
 
 
@@ -47,23 +48,28 @@ public abstract class Item {
     public String getString() {
         return getString(false);
     }
+
     public String getString(boolean reverse) {
-        if(reverse) return "%s %s".formatted(name, getIcon());
+        if (reverse) return "%s %s".formatted(name, getIcon());
         return "%s %s".formatted(getIcon(), name);
     }
 
     public String getName() {
         return name;
     }
+
     public String getDescription() {
         return description;
     }
+
     public Emoji getIconEmoji() {
         return icon;
     }
+
     public String getIcon() {
         return getIconEmoji().getFormatted();
     }
+
     public String getId() {
         return id;
     }

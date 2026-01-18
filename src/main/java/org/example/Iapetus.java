@@ -71,28 +71,10 @@ public class Iapetus {
 
         // Add stuff to the respective managers
         buttonMgr.addButtons(
-            new StrawberryButton()
+                new StrawberryButton()
         );
         commandMgr.addCommands(
-            new PingCommand(),
-            new BonkCommand(),
-            new RandomCommand(rng),
-            new ShopCommand(buttonMgr),
-            new InventoryCommand(),
-            new BerriesCommand(),
-            new PetMenuCommand(),
-            new HatchCommand(itemMgr, rng),
-            new IgnoreChannelCommand(),
-            new RemoveIgnoreCommand(),
-            new ListIgnoredCommand(),
-            new HelpCommand(buttonMgr),
-            new UseItemCommand(itemMgr),
-            new AdventureCommands(buttonMgr, itemMgr, rng),
-            new LootChestCommands(itemMgr, rng),
-            new GiveCommand(),
-            new ComCommands(),
-            new TopBerriesCommand(),
-            new DailyCommand()
+                new PingCommand(), new BonkCommand(), new RandomCommand(rng), new ShopCommand(buttonMgr), new InventoryCommand(), new BerriesCommand(), new PetMenuCommand(), new HatchCommand(itemMgr, rng), new IgnoreChannelCommand(), new RemoveIgnoreCommand(), new ListIgnoredCommand(), new HelpCommand(buttonMgr), new UseItemCommand(itemMgr), new AdventureCommands(buttonMgr, itemMgr, rng), new LootChestCommands(itemMgr, rng), new GiveCommand(), new ComCommands(), new TopBerriesCommand(), new DailyCommand()
         );
 
         builder.addEventListeners(commandMgr, buttonMgr, new DropHandler(), new TextResponses(rng), new InteractionLogger());
@@ -101,7 +83,7 @@ public class Iapetus {
     }
 
     public static void main(String[] args) {
-        if(INSTANCE == null) INSTANCE = new Iapetus();
+        if (INSTANCE == null) INSTANCE = new Iapetus();
     }
 
 

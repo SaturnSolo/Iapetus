@@ -4,40 +4,41 @@ import net.dv8tion.jda.api.components.buttons.Button;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 
 
-/** Represents a button to the <b>ButtonManager</b> class. <br><br>
+/**
+ * Represents a button to the <b>ButtonManager</b> class. <br><br>
  *
  * <h3>Anonymous implementation:</h3>
  * <pre>{@code
  * // example of an anonymous button implementation.
  *  const bm = Main.buttonManager;
  *  bm.addButtons(new IapetusButton("id")) {
- *      @Override
- *      public void run(ButtonInteractionEvent event) {
- *          event.reply("example").queue();
- *      }
- *  })
- *  }</pre>
- *  <h3>Subclass implementation:</h3>
+ * @Override
+ * public void run(ButtonInteractionEvent event) {
+ * event.reply("example").queue();
+ * }
+ * })
+ * }</pre>
+ * <h3>Subclass implementation:</h3>
  * <pre>{@code
  * // example of a defined subclass
  *  public class ExampleButton extends IapetusButton {
  *      public ExampleButton() {
  *          super("id")
- *      }
+ * }
  *
- *      @Override
- *      public void run (ButtonInteractionEvent event) {
- *          String response = exampleFunction();
- *          event.reply(response).queue();
- *      }
+ * @Override
+ * public void run (ButtonInteractionEvent event) {
+ * String response = exampleFunction();
+ * event.reply(response).queue();
+ * }
  *
- *      private String exampleFunction() {
- *          return "example response!";
- *      }
- *  }
- *  }</pre>
+ * private String exampleFunction() {
+ * return "example response!";
+ * }
+ * }
+ * }</pre>
  *
- *  <pre>{@code
+ * <pre>{@code
  *  // put this somewhere where it'll run on startup:
  *  const bm = Main.buttonManager;
  *  bm.addButtons(new ExampleButton());
@@ -60,6 +61,7 @@ public abstract class IapetusButton {
     }
 
     public abstract void run(ButtonInteractionEvent event);
+
     public String getId() {
         return id;
     }
