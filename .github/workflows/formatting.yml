@@ -1,0 +1,50 @@
+name: formatting.yml
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  format:
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: '0'
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: zulu
+          java-version: 21
+
+      - name: Make gradlew executable
+        run: chmod +x gradlew
+
+      - name: Run linter check
+        id: spotless
+        run: ./gradlew spotlessCheck --no-daemon
+        continue-on-error: true
+
+      - name: Apply formatting
+        if: steps.spotless.outcome == 'failure'
+        run: ./gradlew spotlessApply --no-daemon
+
+      - name: Commit formatting changes
+        if: steps.spotless.outcome == 'failure'
+        run: | 
+          git config user.name "github-actions" 
+          git config user.email "github-actions@github.com" 
+          git add . 
+          git commit -m "Apply Spotless formatting" 
+          git push
+
+      - name: Fail if formatting was required
+        if: steps.spotless.outcome == 'failure'
+        run: exit 1

@@ -1,6 +1,7 @@
 plugins {
     id("java")
     alias(libs.plugins.shadow)
+    alias(libs.plugins.spotless)
     application
 }
 
@@ -17,6 +18,12 @@ dependencies {
     implementation(libs.junitjupiter)
     implementation(libs.hikari)
     implementation(libs.sqlite)
+}
+
+spotless {
+    java {
+        eclipse().configFile("config/editorconfig.xml")
+    }
 }
 
 java {

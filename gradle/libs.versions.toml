@@ -1,5 +1,6 @@
 [versions]
 shadow = "9.0.0-beta17"
+spotless = "8.1.0"
 
 jda = "6.3.0"
 logback = "1.5.24"
@@ -18,3 +19,4 @@ sqlite = { group = "org.xerial", name = "sqlite-jdbc", version.ref = "sqlite" }
 
 [plugins]
 shadow = { id = "com.gradleup.shadow", version.ref = "shadow" }
+spotless = { id = "com.diffplug.spotless", version.ref = "spotless" }
