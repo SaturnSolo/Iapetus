@@ -6,13 +6,13 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import java.lang.reflect.Member;
 
 public class InvalidItem extends Item {
-    public InvalidItem(String name) {
-        super(name, "a mysterious item... it hasn't been registered", "invaliditem-" + name, Emoji.fromUnicode("❓"));
-    }
+	public InvalidItem(String name) {
+		super(name, "a mysterious item... it hasn't been registered", "invaliditem-" + name, Emoji.fromUnicode("❓"));
+	}
 
-    @Override
-    public boolean use(SlashCommandInteractionEvent event) {
-        return false;
-        // something later
-    }
+	@Override
+	public boolean use(SlashCommandInteractionEvent event) {
+		return false;
+		// something later
+	}
 }

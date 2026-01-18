@@ -5,13 +5,13 @@ import org.example.database.Database;
 import org.example.structures.IapetusCommand;
 
 public class BerriesCommand extends IapetusCommand {
-    public BerriesCommand() {
-        super("berries", "shows the amount of berries you have");
-    }
+	public BerriesCommand() {
+		super("berries", "shows the amount of berries you have");
+	}
 
-    @Override
-    public boolean runCommand(SlashCommandInteractionEvent event) {
-        event.reply("**You have %d berries** 🍓".formatted(Database.getBerryAmount(event.getUser()))).queue();
-        return true;
-    }
+	@Override
+	public boolean runCommand(SlashCommandInteractionEvent event) {
+		event.reply("**You have %d berries** 🍓".formatted(Database.getBerryAmount(event.getUser()))).queue();
+		return true;
+	}
 }

@@ -15,36 +15,37 @@ import org.example.structures.IapetusCommand;
 import org.example.utils.IapetusColor;
 
 public class ShopCommand extends IapetusCommand {
-    private final ButtonManager buttonMgr;
+	private final ButtonManager buttonMgr;
 
-    public ShopCommand(ButtonManager buttonMgr) {
-        super("shop", "open the shop menu");
-        this.buttonMgr = buttonMgr;
+	public ShopCommand(ButtonManager buttonMgr) {
+		super("shop", "open the shop menu");
+		this.buttonMgr = buttonMgr;
 
-        // create the buttons, this lets the ButtonManager know what to run when a button with the id is clicked.
-        buttonMgr.addButtons(
-                new ShopButton("egg", new EggItem(), 5), new ShopButton("rose", new RoseItem(), 10), new ShopButton("tulip", new TulipItem(), 10), new ShopButton("cherry_blossom", new CherryBlossomItem(), 15)
-        );
+		// create the buttons, this lets the ButtonManager know what to run when a
+		// button with the id is clicked.
+		buttonMgr.addButtons(new ShopButton("egg", new EggItem(), 5), new ShopButton("rose", new RoseItem(), 10),
+				new ShopButton("tulip", new TulipItem(), 10),
+				new ShopButton("cherry_blossom", new CherryBlossomItem(), 15));
 
-    }
+	}
 
-    @Override
-    public boolean runCommand(SlashCommandInteractionEvent event) {
-        MessageEmbed embed = new EmbedBuilder().setTitle("Welcome to the Shop!").setDescription("""
-                **`A shiny egg it seems to be glowing` **🥚 - 🍓5
-                **`Surprisingly no thorns`** 🌹 - 🍓10
-                **`A pretty tulip`** 🌷 - 🍓10
-                **`Sakura Cherry Blossoms Pretty`** 🌸 - 🍓15"""
-        ).setColor(IapetusColor.PINK).build();
+	@Override
+	public boolean runCommand(SlashCommandInteractionEvent event) {
+		MessageEmbed embed = new EmbedBuilder().setTitle("Welcome to the Shop!").setDescription("""
+				**`A shiny egg it seems to be glowing` **🥚 - 🍓5
+				**`Surprisingly no thorns`** 🌹 - 🍓10
+				**`A pretty tulip`** 🌷 - 🍓10
+				**`Sakura Cherry Blossoms Pretty`** 🌸 - 🍓15""").setColor(IapetusColor.PINK).build();
 
-        // fetch each button from the button manager.
-        Button eggButton = buttonMgr.getButton("egg");
-        Button roseButton = buttonMgr.getButton("rose");
-        Button tulipButton = buttonMgr.getButton("tulip");
-        Button cherryBlossomButton = buttonMgr.getButton("cherry_blossom");
+		// fetch each button from the button manager.
+		Button eggButton = buttonMgr.getButton("egg");
+		Button roseButton = buttonMgr.getButton("rose");
+		Button tulipButton = buttonMgr.getButton("tulip");
+		Button cherryBlossomButton = buttonMgr.getButton("cherry_blossom");
 
-        // Send the initial message with buttons
-        event.replyEmbeds(embed).addComponents(ActionRow.of(eggButton, roseButton, tulipButton, cherryBlossomButton)).queue();
-        return true;
-    }
+		// Send the initial message with buttons
+		event.replyEmbeds(embed).addComponents(ActionRow.of(eggButton, roseButton, tulipButton, cherryBlossomButton))
+				.queue();
+		return true;
+	}
 }

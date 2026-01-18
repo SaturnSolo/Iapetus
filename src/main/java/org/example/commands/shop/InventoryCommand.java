@@ -12,25 +12,26 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 public class InventoryCommand extends IapetusCommand {
-    public InventoryCommand() {
-        super("inventory", "opens your inventory");
-    }
+	public InventoryCommand() {
+		super("inventory", "opens your inventory");
+	}
 
-    @Override
-    public boolean runCommand(SlashCommandInteractionEvent event) {
-        String userId = event.getUser().getId();
+	@Override
+	public boolean runCommand(SlashCommandInteractionEvent event) {
+		String userId = event.getUser().getId();
 
-        Inventory inventory = Database.getUserInventory(userId);
-        EmbedBuilder embed = new EmbedBuilder().setTitle("Inventory").setColor(IapetusColor.BODY).setDescription(inventory.isEmpty() ? "Your inventory is empty." : "");
+		Inventory inventory = Database.getUserInventory(userId);
+		EmbedBuilder embed = new EmbedBuilder().setTitle("Inventory").setColor(IapetusColor.BODY)
+				.setDescription(inventory.isEmpty() ? "Your inventory is empty." : "");
 
-        // Quantity map
-        Map<Item, Integer> itemCounts = inventory.getItems().stream().collect(Collectors.groupingBy(
-                item -> item, Collectors.summingInt(item -> 1)
-        ));
+		// Quantity map
+		Map<Item, Integer> itemCounts = inventory.getItems().stream()
+				.collect(Collectors.groupingBy(item -> item, Collectors.summingInt(item -> 1)));
 
-        itemCounts.forEach((item, count) -> embed.addField(item.getString(), "> " + item.getDescription() + "\nQuantity: %d".formatted(count), true));
-        event.replyEmbeds(embed.build()).queue();
+		itemCounts.forEach((item, count) -> embed.addField(item.getString(),
+				"> " + item.getDescription() + "\nQuantity: %d".formatted(count), true));
+		event.replyEmbeds(embed.build()).queue();
 
-        return true;
-    }
+		return true;
+	}
 }

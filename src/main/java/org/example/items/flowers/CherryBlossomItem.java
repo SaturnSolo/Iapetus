@@ -8,13 +8,13 @@ import java.lang.reflect.Member;
 
 public class CherryBlossomItem extends Item {
 
-    public CherryBlossomItem() {
-        super("Cherry Blossom", "very pretty.", "cherry_blossom", Emoji.fromUnicode("🌸"), 15);
-    }
+	public CherryBlossomItem() {
+		super("Cherry Blossom", "very pretty.", "cherry_blossom", Emoji.fromUnicode("🌸"), 15);
+	}
 
-    @Override
-    public boolean use(SlashCommandInteractionEvent event) {
-        event.reply(event.getUser().getAsMention() + "** has eaten " + this.getString(true) + "**").queue();
-        return true;
-    }
+	@Override
+	public boolean use(SlashCommandInteractionEvent event) {
+		event.reply(event.getUser().getAsMention() + "** has eaten " + this.getString(true) + "**").queue();
+		return true;
+	}
 }

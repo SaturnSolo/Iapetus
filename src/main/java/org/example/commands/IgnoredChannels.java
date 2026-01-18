@@ -56,7 +56,9 @@ public class IgnoredChannels extends IapetusCommand {
 						}
 
 						case 0 -> event.reply("**This channel wasn't ignored.**").setEphemeral(true).queue();
-						default -> event.reply("%s **has been removed from ignored channels.**".formatted(channel.getAsMention())).setEphemeral(true).queue();
+						default -> event.reply(
+								"%s **has been removed from ignored channels.**".formatted(channel.getAsMention()))
+								.setEphemeral(true).queue();
 					}
 				}
 

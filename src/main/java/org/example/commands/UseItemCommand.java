@@ -13,33 +13,33 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class UseItemCommand extends IapetusCommand {
-    private final ItemManager itemMgr;
+	private final ItemManager itemMgr;
 
-    public UseItemCommand(ItemManager itemMgr) {
-        super(Commands.slash("use", "to use an item").addOptions(new OptionData(OptionType.STRING, "item", "use item", true).addChoices(getChoices(itemMgr))
-        )
-        );
+	public UseItemCommand(ItemManager itemMgr) {
+		super(Commands.slash("use", "to use an item").addOptions(
+				new OptionData(OptionType.STRING, "item", "use item", true).addChoices(getChoices(itemMgr))));
 
-        this.itemMgr = itemMgr;
-    }
+		this.itemMgr = itemMgr;
+	}
 
-    @Override
-    public boolean runCommand(SlashCommandInteractionEvent event) {
-        String choice = event.getOption("item").getAsString(); // NPE is impossible
-        String userId = event.getUser().getId();
+	@Override
+	public boolean runCommand(SlashCommandInteractionEvent event) {
+		String choice = event.getOption("item").getAsString(); // NPE is impossible
+		String userId = event.getUser().getId();
 
-        if (!itemMgr.hasItem(userId, choice)) {
-            event.reply("**You don't have this item in your inventory.**").setEphemeral(true).queue();
-            return true;
-        }
-        Item item = itemMgr.getItem(choice);
-        if (item.use(event)) itemMgr.takeItem(userId, choice);
-        return true;
-    }
+		if (!itemMgr.hasItem(userId, choice)) {
+			event.reply("**You don't have this item in your inventory.**").setEphemeral(true).queue();
+			return true;
+		}
+		Item item = itemMgr.getItem(choice);
+		if (item.use(event))
+			itemMgr.takeItem(userId, choice);
+		return true;
+	}
 
-    private static Collection<Command.Choice> getChoices(ItemManager itemMgr) {
-        Collection<Command.Choice> choices = new ArrayList<>();
-        itemMgr.getItems().forEach((id, item) -> choices.add(new Command.Choice(item.getString(true), id)));
-        return choices;
-    }
+	private static Collection<Command.Choice> getChoices(ItemManager itemMgr) {
+		Collection<Command.Choice> choices = new ArrayList<>();
+		itemMgr.getItems().forEach((id, item) -> choices.add(new Command.Choice(item.getString(true), id)));
+		return choices;
+	}
 }

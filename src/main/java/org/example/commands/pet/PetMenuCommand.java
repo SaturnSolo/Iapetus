@@ -10,23 +10,24 @@ import org.example.utils.IapetusColor;
 import java.util.List;
 
 public class PetMenuCommand extends IapetusCommand {
-    public PetMenuCommand() {
-        super("pets", "shows a list of your pets");
-    }
+	public PetMenuCommand() {
+		super("pets", "shows a list of your pets");
+	}
 
-    @Override
-    public boolean runCommand(SlashCommandInteractionEvent event) {
-        String userId = event.getUser().getId();
-        List<String> petList = Database.getHatchedPets(userId);
+	@Override
+	public boolean runCommand(SlashCommandInteractionEvent event) {
+		String userId = event.getUser().getId();
+		List<String> petList = Database.getHatchedPets(userId);
 
-        if (petList.isEmpty()) {
-            event.reply("You don't have any hatched pets yet.").queue();
-            return true;
-        }
+		if (petList.isEmpty()) {
+			event.reply("You don't have any hatched pets yet.").queue();
+			return true;
+		}
 
-        MessageEmbed embed = new EmbedBuilder().setTitle("Hatched Pets").setDescription(String.join("\n", petList)).setColor(IapetusColor.RED).build();
+		MessageEmbed embed = new EmbedBuilder().setTitle("Hatched Pets").setDescription(String.join("\n", petList))
+				.setColor(IapetusColor.RED).build();
 
-        event.replyEmbeds(embed).queue();
-        return true;
-    }
+		event.replyEmbeds(embed).queue();
+		return true;
+	}
 }
