@@ -22,7 +22,7 @@ dependencies {
 
 spotless {
     java {
-        eclipse().configFile("config/editorconfig.xml")
+        eclipse().configFile(project.rootDir.resolve("config/editorconfig.xml"))
     }
 }
 
