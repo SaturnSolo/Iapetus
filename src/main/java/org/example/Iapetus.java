@@ -21,6 +21,7 @@ import org.example.events.InteractionLogger;
 import org.example.events.TextResponses;
 import org.example.items.*;
 import org.example.items.PumpkinItem;
+import org.example.structures.IapetusCommand;
 
 import java.security.SecureRandom;
 import java.util.Random;
@@ -51,8 +52,9 @@ public class Iapetus {
 		buttonMgr = new ButtonManager();
 		commandMgr = new CommandManager();
 
-		// Initialize Item
+		// Initialize static fields
 		Item.init(itemMgr);
+		IapetusCommand.init(commandMgr);
 
 		// Set activity (like "playing Something")
 		builder.setActivity(Activity.listening("🍓"));
@@ -73,7 +75,7 @@ public class Iapetus {
 				new InventoryCommand(), new BerriesCommand(), new PetMenuCommand(), new HatchCommand(itemMgr, rng),
 				new IgnoredChannels(), new HelpCommand(buttonMgr), new UseItemCommand(itemMgr),
 				new AdventureCommands(buttonMgr, itemMgr, rng), new LootChestCommands(itemMgr, rng), new GiveCommand(),
-				new ComCommands(), new TopBerriesCommand(), new DailyCommand());
+				new TopBerriesCommand(), new DailyCommand());
 
 		builder.addEventListeners(commandMgr, buttonMgr, new DropHandler(), new TextResponses(rng),
 				new InteractionLogger());

@@ -35,3 +35,7 @@ java {
 application {
     mainClass = "org.example.Iapetus"
 }
+
+tasks.spotlessCheck {
+    dependsOn(tasks.spotlessApply)
+}

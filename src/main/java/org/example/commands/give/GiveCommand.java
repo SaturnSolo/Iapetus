@@ -22,18 +22,18 @@ public class GiveCommand extends IapetusCommand {
 
 		if (transferAmount <= 0) {
 			event.reply("You must specify an amount greater than 0.").setEphemeral(true).queue();
-			return false;
+			return true;
 		}
 
 		if (sourceUserId.equals(targetUserId.getId())) {
 			event.reply("You cannot give berries to yourself.").setEphemeral(true).queue();
-			return false;
+			return true;
 		}
 
 		int totalBerries = Database.getBerryAmount(sourceUserId);
 		if (totalBerries < transferAmount) {
 			event.reply("You do not have enough berries to transfer.").setEphemeral(true).queue();
-			return false;
+			return true;
 		}
 
 		Database.takeBerries(sourceUserId, transferAmount);
