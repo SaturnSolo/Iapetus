@@ -10,7 +10,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.*;
 
 public class CommandManager extends ListenerAdapter {
-	private final Map<String, IapetusCommand> commands = new HashMap<String, IapetusCommand>();
+	private final Map<String, IapetusCommand> commands = new HashMap<>();
 
 	@Override
 	public void onSlashCommandInteraction(@NotNull SlashCommandInteractionEvent event) {
@@ -40,7 +40,7 @@ public class CommandManager extends ListenerAdapter {
 	}
 
 	public Map<String, IapetusCommand> getCommands() {
-		return this.commands;
+		return Collections.unmodifiableMap(this.commands);
 	}
 
 	public IapetusCommand getCommand(String name) {

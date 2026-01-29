@@ -7,15 +7,17 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.example.database.Database;
 
 import java.sql.*;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class DropHandler extends ListenerAdapter {
-	private int messageCount = 0;
+    private final Map<Long, Integer> perChannelMsgCount = new HashMap<>();
 
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
-		if (event.getAuthor().isBot())
+		if (event.getAuthor().isBot() || event.getAuthor().isSystem())
 			return;
 
 		// Retrieve ignored channels from database
@@ -25,12 +27,14 @@ public class DropHandler extends ListenerAdapter {
 		if (ignoredChannels.contains(event.getChannel().getIdLong()))
 			return;
 
-		if (++messageCount == 26) {
-			event.getChannel().sendMessage("**Strawberry Drop!**")
-					.addComponents(ActionRow.of(Button.primary("strawberry", "🍓")))
-					// .flatMap(message -> message.addReaction(Emoji.fromUnicode("🍓")))
-					.queueAfter(1, TimeUnit.SECONDS);
-			messageCount = 0; // reset message count
-		}
+        int channelMsgCount = perChannelMsgCount.getOrDefault(event.getChannel().getIdLong(), 0);
+        if (++channelMsgCount == 26) {
+            event.getChannel().sendMessage("**Strawberry Drop!**")
+                .addComponents(ActionRow.of(Button.primary("strawberry", "🍓")))
+                .queueAfter(1, TimeUnit.SECONDS);
+
+            channelMsgCount = 0;
+        }
+        perChannelMsgCount.put(event.getChannel().getIdLong(), channelMsgCount);
 	}
 }

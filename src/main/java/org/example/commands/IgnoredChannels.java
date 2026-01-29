@@ -1,25 +1,29 @@
 package org.example.commands;
 
+import net.dv8tion.jda.api.Permission;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.unions.GuildChannelUnion;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import net.dv8tion.jda.api.interactions.commands.DefaultMemberPermissions;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
 import net.dv8tion.jda.api.interactions.commands.build.SubcommandData;
 import org.example.database.Database;
 import org.example.structures.IapetusCommand;
-import org.example.utils.MemberUtils;
 
 import java.util.List;
 
 public class IgnoredChannels extends IapetusCommand {
 	public IgnoredChannels() {
-		super(Commands.slash("ignored-channels", "ignored channels").addSubcommands(
-				new SubcommandData("add", "add a channel to ignorelist").addOption(OptionType.CHANNEL, "channel",
-						"choose channels for to ignore", true),
-				new SubcommandData("remove", "remove a channel from ignorelist").addOption(OptionType.CHANNEL,
-						"channel", "choose channels for to ignore", true),
-				new SubcommandData("list", "list all ignored channels")));
+		super(Commands.slash("ignored-channels", "ignored channels")
+				.addSubcommands(
+						new SubcommandData("add", "add a channel to ignorelist").addOption(OptionType.CHANNEL,
+								"channel", "choose channels for to ignore", true),
+						new SubcommandData("remove", "remove a channel from ignorelist").addOption(OptionType.CHANNEL,
+								"channel", "choose channels for to ignore", true),
+						new SubcommandData("list", "list all ignored channels"))
+				.setDefaultPermissions(
+						DefaultMemberPermissions.enabledFor(Permission.MANAGE_CHANNEL, Permission.MANAGE_SERVER)));
 	}
 
 	@Override
@@ -27,11 +31,6 @@ public class IgnoredChannels extends IapetusCommand {
 		Guild guild = event.getGuild();
 		if (guild == null) {
 			event.reply("This command can only be used in a server.").queue();
-			return true;
-		}
-
-		if (!MemberUtils.isAdmin(event.getMember())) {
-			event.reply("**You need administrator permission to use this command.**").setEphemeral(true).queue();
 			return true;
 		}
 
