@@ -7,9 +7,9 @@ import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.example.database.Database;
 
 public class InteractionLogger extends ListenerAdapter {
-    private String getGuildId(GenericInteractionCreateEvent event) {
-        return event.getGuild() == null ? "DM" : event.getGuild().getId();
-    }
+	private String getGuildId(GenericInteractionCreateEvent event) {
+		return event.getGuild() == null ? "DM" : event.getGuild().getId();
+	}
 
 	@Override
 	public void onSlashCommandInteraction(SlashCommandInteractionEvent event) {

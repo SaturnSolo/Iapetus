@@ -5,6 +5,8 @@ import net.dv8tion.jda.api.components.buttons.Button;
 import net.dv8tion.jda.api.events.message.MessageReceivedEvent;
 import net.dv8tion.jda.api.hooks.ListenerAdapter;
 import org.example.database.Database;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.sql.*;
 import java.util.HashMap;
@@ -13,7 +15,8 @@ import java.util.Map;
 import java.util.concurrent.TimeUnit;
 
 public class DropHandler extends ListenerAdapter {
-    private final Map<Long, Integer> perChannelMsgCount = new HashMap<>();
+	private static final Logger LOGGER = LoggerFactory.getLogger(DropHandler.class);
+	private final Map<Long, Integer> perChannelMsgCount = new HashMap<>();
 
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
@@ -24,17 +27,20 @@ public class DropHandler extends ListenerAdapter {
 		List<Long> ignoredChannels = Database.getIgnoredChannels(event.getGuild());
 
 		// Check if current channel is ignored
-		if (ignoredChannels.contains(event.getChannel().getIdLong()))
+		if (ignoredChannels.contains(event.getChannel().getIdLong())) {
+			LOGGER.info("Got a message in an ignored channel");
 			return;
+		}
 
-        int channelMsgCount = perChannelMsgCount.getOrDefault(event.getChannel().getIdLong(), 0);
-        if (++channelMsgCount == 26) {
-            event.getChannel().sendMessage("**Strawberry Drop!**")
-                .addComponents(ActionRow.of(Button.primary("strawberry", "🍓")))
-                .queueAfter(1, TimeUnit.SECONDS);
+		int channelMsgCount = perChannelMsgCount.getOrDefault(event.getChannel().getIdLong(), 0);
+		LOGGER.info("Channel %d has %d messages".formatted(event.getChannel().getIdLong(), channelMsgCount));
+		if (++channelMsgCount == 26) {
+			event.getChannel().sendMessage("**Strawberry Drop!**")
+					.addComponents(ActionRow.of(Button.primary("strawberry", "🍓"))).queueAfter(1, TimeUnit.SECONDS);
 
-            channelMsgCount = 0;
-        }
-        perChannelMsgCount.put(event.getChannel().getIdLong(), channelMsgCount);
+			channelMsgCount = 0;
+		}
+		LOGGER.info("Now, it has %d messages".formatted(channelMsgCount));
+		perChannelMsgCount.put(event.getChannel().getIdLong(), channelMsgCount);
 	}
 }
