@@ -16,12 +16,15 @@ import org.example.database.Database;
 import org.example.items.Item;
 import org.example.structures.IapetusButton;
 import org.example.structures.Inventory;
+import org.example.types.ItemId;
+import org.example.types.UserId;
 import org.example.utils.IapetusColor;
 
 import java.util.*;
 
 public class AdventureButtons {
 	private final ButtonManager buttonMgr;
+	private final ItemManager itemMgr;
 	private final Random rng;
 	private final Map<String, Date> adventureCooldowns;
 	private final Map<String, AdventureLocation> locations = new HashMap<>();
@@ -32,10 +35,9 @@ public class AdventureButtons {
 	//
 	public AdventureButtons(ButtonManager buttonMgr, ItemManager itemMgr, Random rng, Map<String, Date> advCooldowns) {
 		this.buttonMgr = buttonMgr;
+		this.itemMgr = itemMgr;
 		this.rng = rng;
 		this.adventureCooldowns = advCooldowns;
-
-		AdventureEvent.init(itemMgr);
 
 		this.buttonMgr.addButtons(new ConfirmButton(), new LeaveButton(), new CancelButton());
 
@@ -43,18 +45,18 @@ public class AdventureButtons {
 				"it seems quite deep, it requires you to crawl.", 5)
 				.addEvents(new AdventureEvent("The crawl was quite uncomfortable and you didn't find anything.", 2),
 						new AdventureEvent("You couldn't fit through the tiny gap.", 1),
-						new FindEvent("You crawled deep into the cave and found a neat rock. You pocketed it.", "rock",
-								2),
+						new FindEvent("You crawled deep into the cave and found a neat rock. You pocketed it.",
+								ItemId.ROCK, 2),
 						new FindEvent(
 								"You noticed a sparkle as you crawled through the dark cave. When you got closer you realized it was a gemstone!",
-								"gem", 1),
+								ItemId.GEM, 1),
 
 						new ChoiceEvent(
 								"The path splits in two directions. \nOn the left you see a small glint, on the right darkness.",
 								"cave_split", 8)
 								.addChoices(new AdventureChoice("Go left", Emoji.fromUnicode("◀"),
-										ButtonStyle.SECONDARY)
-										.addEvents(new FindEvent("You walk up to the glint and its a gem!", "gem", 2),
+										ButtonStyle.SECONDARY).addEvents(
+												new FindEvent("You walk up to the glint and its a gem!", ItemId.GEM, 2),
 												new DeathEvent(
 														"You walk up to the glint and its a bear D:\n You attempt to flee but fail.",
 														1),
@@ -64,7 +66,7 @@ public class AdventureButtons {
 										new AdventureChoice("Go right", Emoji.fromUnicode("▶"), ButtonStyle.SECONDARY)
 												.addEvents(
 														new FindEvent("You pushed forward and found a neat rock.",
-																"rock", 1),
+																ItemId.ROCK, 1),
 														new ChoiceEvent(
 																"You pushed forward and found an egg, do you take it?",
 																"cave_find_egg", 1)
@@ -72,7 +74,7 @@ public class AdventureButtons {
 																		Emoji.fromUnicode("🥚"))
 																		.addEvents(new FindEvent(
 																				"You picked up the egg, I wonder whats inside?",
-																				"egg", 3, 1),
+																				ItemId.EGG, 3, 1),
 																				new DeathEvent(
 																						"Its mother was just around the corner! It attacked you and took some of your items.",
 																						2)),
@@ -91,7 +93,7 @@ public class AdventureButtons {
 														5),
 												new FindEvent(
 														"You made it to the other side and found a massive gem cluster!",
-														"gem", 2, 3)),
+														ItemId.GEM, 2, 3)),
 										new AdventureChoice("Go back", ButtonStyle.SECONDARY)
 												.addEvents(new AdventureEvent("You got out safely.", 1)))),
 				new AdventureLocation("throne", "%s walked into a throne room.",
@@ -102,14 +104,14 @@ public class AdventureButtons {
 								.addChoices(new AdventureChoice("Take it!", Emoji.fromUnicode("🎲")).addEvents(
 										new FindEvent(
 												"You took the dice from the collection, hopefully no one notices!",
-												"dice", 2),
+												ItemId.DICE, 2),
 										new AdventureEvent(
 												"Uh oh! The queen saw you taking and kicked you from her throne room.",
 												1)),
 										new AdventureChoice("Leave it be.", ButtonStyle.SECONDARY).addEvents(
 												new FindEvent(
 														"The queen saw you admiring the dice collection and offered you one!",
-														"dice", 1),
+														ItemId.DICE, 1),
 												new AdventureEvent("You left the collection alone.", 2)))),
 				new AdventureLocation("forest", "%s wandered into a forest.",
 						"the brush is quite thick, maybe something is inside.", 4)
@@ -118,7 +120,7 @@ public class AdventureButtons {
 								true),
 								new ChoiceEvent("In the wild you found a flower! Do you pick it?", "forest_flower", 3)
 										.addChoices(new AdventureChoice("Pick it!").addEvents(new FindEvent(
-												"You picked the rose, it hurt a little but your ok!", "rose", 1)),
+												"You picked the rose, it hurt a little but your ok!", ItemId.ROSE, 1)),
 												new AdventureChoice("Keep searching", ButtonStyle.SECONDARY).addEvents(
 														new LocationEvent("forest", 2), new LocationEvent("cave", 4))),
 								new AdventureEvent(
@@ -137,7 +139,7 @@ public class AdventureButtons {
 														.addChoices(new AdventureChoice("Steal", ButtonStyle.DANGER)
 																.addEvents(new FindEvent(
 																		"You looked around and all you could find was a rusty key. I wonder what it's used for?",
-																		"key", 1),
+																		ItemId.KEY, 1),
 																		new StrawberryEvent(
 																				"You took from the register when the clerk wasn't looking!",
 																				5, 2),
@@ -162,7 +164,7 @@ public class AdventureButtons {
 						"You talk to the hotel clerk and are given a room. \nYou head to your room, what do you want to do?",
 						"hotel_room", 1)
 						.addChoices(new AdventureChoice("Search", Emoji.fromUnicode("🔍")).addEvents(
-								new FindEvent("You searched through your room and found a dice!", "dice", 1),
+								new FindEvent("You searched through your room and found a dice!", ItemId.DICE, 1),
 								new StrawberryEvent("Someone left a strawberry behind in your room, what a lucky day!",
 										1, 1)),
 								new AdventureChoice("Sleep", ButtonStyle.SECONDARY)
@@ -175,13 +177,7 @@ public class AdventureButtons {
 										4, true),
 								new AdventureEvent("You dream of strawberries.", 4),
 								new AdventureEvent("You've peacefully rested.", 2))
-						.setCanLeave(false)
-		/*
-		 * new AdventureLocation("hell", "Welcome to hell, %s.",
-		 * "you're nightmares became real, and you can't escape...", 0).addEvents( new
-		 * DeathEvent("You met the devil, he killed you.", 1) ).disableLeave()
-		 */
-		);
+						.setCanLeave(false));
 	}
 
 	//
@@ -266,7 +262,7 @@ public class AdventureButtons {
 
 		public MessageEmbed generateEmbed(User user) {
 			return new EmbedBuilder().setTitle(name.replaceAll("%s", user.getEffectiveName()))
-					.setDescription(description).setFooter("Investigate \uD83D\uDD0D or Leave \uD83D\uDCA8")
+					.setDescription(description).setFooter("Investigate 🔍 or Leave 💨")
 					.setColor(IapetusColor.DARK_GREEN).build();
 		}
 
@@ -295,14 +291,8 @@ public class AdventureButtons {
 
 	// this is the base event, extended for different events!
 	private static class AdventureEvent {
-		protected static ItemManager itemMgr;
-
 		protected final String message;
 		protected final int odds;
-
-		public static void init(ItemManager itemMgr) {
-			AdventureEvent.itemMgr = itemMgr;
-		}
 
 		public AdventureEvent(String message, int odds) {
 			this.message = message;
@@ -316,16 +306,16 @@ public class AdventureButtons {
 		}
 	}
 
-	// when a user finds an iteM!
-	private static class FindEvent extends AdventureEvent {
+	// when a user finds an item!
+	private class FindEvent extends AdventureEvent {
 		private final int amount;
-		String itemId;
+		private final ItemId itemId;
 
-		public FindEvent(String message, String itemId, int odds) {
+		public FindEvent(String message, ItemId itemId, int odds) {
 			this(message, itemId, odds, 1);
 		}
 
-		public FindEvent(String message, String itemId, int odds, int amount) {
+		public FindEvent(String message, ItemId itemId, int odds, int amount) {
 			super(message, odds);
 			this.itemId = itemId;
 			this.amount = amount;
@@ -334,7 +324,7 @@ public class AdventureButtons {
 		@Override
 		public void run(ButtonInteractionEvent event) {
 			if (itemId != null)
-				itemMgr.giveItem(event.getUser().getId(), itemId, amount);
+				itemMgr.giveItem(UserId.of(event.getUser()), itemId, amount);
 			MessageEmbed embed = new EmbedBuilder(event.getMessage().getEmbeds().get(0)).setDescription(message)
 					.setFooter("+%d %s".formatted(amount, itemMgr.getItem(itemId).getString(true))).build();
 			event.editMessage(new MessageEditBuilder().setEmbeds(embed).setReplace(true).build()).queue();
@@ -379,7 +369,7 @@ public class AdventureButtons {
 		@Override
 		public void run(ButtonInteractionEvent event) {
 			User user = event.getUser();
-			Inventory inventory = Database.getUserInventory(user.getId());
+			Inventory inventory = Database.getUserInventory(UserId.of(user), itemMgr);
 
 			String footer = null;
 			if (inventory.size() > 2) {
@@ -546,9 +536,6 @@ public class AdventureButtons {
 		public void run(ButtonInteractionEvent event) {
 			User user = event.getUser();
 
-			// ActionRow update = event.getMessage().getActionRows().get(0).asDisabled();
-			// event.getMessage().editMessageComponents(update).queue();
-
 			AdventureLocation location = getRandomLocation();
 			MessageEmbed embed = location.generateEmbed(user);
 
@@ -621,7 +608,7 @@ public class AdventureButtons {
 
 	private class LeaveButton extends IapetusButton {
 		public LeaveButton() {
-			super(Button.secondary("adv-leave", Emoji.fromUnicode("\uD83D\uDCA8")));
+			super(Button.secondary("adv-leave", Emoji.fromUnicode("💨")));
 		}
 
 		@Override

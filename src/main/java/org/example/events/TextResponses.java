@@ -51,7 +51,7 @@ public class TextResponses extends ListenerAdapter {
 			case String s when s.contains("🍓") ->
 				output.append(STRAWBERRY.get(rng.nextInt(STRAWBERRY.size()))).append("\n");
 			case String s when s.contains("🍒") -> output.append(CHERRY.get(rng.nextInt(CHERRY.size()))).append("\n");
-			case String s when s.contains("\uD83E\uDED0") ->
+			case String s when s.contains("🫐") ->
 				output.append(BLUEBERRY.get(rng.nextInt(BLUEBERRY.size()))).append("\n");
 			case String s when s.contains("moss") -> output.append(MOSS.get(rng.nextInt(MOSS.size()))).append("\n");
 			case String s when (s.equals("iapetus")

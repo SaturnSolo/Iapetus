@@ -1,19 +1,18 @@
 package org.example.structures;
 
-import org.example.ItemManager;
+import org.example.database.Database;
 import org.example.items.Item;
+import org.example.types.UserId;
 
 import java.util.List;
 
 public class Inventory {
-	private final ItemManager itemMgr;
+	private final UserId userId;
 	private final List<Item> items;
-	private final String userId;
 
-	public Inventory(String userId, List<Item> items, ItemManager itemMgr) {
+	public Inventory(UserId userId, List<Item> items) {
 		this.userId = userId;
 		this.items = items;
-		this.itemMgr = itemMgr;
 	}
 
 	public Item get(int index) {
@@ -26,7 +25,7 @@ public class Inventory {
 
 	public Item remove(int index) {
 		Item item = items.remove(index);
-		itemMgr.takeItem(userId, item.getId());
+		Database.takeItem(userId.value(), item.getId());
 		return item;
 	}
 

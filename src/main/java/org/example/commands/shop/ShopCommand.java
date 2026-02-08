@@ -6,27 +6,28 @@ import net.dv8tion.jda.api.components.buttons.Button;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.example.ButtonManager;
+import org.example.ItemManager;
 import org.example.buttons.ShopButton;
-import org.example.items.EggItem;
-import org.example.items.flowers.CherryBlossomItem;
-import org.example.items.flowers.RoseItem;
-import org.example.items.flowers.TulipItem;
 import org.example.structures.IapetusCommand;
+import org.example.types.ItemId;
 import org.example.utils.IapetusColor;
 
+import java.util.Map;
+
 public class ShopCommand extends IapetusCommand {
+	private static final Map<ItemId, Integer> PRICES = Map.of(ItemId.EGG, 5, ItemId.ROSE, 10, ItemId.TULIP, 10,
+			ItemId.CHERRY_BLOSSOM, 15);
+
 	private final ButtonManager buttonMgr;
 
-	public ShopCommand(ButtonManager buttonMgr) {
+	public ShopCommand(ButtonManager buttonMgr, ItemManager itemMgr) {
 		super("shop", "open the shop menu");
 		this.buttonMgr = buttonMgr;
 
 		// create the buttons, this lets the ButtonManager know what to run when a
 		// button with the id is clicked.
-		buttonMgr.addButtons(new ShopButton("egg", new EggItem(), 5), new ShopButton("rose", new RoseItem(), 10),
-				new ShopButton("tulip", new TulipItem(), 10),
-				new ShopButton("cherry_blossom", new CherryBlossomItem(), 15));
-
+		PRICES.forEach(
+				(itemId, cost) -> buttonMgr.addButtons(new ShopButton(itemId.key(), itemMgr.getItem(itemId), cost)));
 	}
 
 	@Override

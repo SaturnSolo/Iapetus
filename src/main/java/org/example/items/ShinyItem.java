@@ -4,23 +4,25 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.example.ItemManager;
+import org.example.types.ItemId;
+import org.example.types.UserId;
 
 public class ShinyItem extends Item {
 	private final ItemManager itemMgr;
 
 	public ShinyItem(ItemManager itemMgr) {
-		super("Shiny", "Looks shiny", "shiny", Emoji.fromUnicode("✨"), 0);
+		super(ItemId.SHINY, "Shiny", "Looks shiny", Emoji.fromUnicode("✨"));
 		this.itemMgr = itemMgr;
 	}
 
 	@Override
 	public boolean use(SlashCommandInteractionEvent event) {
 		User user = event.getUser();
-		String userId = user.getId();
+		UserId userId = UserId.of(user);
 
-		if (itemMgr.hasItem(userId, "shiny")) {
+		if (itemMgr.hasItem(userId, ItemId.SHINY)) {
 
-			itemMgr.giveItem(userId, "key");
+			itemMgr.giveItem(userId, ItemId.KEY);
 			event.reply("**This item sparkles ✨ and explodes 💥 into a key!**").queue();
 			return false;
 		}

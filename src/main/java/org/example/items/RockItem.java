@@ -8,6 +8,7 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.example.ButtonManager;
 import org.example.structures.IapetusButton;
+import org.example.types.ItemId;
 
 import java.util.Random;
 
@@ -16,15 +17,14 @@ public class RockItem extends Item {
 	private final Random rng;
 
 	public RockItem(ButtonManager buttonMgr, Random rng) {
-		super("Rock", "It's a rock", "rock", Emoji.fromUnicode("\uD83E\uDEA8"), 0);
+		super(ItemId.ROCK, "Rock", "It's a rock", Emoji.fromUnicode("🪨"));
 		this.buttonMgr = buttonMgr;
 		this.rng = rng;
 	}
 
 	@Override
 	public boolean use(SlashCommandInteractionEvent event) {
-		buttonMgr.addButtons(new RPSButton("rock", "\uD83E\uDEA8"), new RPSButton("paper", "🗞"),
-				new RPSButton("scissors", "✂"));
+		buttonMgr.addButtons(new RPSButton("rock", "🪨"), new RPSButton("paper", "🗞"), new RPSButton("scissors", "✂"));
 
 		event.reply("**Rock, paper, or scissors?**").addComponents(ActionRow.of(buttonMgr.getButton("rock"),
 				buttonMgr.getButton("paper"), buttonMgr.getButton("scissors"))).queue();
@@ -35,7 +35,7 @@ public class RockItem extends Item {
 		private final String selection;
 
 		private enum Emojis {
-			ROCK(Emoji.fromUnicode("\uD83E\uDEA8")), PAPER(Emoji.fromUnicode("🗞")), SCISSORS(Emoji.fromUnicode("✂"));
+			ROCK(Emoji.fromUnicode("🪨")), PAPER(Emoji.fromUnicode("🗞")), SCISSORS(Emoji.fromUnicode("✂"));
 
 			private final Emoji emoji;
 

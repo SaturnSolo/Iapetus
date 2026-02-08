@@ -10,7 +10,7 @@ public class PingCommand extends IapetusCommand {
 
 	@Override
 	public boolean runCommand(SlashCommandInteractionEvent event) {
-		event.reply("Pong! \uD83C\uDF3A").queue();
+		event.reply("Pong! 🌺").queue();
 		return true;
 	}
 }
