@@ -6,80 +6,107 @@ import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.entities.emoji.UnicodeEmoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import org.example.ButtonModule;
+import org.example.ButtonManager;
+import org.example.structures.IapetusButton;
 import org.example.types.ItemId;
 
 import java.util.Random;
 
-public class RockItem extends Item implements ButtonModule {
+public class RockItem extends Item {
+	private final ButtonManager buttonMgr;
 	private final Random rng;
 
-	public RockItem(Random rng) {
+	public RockItem(ButtonManager buttonMgr, Random rng) {
 		super(ItemId.ROCK, "Rock", "It's a rock", Emoji.fromUnicode("🪨"));
+		this.buttonMgr = buttonMgr;
 		this.rng = rng;
 	}
 
 	@Override
 	public boolean use(SlashCommandInteractionEvent event) {
-		event.reply("**Rock, paper, or scissors?**")
-				.addComponents(ActionRow.of(Button.primary("rps:rock", Emoji.fromUnicode("🪨")),
-						Button.primary("rps:paper", Emoji.fromUnicode("🗞")),
-						Button.primary("rps:scissors", Emoji.fromUnicode("✂"))))
-				.queue();
+		buttonMgr.addButtons(new RPSButton("rock", "🪨"), new RPSButton("paper", "🗞"), new RPSButton("scissors", "✂"));
+
+		event.reply("**Rock, paper, or scissors?**").addComponents(ActionRow.of(buttonMgr.getButton("rock"),
+				buttonMgr.getButton("paper"), buttonMgr.getButton("scissors"))).queue();
 		return false;
 	}
 
-	@Override
-	public void onButton(String id, ButtonInteractionEvent event) {
-		String computer = switch (rng.nextInt(3)) {
-			case 0 -> "rock";
-			case 1 -> "paper";
-			default -> "scissors";
-		};
+	private class RPSButton extends IapetusButton {
+		private final String selection;
 
-		int result = switch (id) {
-			case String s when s.equals(computer) -> 0;
-			case "rock" -> computer.equals("scissors") ? 1 : -1;
-			case "paper" -> computer.equals("rock") ? 1 : -1;
-			case "scissors" -> computer.equals("paper") ? 1 : -1;
-			default -> 2;
-		};
+		private enum Emojis {
+			ROCK(Emoji.fromUnicode("🪨")), PAPER(Emoji.fromUnicode("🗞")), SCISSORS(Emoji.fromUnicode("✂"));
 
-		if (result == 2) {
-			event.reply("an error occured processing this request, please try again.").queue();
-			return;
+			private final Emoji emoji;
+
+			Emojis(UnicodeEmoji emoji) {
+				this.emoji = emoji;
+			}
+
+			public String get() {
+				return emoji.getFormatted();
+			}
 		}
 
-		// Disable the buttons so they can't be used again
-		event.getMessage()
-				.editMessageComponents(event.getMessage().getComponents().getFirst().asActionRow().asDisabled())
-				.queue();
+		public RPSButton(String type, String emoji) {
+			super(Button.primary(type, Emoji.fromUnicode(emoji)));
+			selection = type;
+		}
 
-		String playerEmoji = Emojis.valueOf(id.toUpperCase()).get();
-		String computerEmoji = Emojis.valueOf(computer.toUpperCase()).get();
+		@Override
+		public void run(ButtonInteractionEvent event) {
+			String computer = selectRandom("rock", "paper", "scissors");
 
-		switch (result) {
-			case 0 -> event.reply("**You both chose** " + playerEmoji + "\n **it's a draw!**").queue();
-			case 1 ->
-				event.reply("**You chose** " + playerEmoji + " **The bot chose** " + computerEmoji + "\n **You win!**")
+			int result = 2;
+
+			if (selection.equals(computer)) {
+				result = 0;
+			} else if (computer.equals("rock")) {
+				if (selection.equals("paper"))
+					result = 1;
+				else
+					result = -1;
+			} else if (computer.equals("paper")) {
+				if (selection.equals("scissors"))
+					result = 1;
+				else
+					result = -1;
+			} else if (computer.equals("scissors")) {
+				if (selection.equals("rock"))
+					result = 1;
+				else
+					result = -1;
+			}
+
+			if (result == 2) {
+				event.reply("an error occured processing this request, please try again.").queue();
+				return;
+			}
+
+			event.getMessage()
+					.editMessageComponents(event.getMessage().getComponents().getFirst().asActionRow().asDisabled())
+					.queue(); // this disables the buttons so they can't be used again.
+
+			// PLAYER DRAWS
+			if (result == 0) {
+				event.reply(
+						"**You both chose** " + Emojis.valueOf(selection.toUpperCase()).get() + "\n **it's a draw!**")
 						.queue();
-			case -1 ->
-				event.reply("**You chose** " + playerEmoji + " **The bot chose** " + computerEmoji + "\n **You lose!**")
-						.queue();
-		}
-	}
-
-	private enum Emojis {
-		ROCK(Emoji.fromUnicode("🪨")), PAPER(Emoji.fromUnicode("🗞")), SCISSORS(Emoji.fromUnicode("✂"));
-
-		private final Emoji emoji;
-
-		Emojis(UnicodeEmoji emoji) {
-			this.emoji = emoji;
+			}
+			// PLAYER WINS
+			if (result == 1) {
+				event.reply("**You chose** " + Emojis.valueOf(selection.toUpperCase()).get() + " **The bot chose** "
+						+ Emojis.valueOf(computer.toUpperCase()).get() + "\n **You win!**").queue();
+			}
+			// PLAYER LOSES
+			if (result == -1) {
+				event.reply("**You chose** " + Emojis.valueOf(selection.toUpperCase()).get() + " **The bot chose** "
+						+ Emojis.valueOf(computer.toUpperCase()).get() + "\n **You lose!**").queue();
+			}
 		}
 
-		public String get() {
-			return emoji.getFormatted();
+		public String selectRandom(String... strings) {
+			return strings[rng.nextInt(strings.length)];
 		}
 	}
 }

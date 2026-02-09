@@ -1,23 +1,39 @@
 package org.example.structures;
 
-import org.example.types.ItemId;
+import org.example.database.Database;
+import org.example.items.Item;
+import org.example.types.UserId;
 
-import java.util.Map;
+import java.util.List;
 
-public record Inventory(Map<ItemId, Integer> items) {
-	public boolean has(ItemId item) {
-		return items.getOrDefault(item, 0) > 0;
+public class Inventory {
+	private final UserId userId;
+	private final List<Item> items;
+
+	public Inventory(UserId userId, List<Item> items) {
+		this.userId = userId;
+		this.items = items;
 	}
 
-	public int count(ItemId item) {
-		return items.getOrDefault(item, 0);
+	public Item get(int index) {
+		return items.get(index);
 	}
 
-	public int totalCount() {
-		return items.values().stream().mapToInt(i -> i).sum();
+	public int size() {
+		return items.size();
+	}
+
+	public Item remove(int index) {
+		Item item = items.remove(index);
+		Database.takeItem(userId.value(), item.getId());
+		return item;
 	}
 
 	public boolean isEmpty() {
 		return items.isEmpty();
+	}
+
+	public List<Item> getItems() {
+		return items;
 	}
 }

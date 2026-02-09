@@ -5,29 +5,29 @@ import net.dv8tion.jda.api.components.actionrow.ActionRow;
 import net.dv8tion.jda.api.components.buttons.Button;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import org.example.ButtonModule;
-import org.example.Economy;
+import org.example.ButtonManager;
 import org.example.ItemManager;
-import org.example.items.Item;
+import org.example.buttons.ShopButton;
 import org.example.structures.IapetusCommand;
 import org.example.types.ItemId;
-import org.example.types.UserId;
 import org.example.utils.IapetusColor;
 
 import java.util.Map;
 
-public class ShopCommand extends IapetusCommand implements ButtonModule {
+public class ShopCommand extends IapetusCommand {
 	private static final Map<ItemId, Integer> PRICES = Map.of(ItemId.EGG, 5, ItemId.ROSE, 10, ItemId.TULIP, 10,
 			ItemId.CHERRY_BLOSSOM, 15);
 
-	private final ItemManager itemMgr;
-	private final Economy economy;
+	private final ButtonManager buttonMgr;
 
-	public ShopCommand(ItemManager itemMgr, Economy economy) {
+	public ShopCommand(ButtonManager buttonMgr, ItemManager itemMgr) {
 		super("shop", "open the shop menu");
-		this.itemMgr = itemMgr;
-		this.economy = economy;
+		this.buttonMgr = buttonMgr;
+
+		// create the buttons, this lets the ButtonManager know what to run when a
+		// button with the id is clicked.
+		PRICES.forEach(
+				(itemId, cost) -> buttonMgr.addButtons(new ShopButton(itemId.key(), itemMgr.getItem(itemId), cost)));
 	}
 
 	@Override
@@ -38,41 +38,15 @@ public class ShopCommand extends IapetusCommand implements ButtonModule {
 				**`A pretty tulip`** 🌷 - 🍓10
 				**`Sakura Cherry Blossoms Pretty`** 🌸 - 🍓15""").setColor(IapetusColor.PINK).build();
 
-		Button eggButton = shopButton(ItemId.EGG);
-		Button roseButton = shopButton(ItemId.ROSE);
-		Button tulipButton = shopButton(ItemId.TULIP);
-		Button cherryBlossomButton = shopButton(ItemId.CHERRY_BLOSSOM);
+		// fetch each button from the button manager.
+		Button eggButton = buttonMgr.getButton("egg");
+		Button roseButton = buttonMgr.getButton("rose");
+		Button tulipButton = buttonMgr.getButton("tulip");
+		Button cherryBlossomButton = buttonMgr.getButton("cherry_blossom");
 
+		// Send the initial message with buttons
 		event.replyEmbeds(embed).addComponents(ActionRow.of(eggButton, roseButton, tulipButton, cherryBlossomButton))
 				.queue();
 		return true;
-	}
-
-	@Override
-	public void onButton(String id, ButtonInteractionEvent event) {
-		ItemId itemId;
-		try {
-			itemId = ItemId.valueOf(id.toUpperCase());
-		} catch (IllegalArgumentException e) {
-			return;
-		}
-
-		Integer cost = PRICES.get(itemId);
-		if (cost == null)
-			return;
-
-		boolean success = economy.purchase(UserId.of(event.getUser()), itemId, cost);
-		if (success) {
-			Item item = itemMgr.getItem(itemId);
-			event.reply("**You have purchased a %s and added it to your inventory!**".formatted(item.getString()))
-					.setEphemeral(true).queue();
-		} else {
-			event.reply("**Insufficient berries!**").setEphemeral(true).queue();
-		}
-	}
-
-	private Button shopButton(ItemId itemId) {
-		Item item = itemMgr.getItem(itemId);
-		return Button.secondary("shop:" + itemId.key(), item.getName()).withEmoji(item.getIconEmoji());
 	}
 }

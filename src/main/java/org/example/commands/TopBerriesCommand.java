@@ -4,19 +4,15 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import org.example.Economy;
+import org.example.database.Database;
 import org.example.structures.IapetusCommand;
-import org.example.types.UserId;
 import org.example.utils.IapetusColor;
 
 import java.util.Map;
 
 public class TopBerriesCommand extends IapetusCommand {
-	private final Economy economy;
-
-	public TopBerriesCommand(Economy economy) {
+	public TopBerriesCommand() {
 		super("leaderboard", "Shows the user with the most berries in the server");
-		this.economy = economy;
 	}
 
 	@Override
@@ -24,11 +20,11 @@ public class TopBerriesCommand extends IapetusCommand {
 		Guild guild = event.getGuild();
 		if (guild == null) {
 			event.reply("You're alone here in DMs, of course you are #1. You have %d berries."
-					.formatted(economy.getBalance(UserId.of(event.getUser())))).setEphemeral(true).queue();
+					.formatted(Database.getBerryAmount(event.getUser()))).setEphemeral(true).queue();
 			return true;
 		}
 
-		Map<Long, Integer> topBerries = economy.getLeaderboard(guild.getIdLong(), 10);
+		Map<Long, Integer> topBerries = Database.getTopNBerryHolders(guild.getIdLong(), 10);
 		StringBuilder leaderboard = new StringBuilder();
 
 		if (topBerries.isEmpty()) {
