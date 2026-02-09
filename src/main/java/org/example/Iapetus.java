@@ -5,6 +5,10 @@ import net.dv8tion.jda.api.JDA;
 import net.dv8tion.jda.api.JDABuilder;
 import net.dv8tion.jda.api.entities.Activity;
 import net.dv8tion.jda.api.requests.GatewayIntent;
+import net.dv8tion.jda.api.utils.ChunkingFilter;
+import net.dv8tion.jda.api.utils.MemberCachePolicy;
+import net.dv8tion.jda.api.utils.cache.CacheFlag;
+import org.example.buttons.StrawberryButton;
 import org.example.commands.*;
 import org.example.commands.give.GiveCommand;
 import org.example.commands.pet.HatchCommand;
@@ -27,9 +31,8 @@ public class Iapetus {
 	private static Iapetus INSTANCE;
 
 	private final CommandManager commandMgr;
-	private final ButtonRouter buttonRouter;
+	private final ButtonManager buttonMgr;
 	private final ItemManager itemMgr;
-	private final Economy economy;
 	private final Random rng;
 
 	private Iapetus() {
@@ -45,25 +48,23 @@ public class Iapetus {
 
 		rng = new SecureRandom();
 
-		// initialize managers.
+		// initialize interaction managers.
 		itemMgr = new ItemManager();
-		economy = new Economy(itemMgr);
-		buttonRouter = new ButtonRouter();
+		buttonMgr = new ButtonManager();
 		commandMgr = new CommandManager();
 
-		// Set activity
+		// Set activity (like "playing Something")
 		builder.setActivity(Activity.listening("🍓"));
 		builder.enableIntents(GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_PRESENCES,
 				GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MEMBERS,
 				GatewayIntent.GUILD_PRESENCES);
 
-		// Register items
-		RockItem rockItem = new RockItem(rng);
+		// Register items explicitly
 		itemMgr.register(new DiceItem(rng));
 		itemMgr.register(new GemItem());
 		itemMgr.register(new KeyItem());
 		itemMgr.register(new PumpkinItem());
-		itemMgr.register(rockItem);
+		itemMgr.register(new RockItem(buttonMgr, rng));
 		itemMgr.register(new ShinyItem(itemMgr));
 		itemMgr.register(new SkullItem());
 		itemMgr.register(new SwordItem());
@@ -72,27 +73,16 @@ public class Iapetus {
 		itemMgr.register(new TulipItem());
 		itemMgr.register(new CherryBlossomItem());
 
-		// Create commands that are also ButtonModules
-		ShopCommand shopCommand = new ShopCommand(itemMgr, economy);
-		HelpCommand helpCommand = new HelpCommand(commandMgr);
-		DropHandler dropHandler = new DropHandler(economy);
-		AdventureCommands adventureCommands = new AdventureCommands(itemMgr, economy, rng);
+		// Add stuff to the respective managers
+		buttonMgr.addButtons(new StrawberryButton());
+		commandMgr.addCommands(new PingCommand(), new BonkCommand(), new RandomCommand(rng),
+				new ShopCommand(buttonMgr, itemMgr), new InventoryCommand(itemMgr), new BerriesCommand(),
+				new PetMenuCommand(), new HatchCommand(itemMgr, rng), new IgnoredChannels(),
+				new HelpCommand(buttonMgr, commandMgr), new UseItemCommand(itemMgr),
+				new AdventureCommands(buttonMgr, itemMgr, rng), new LootChestCommands(itemMgr, rng), new GiveCommand(),
+				new TopBerriesCommand(), new DailyCommand());
 
-		// Register button modules
-		buttonRouter.register("shop", shopCommand);
-		buttonRouter.register("help", helpCommand);
-		buttonRouter.register("drop", dropHandler);
-		buttonRouter.register("rps", rockItem);
-		buttonRouter.register("adv", adventureCommands.getAdventureButtons());
-
-		// Register commands
-		commandMgr.addCommands(new PingCommand(), new BonkCommand(), new RandomCommand(rng), shopCommand,
-				new InventoryCommand(itemMgr), new BerriesCommand(economy), new PetMenuCommand(),
-				new HatchCommand(itemMgr, rng), new IgnoredChannels(), helpCommand, new UseItemCommand(itemMgr),
-				adventureCommands, new LootChestCommands(itemMgr, economy, rng), new GiveCommand(economy),
-				new TopBerriesCommand(economy), new DailyCommand(economy));
-
-		builder.addEventListeners(commandMgr, buttonRouter, dropHandler, new TextResponses(rng),
+		builder.addEventListeners(commandMgr, buttonMgr, new DropHandler(), new TextResponses(rng),
 				new InteractionLogger());
 		JDA jda = builder.build();
 		commandMgr.register(jda);
@@ -103,4 +93,19 @@ public class Iapetus {
 			INSTANCE = new Iapetus();
 	}
 
+	public void configureMemoryUsage(JDABuilder builder) {
+		// Disable cache for member activities (streaming/games/spotify)
+		builder.disableCache(CacheFlag.ACTIVITY);
+
+		// Only cache members who are either in a voice channel or owner of the guild
+		builder.setMemberCachePolicy(MemberCachePolicy.ALL.or(MemberCachePolicy.OWNER));
+
+		// Disable member chunking on startup
+		builder.setChunkingFilter(ChunkingFilter.NONE);
+
+		// Consider guilds with more than 50 members as "large".
+		// Large guilds will only provide online members in their setup and thus reduce
+		// bandwidth if chunking is disabled.
+		builder.setLargeThreshold(50);
+	}
 }
