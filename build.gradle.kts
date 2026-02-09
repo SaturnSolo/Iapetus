@@ -2,27 +2,25 @@ plugins {
     id("java")
     alias(libs.plugins.shadow)
     alias(libs.plugins.spotless)
+    alias(libs.plugins.owasp)
     application
 }
 
 repositories {
     mavenCentral()
-    maven { url = uri("https://jitpack.io") }
-    maven { url = uri("https://m2.dv8tion.net/releases") }
 }
 
 dependencies {
     implementation(libs.jda)
     implementation(libs.logback)
     implementation(libs.dotenv)
-    implementation(libs.junitjupiter)
     implementation(libs.hikari)
     implementation(libs.sqlite)
 }
 
 spotless {
     java {
-        eclipse()
+        googleJavaFormat()
     }
 }
 
