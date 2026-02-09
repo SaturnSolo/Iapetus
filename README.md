@@ -23,7 +23,8 @@ Iapetus offers an interactive experience where you can:
 This project is licensed under the **AGPL-3.0 license**. See the [LICENSE](LICENSE) file for details.
 
 ### Credits
-[@sylviameows](https://github.com/sylviameows) For making the adventure commands and orignal rework of the bot. 
+Thanks to all of the contributors who have helped and continue to push updates for this project! I appreciate you all! 
+
 
 ---
 
