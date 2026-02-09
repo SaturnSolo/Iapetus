@@ -4,17 +4,15 @@ import net.dv8tion.jda.api.EmbedBuilder;
 import net.dv8tion.jda.api.components.actionrow.ActionRow;
 import net.dv8tion.jda.api.components.buttons.Button;
 import net.dv8tion.jda.api.components.buttons.ButtonStyle;
-import net.dv8tion.jda.api.entities.Message;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import net.dv8tion.jda.api.utils.messages.MessageEditBuilder;
-import org.example.ButtonManager;
+import org.example.ButtonModule;
+import org.example.Economy;
 import org.example.ItemManager;
 import org.example.database.Database;
-import org.example.items.Item;
-import org.example.structures.IapetusButton;
 import org.example.structures.Inventory;
 import org.example.types.ItemId;
 import org.example.types.UserId;
@@ -22,24 +20,22 @@ import org.example.utils.IapetusColor;
 
 import java.util.*;
 
-public class AdventureButtons {
-	private final ButtonManager buttonMgr;
+public class AdventureButtons implements ButtonModule {
 	private final ItemManager itemMgr;
+	private final Economy economy;
 	private final Random rng;
 	private final Map<String, Date> adventureCooldowns;
 	private final Map<String, AdventureLocation> locations = new HashMap<>();
 	private final Map<String, ChoiceEvent> choiceEvents = new HashMap<>();
 
 	//
-	// INITIALIZING THE BUTTONS AND LOCATIONS.
+	// INITIALIZING THE LOCATIONS.
 	//
-	public AdventureButtons(ButtonManager buttonMgr, ItemManager itemMgr, Random rng, Map<String, Date> advCooldowns) {
-		this.buttonMgr = buttonMgr;
+	public AdventureButtons(ItemManager itemMgr, Economy economy, Random rng, Map<String, Date> advCooldowns) {
 		this.itemMgr = itemMgr;
+		this.economy = economy;
 		this.rng = rng;
 		this.adventureCooldowns = advCooldowns;
-
-		this.buttonMgr.addButtons(new ConfirmButton(), new LeaveButton(), new CancelButton());
 
 		addLocations(new AdventureLocation("cave", "%s stumbled upon a cave.",
 				"it seems quite deep, it requires you to crawl.", 5)
@@ -184,26 +180,25 @@ public class AdventureButtons {
 	// MANAGING THE LOCATIONS
 	//
 
-	public void addLocations(List<AdventureLocation> locations) {
+	private void addLocations(List<AdventureLocation> locations) {
 		locations.forEach(location -> this.locations.put(location.id, location));
 	}
 
-	public void addLocations(AdventureLocation... locations) {
+	private void addLocations(AdventureLocation... locations) {
 		addLocations(Arrays.asList(locations));
 	}
 
-	public AdventureLocation getLocation(String location) {
+	private AdventureLocation getLocation(String location) {
 		return locations.get(location);
 	}
 
 	private AdventureLocation getRandomLocation() {
-		List<AdventureLocation> locations = new ArrayList<>();
+		List<AdventureLocation> pool = new ArrayList<>();
 		this.locations.values().forEach(location -> {
 			for (int i = 0; i < location.odds; ++i)
-				locations.add(location);
+				pool.add(location);
 		});
-		int index = rng.nextInt(locations.size());
-		return locations.get(index);
+		return pool.get(rng.nextInt(pool.size()));
 	}
 
 	//
@@ -222,15 +217,76 @@ public class AdventureButtons {
 	// COMMONLY USED FUNCTIONS
 	//
 
-	public void disableRow(Message message, int row) {
-		ActionRow disabled = message.getComponents().get(row).asActionRow().asDisabled();
-		message.editMessageComponents(disabled).queue();
+	private String selectRandom(String... strings) {
+		return strings[rng.nextInt(strings.length)];
 	}
 
-	public String selectRandom(String... strings) {
-		List<String> list = Arrays.asList(strings);
-		int index = rng.nextInt(list.size());
-		return list.get(index);
+	//
+	// BUTTON DISPATCH
+	//
+
+	@Override
+	public void onButton(String id, ButtonInteractionEvent event) {
+		switch (id) {
+			case "confirm" -> handleConfirm(event);
+			case "cancel" -> handleCancel(event);
+			case "leave" -> handleLeave(event);
+			default -> {
+				if (id.endsWith("-investigate")) {
+					String locationId = id.substring(0, id.indexOf("-investigate"));
+					AdventureLocation location = getLocation(locationId);
+					if (location != null)
+						location.investigate(event);
+				} else {
+					// Choice button: id is "<choiceId>-<index>"
+					int dash = id.lastIndexOf('-');
+					if (dash > 0) {
+						String choiceId = id.substring(0, dash);
+						int index = Integer.parseInt(id.substring(dash + 1));
+						ChoiceEvent choice = getChoice(choiceId);
+						if (choice != null)
+							choice.run(index, event);
+					}
+				}
+			}
+		}
+	}
+
+	private void handleConfirm(ButtonInteractionEvent event) {
+		AdventureLocation location = getRandomLocation();
+		MessageEmbed embed = location.generateEmbed(event.getUser());
+
+		event.editMessage(new MessageEditBuilder().setEmbeds(embed)
+				.setComponents(ActionRow.of(
+						Button.primary("adv:%s-investigate".formatted(location.id), "Investigate")
+								.withEmoji(Emoji.fromUnicode("🔍")),
+						Button.secondary("adv:leave", Emoji.fromUnicode("💨")).withDisabled(!location.canLeave)))
+				.setReplace(true).build()).queue();
+	}
+
+	private void handleCancel(ButtonInteractionEvent event) {
+		User user = event.getUser();
+		MessageEmbed embed = new EmbedBuilder().setThumbnail(user.getAvatarUrl()).setColor(IapetusColor.DARK_GREEN)
+				.setTitle(user.getEffectiveName() + "** isn't ready**")
+				.setDescription(
+						selectRandom("Adventure isn't always for everybody it's okay", "Adventure when you are ready",
+								"There is no rush to rush out into the adventure relax while you can",
+								"Not ready for adventure yet? That's fine!"))
+				.build();
+
+		adventureCooldowns.put(user.getId(), new Date());
+		event.editMessage(new MessageEditBuilder().setEmbeds(embed).setReplace(true).build()).queue();
+	}
+
+	private void handleLeave(ButtonInteractionEvent event) {
+		User user = event.getUser();
+		MessageEmbed embed = new EmbedBuilder().setThumbnail(user.getAvatarUrl()).setColor(IapetusColor.DARK_GREEN)
+				.setTitle(user.getEffectiveName() + " left the area.")
+				.setDescription(selectRandom("You left the area, who knows what adventures awaited you.",
+						"Hopefully you didn't forget anything.", "Did you have a safe journey?"))
+				.build();
+
+		event.editMessage(new MessageEditBuilder().setEmbeds(embed).setReplace(true).build()).queue();
 	}
 
 	//
@@ -285,11 +341,10 @@ public class AdventureButtons {
 	}
 
 	//
-	// EVENTS!!
-	// TODO: puzzle event, death event (lose random item), location (switch) event
+	// EVENTS
+	// TODO: puzzle event, location (switch) event
 	//
 
-	// this is the base event, extended for different events!
 	private static class AdventureEvent {
 		protected final String message;
 		protected final int odds;
@@ -306,7 +361,6 @@ public class AdventureButtons {
 		}
 	}
 
-	// when a user finds an item!
 	private class FindEvent extends AdventureEvent {
 		private final int amount;
 		private final ItemId itemId;
@@ -353,7 +407,7 @@ public class AdventureButtons {
 			if (isRandom)
 				found = rng.nextInt(amount) + 1;
 
-			Database.giveBerries(event.getUser(), found);
+			economy.reward(UserId.of(event.getUser()), found);
 			MessageEmbed embed = new EmbedBuilder(event.getMessage().getEmbeds().get(0))
 					.setDescription(message.replaceAll("%s", "" + found))
 					.setFooter("+%d Strawberries 🍓".formatted(found)).build();
@@ -369,23 +423,28 @@ public class AdventureButtons {
 		@Override
 		public void run(ButtonInteractionEvent event) {
 			User user = event.getUser();
-			Inventory inventory = Database.getUserInventory(UserId.of(user), itemMgr);
+			UserId userId = UserId.of(user);
+			Inventory inventory = Database.getUserInventory(userId, itemMgr);
 
 			String footer = null;
-			if (inventory.size() > 2) {
-				int itemsToTake = (int) Math.floor(Math.sqrt(inventory.size()) - 0.4);
-				Map<Item, Integer> taken = new HashMap<>();
-				for (int i = 0; i < itemsToTake; i++) {
-					Item item = inventory.remove(rng.nextInt(inventory.size()));
-					Integer count = taken.get(item);
-					if (count == null)
-						count = 0;
-					taken.put(item, count + 1);
+			if (inventory.totalCount() > 2) {
+				List<ItemId> pool = new ArrayList<>();
+				inventory.items().forEach((id, count) -> {
+					for (int i = 0; i < count; i++)
+						pool.add(id);
+				});
+
+				int itemsToTake = (int) Math.floor(Math.sqrt(pool.size()) - 0.4);
+				Map<ItemId, Integer> taken = new EnumMap<>(ItemId.class);
+				for (int i = 0; i < itemsToTake && !pool.isEmpty(); i++) {
+					ItemId picked = pool.remove(rng.nextInt(pool.size()));
+					itemMgr.takeItem(userId, picked);
+					taken.merge(picked, 1, Integer::sum);
 				}
 
 				StringBuilder builder = new StringBuilder();
-				taken.forEach((item, count) -> builder.append("-").append(count).append(" ")
-						.append(item.getString(true)).append(" "));
+				taken.forEach((id, count) -> builder.append("-").append(count).append(" ")
+						.append(itemMgr.getItem(id).getString(true)).append(" "));
 				footer = builder.toString();
 			}
 
@@ -408,20 +467,18 @@ public class AdventureButtons {
 			AdventureLocation location = getLocation(locationId);
 			MessageEmbed embed = location.generateEmbed(event.getUser());
 
-			String investigateButtonId = "adv-%s-investigate".formatted(location.id);
-			if (!buttonMgr.buttonExists(investigateButtonId))
-				buttonMgr.addButtons(new InvestigateButton(location.id));
-
 			event.editMessage(new MessageEditBuilder().setEmbeds(embed)
-					.setComponents(ActionRow.of(buttonMgr.getButton(investigateButtonId),
-							buttonMgr.getButton("adv-leave").withDisabled(!location.canLeave)))
+					.setComponents(ActionRow.of(
+							Button.primary("adv:%s-investigate".formatted(location.id), "Investigate")
+									.withEmoji(Emoji.fromUnicode("🔍")),
+							Button.secondary("adv:leave", Emoji.fromUnicode("💨")).withDisabled(!location.canLeave)))
 					.setReplace(true).build()).queue();
 		}
 	}
 
 	private class ChoiceEvent extends AdventureEvent {
-		public String id;
-		public List<AdventureChoice> choices;
+		private final String id;
+		private final List<AdventureChoice> choices;
 
 		public ChoiceEvent(String message, String id, int odds) {
 			super(message, odds);
@@ -439,16 +496,15 @@ public class AdventureButtons {
 			return addChoices(Arrays.asList(choices));
 		}
 
+		@Override
 		public void run(ButtonInteractionEvent event) {
 			Collection<Button> buttons = new ArrayList<>();
 			for (int i = 0; i < choices.size(); i++) {
 				if (i > 4)
 					break;
 				AdventureChoice choice = choices.get(i);
-				ChoiceButton button = choice.getButton(id, i);
-				if (!buttonMgr.buttonExists(button.getId()))
-					buttonMgr.addButtons(button);
-				buttons.add(button.getButton());
+				Button button = choice.toButton(id, i);
+				buttons.add(button);
 			}
 
 			MessageEmbed embed = new EmbedBuilder(event.getMessage().getEmbeds().getFirst()).setDescription(message)
@@ -463,7 +519,7 @@ public class AdventureButtons {
 		}
 	}
 
-	public class AdventureChoice {
+	private class AdventureChoice {
 		private final List<AdventureEvent> events;
 
 		private final String label;
@@ -471,10 +527,7 @@ public class AdventureButtons {
 		private final ButtonStyle style;
 
 		public AdventureChoice(String label, Emoji emoji) {
-			this.label = label;
-			this.emoji = emoji;
-			this.style = ButtonStyle.PRIMARY;
-			this.events = new ArrayList<>();
+			this(label, emoji, ButtonStyle.PRIMARY);
 		}
 
 		public AdventureChoice(String label, Emoji emoji, ButtonStyle style) {
@@ -485,10 +538,7 @@ public class AdventureButtons {
 		}
 
 		public AdventureChoice(String label) {
-			this.label = label;
-			this.style = ButtonStyle.PRIMARY;
-			this.emoji = null;
-			this.events = new ArrayList<>();
+			this(label, ButtonStyle.PRIMARY);
 		}
 
 		public AdventureChoice(String label, ButtonStyle style) {
@@ -503,11 +553,12 @@ public class AdventureButtons {
 			events.get(index).run(event);
 		}
 
-		public ChoiceButton getButton(String choiceId, int index) {
-			String id = "%s-%d".formatted(choiceId, index);
-			if (emoji == null)
-				return new ChoiceButton(id, label, style);
-			return new ChoiceButton(id, label, emoji, style);
+		public Button toButton(String choiceId, int index) {
+			String buttonId = "adv:%s-%d".formatted(choiceId, index);
+			Button button = Button.primary(buttonId, label).withStyle(style);
+			if (emoji != null)
+				button = button.withEmoji(emoji);
+			return button;
 		}
 
 		public AdventureChoice addEvents(List<AdventureEvent> events) {
@@ -520,107 +571,6 @@ public class AdventureButtons {
 
 		public AdventureChoice addEvents(AdventureEvent... events) {
 			return addEvents(Arrays.asList(events));
-		}
-	}
-
-	//
-	// BUTTONS
-	//
-
-	private class ConfirmButton extends IapetusButton {
-		public ConfirmButton() {
-			super(Button.success("confirm-adv", "Confirm").withEmoji(Emoji.fromUnicode("✅")));
-		}
-
-		@Override
-		public void run(ButtonInteractionEvent event) {
-			User user = event.getUser();
-
-			AdventureLocation location = getRandomLocation();
-			MessageEmbed embed = location.generateEmbed(user);
-
-			String investigateButtonId = "adv-" + location.id + "-investigate";
-			if (!buttonMgr.buttonExists(investigateButtonId))
-				buttonMgr.addButtons(new InvestigateButton(location.id));
-
-			event.editMessage(new MessageEditBuilder().setEmbeds(embed)
-					.setComponents(ActionRow.of(buttonMgr.getButton(investigateButtonId),
-							buttonMgr.getButton("adv-leave").withDisabled(!location.canLeave)))
-					.setReplace(true).build()).queue();
-		}
-	}
-
-	public class CancelButton extends IapetusButton {
-		public CancelButton() {
-			super(Button.secondary("cancel-adv", Emoji.fromUnicode("❌")));
-		}
-
-		@Override
-		public void run(ButtonInteractionEvent event) {
-			String pfp = event.getUser().getAvatarUrl();
-			User user = event.getUser();
-			MessageEmbed embed = new EmbedBuilder().setThumbnail(pfp).setColor(IapetusColor.DARK_GREEN)
-					.setTitle(user.getEffectiveName() + "** isn't ready**")
-					.setDescription(selectRandom("Adventure isn't always for everybody it's okay",
-							"Adventure when you are ready",
-							"There is no rush to rush out into the adventure relax while you can",
-							"Not ready for adventure yet? That's fine!"))
-					.build();
-
-			adventureCooldowns.put(user.getId(), new Date());
-			event.editMessage(new MessageEditBuilder().setEmbeds(embed).setReplace(true).build()).queue();
-		}
-	}
-
-	private class InvestigateButton extends IapetusButton {
-		public InvestigateButton(String locationId) {
-			super(Button.primary("adv-" + locationId + "-investigate", "Investigate")
-					.withEmoji(Emoji.fromUnicode("🔍")));
-		}
-
-		@Override
-		public void run(ButtonInteractionEvent event) {
-			String locationId = event.getButton().getCustomId().split("-")[1]; // adv-<location>-investigate
-			AdventureLocation location = getLocation(locationId);
-
-			location.investigate(event);
-		}
-	}
-
-	private class ChoiceButton extends IapetusButton {
-		public ChoiceButton(String choiceId, String label, Emoji emoji, ButtonStyle style) {
-			super(Button.primary("adv-" + choiceId, label).withEmoji(emoji).withStyle(style));
-		}
-
-		public ChoiceButton(String choiceId, String label, ButtonStyle style) {
-			super(Button.primary("adv-" + choiceId, label).withStyle(style));
-		}
-
-		@Override
-		public void run(ButtonInteractionEvent event) {
-			String choiceId = event.getButton().getCustomId().split("-")[1]; // adv-<choiceId>-<selection>
-			int selection = Integer.parseInt(event.getButton().getCustomId().split("-")[2]);
-			ChoiceEvent choice = getChoice(choiceId);
-
-			choice.run(selection, event);
-		}
-	}
-
-	private class LeaveButton extends IapetusButton {
-		public LeaveButton() {
-			super(Button.secondary("adv-leave", Emoji.fromUnicode("💨")));
-		}
-
-		@Override
-		public void run(ButtonInteractionEvent event) {
-			User user = event.getUser();
-			MessageEmbed embed = new EmbedBuilder().setThumbnail(user.getAvatarUrl()).setColor(IapetusColor.DARK_GREEN)
-					.setTitle(user.getEffectiveName() + " left the area.")
-					.setDescription(selectRandom("You left the area, who knows what adventures awaited you.",
-							"Hopefully you didn't forget anything.", "Did you have a safe journey?"))
-					.build();
-
-			event.editMessage(new MessageEditBuilder().setEmbeds(embed).setReplace(true).build()).queue();
 		}
 	}
 }

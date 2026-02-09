@@ -6,16 +6,15 @@ import net.dv8tion.jda.api.components.buttons.Button;
 import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
-import org.example.ButtonManager;
+import org.example.ButtonModule;
 import org.example.CommandManager;
-import org.example.structures.IapetusButton;
 import org.example.structures.IapetusCommand;
 import org.example.utils.IapetusColor;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public class HelpCommand extends IapetusCommand {
+public class HelpCommand extends IapetusCommand implements ButtonModule {
 	private static final MessageEmbed IAPETUS_MAIN_EMBED = new EmbedBuilder().setTitle("**Iapetus**").setDescription(
 			"""
 					**`Basic info`**\s
@@ -46,67 +45,55 @@ public class HelpCommand extends IapetusCommand {
 					 Here you will find the documentation on Iapetus from commands to our Terms Of Service and Privacy policy on our [Gitbook](https://iapetus-bot-development.gitbook.io/iapetus-bot)**""")
 			.setColor(IapetusColor.LILA).build();
 
-	private final ButtonManager buttonMgr;
+	private final CommandManager commandMgr;
 
-	public HelpCommand(ButtonManager buttonMgr, CommandManager commandMgr) {
+	public HelpCommand(CommandManager commandMgr) {
 		super("help", "gives a bit of help and info");
-		this.buttonMgr = buttonMgr;
-		registerButtons(commandMgr);
-	}
-
-	private void registerButtons(CommandManager commandMgr) {
-		buttonMgr.addButtons(new IapetusButton(Button.primary("links", "🔗")) {
-			@Override
-			public void run(ButtonInteractionEvent event) {
-				event.replyEmbeds(LINKS_EMBED).queue();
-			}
-		}, new IapetusButton(Button.primary("info", "❔")) {
-			@Override
-			public void run(ButtonInteractionEvent event) {
-				event.replyEmbeds(MORE_INFO_EMBED).queue();
-			}
-		}, new IapetusButton(Button.primary("commands", "💚")) {
-			@Override
-			public void run(ButtonInteractionEvent event) {
-				Map<String, String> funCommands = new HashMap<>();
-				Map<String, String> adminCommands = new HashMap<>();
-
-				commandMgr.getCommands().forEach((cmdName, cmd) -> {
-					Long rawPerms = cmd.getSlash().getDefaultPermissions().getPermissionsRaw();
-					System.out.printf("Required perms for %s: %d", cmdName, rawPerms);
-					if (rawPerms == null)
-						funCommands.put(cmdName, cmd.getDescription());
-					else
-						adminCommands.put(cmdName, cmd.getDescription());
-				});
-
-				StringBuilder commands = new StringBuilder();
-				commands.append(
-						"**Need help with commands or wondering what the commands are and what they do? I am here to help you!**\n\n");
-
-				commands.append("**`Fun commands`**\n");
-				funCommands.forEach((name, description) -> {
-					commands.append("**/%s** - %s\n".formatted(name, description));
-				});
-
-				commands.append("\n");
-				commands.append("**`Staff only commands`**\n");
-				adminCommands.forEach((name, description) -> {
-					commands.append("**/%s** - %s\n".formatted(name, description));
-				});
-
-				MessageEmbed embed = new EmbedBuilder().setTitle("**`Commands`**").setDescription(commands)
-						.setColor(IapetusColor.LILA).build();
-
-				event.replyEmbeds(embed).queue();
-			}
-		});
+		this.commandMgr = commandMgr;
 	}
 
 	@Override
 	public boolean runCommand(SlashCommandInteractionEvent event) {
-		event.replyEmbeds(IAPETUS_MAIN_EMBED).addComponents(ActionRow.of(buttonMgr.getButton("commands"),
-				buttonMgr.getButton("info"), buttonMgr.getButton("links"))).queue();
+		event.replyEmbeds(IAPETUS_MAIN_EMBED).addComponents(ActionRow.of(Button.primary("help:commands", "💚"),
+				Button.primary("help:info", "❔"), Button.primary("help:links", "🔗"))).queue();
 		return true;
+	}
+
+	@Override
+	public void onButton(String id, ButtonInteractionEvent event) {
+		switch (id) {
+			case "links" -> event.replyEmbeds(LINKS_EMBED).queue();
+			case "info" -> event.replyEmbeds(MORE_INFO_EMBED).queue();
+			case "commands" -> event.replyEmbeds(buildCommandsEmbed()).queue();
+			default -> {
+			}
+		}
+	}
+
+	private MessageEmbed buildCommandsEmbed() {
+		Map<String, String> funCommands = new HashMap<>();
+		Map<String, String> adminCommands = new HashMap<>();
+
+		commandMgr.getCommands().forEach((cmdName, cmd) -> {
+			Long rawPerms = cmd.getSlash().getDefaultPermissions().getPermissionsRaw();
+			if (rawPerms == null)
+				funCommands.put(cmdName, cmd.getDescription());
+			else
+				adminCommands.put(cmdName, cmd.getDescription());
+		});
+
+		StringBuilder commands = new StringBuilder();
+		commands.append(
+				"**Need help with commands or wondering what the commands are and what they do? I am here to help you!**\n\n");
+
+		commands.append("**`Fun commands`**\n");
+		funCommands.forEach((name, description) -> commands.append("**/%s** - %s\n".formatted(name, description)));
+
+		commands.append("\n");
+		commands.append("**`Staff only commands`**\n");
+		adminCommands.forEach((name, description) -> commands.append("**/%s** - %s\n".formatted(name, description)));
+
+		return new EmbedBuilder().setTitle("**`Commands`**").setDescription(commands).setColor(IapetusColor.LILA)
+				.build();
 	}
 }
