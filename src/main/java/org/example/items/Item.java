@@ -2,44 +2,30 @@ package org.example.items;
 
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
-import org.example.ItemManager;
-import org.example.buttons.ShopButton;
+import org.example.types.ItemId;
 
 public abstract class Item {
-	private static ItemManager itemMgr;
-	// these values will show to the user.
-	private final String name;
-	private final Emoji icon; // usually an emoji
-	private final String description;
-	private final int cost;
-
-	// something like "cherry_blossom" - not shown to user.
+	private final ItemId itemId;
 	private final String id;
+	private final String name;
+	private final Emoji icon;
+	private final String description;
 
-	private final ShopButton buyButton;
-
-	public static void init(ItemManager itemMgr) {
-		Item.itemMgr = itemMgr;
-	}
-
-	public Item(String name, String description, String id, Emoji icon, int cost) {
+	protected Item(ItemId itemId, String name, String description, Emoji icon) {
+		this.itemId = itemId;
+		this.id = itemId.key();
 		this.name = name;
 		this.description = description;
-		this.id = id;
-
 		this.icon = icon;
-		this.cost = cost;
-		buyButton = new ShopButton(id, this, cost);
-
-		Item.itemMgr.addItem(this);
 	}
 
-	public Item(String name, String description, String id, Emoji icon) {
-		this(name, description, id, icon, 0);
-	}
-
-	public Item(String name, String description, String id) {
-		this(name, description, id, null, 0);
+	/** For InvalidItem only — no ItemId, uses a raw string key. */
+	protected Item(String id, String name, String description, Emoji icon) {
+		this.itemId = null;
+		this.id = id;
+		this.name = name;
+		this.description = description;
+		this.icon = icon;
 	}
 
 	abstract public boolean use(SlashCommandInteractionEvent event);
@@ -68,6 +54,10 @@ public abstract class Item {
 
 	public String getIcon() {
 		return getIconEmoji().getFormatted();
+	}
+
+	public ItemId getItemId() {
+		return itemId;
 	}
 
 	public String getId() {

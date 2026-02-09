@@ -7,6 +7,8 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import org.example.ItemManager;
 import org.example.database.Database;
 import org.example.structures.IapetusCommand;
+import org.example.types.ItemId;
+import org.example.types.UserId;
 import org.example.utils.IapetusColor;
 
 import java.util.Random;
@@ -24,9 +26,9 @@ public class HatchCommand extends IapetusCommand {
 	@Override
 	public boolean runCommand(SlashCommandInteractionEvent event) {
 		User user = event.getUser();
-		String userId = user.getId();
+		UserId userId = UserId.of(user);
 
-		if (!itemMgr.hasItem(userId, "egg")) {
+		if (!itemMgr.hasItem(userId, ItemId.EGG)) {
 			event.reply("You don't have an egg to hatch.").queue();
 			return true;
 		}
@@ -35,10 +37,10 @@ public class HatchCommand extends IapetusCommand {
 		String hatchedPet = hatchRandomPet();
 
 		// Log the hatching in the database
-		Database.logHatchInDatabase(userId, hatchedPet);
+		Database.logHatchInDatabase(userId.value(), hatchedPet);
 
 		// Remove the egg from the inventory
-		itemMgr.takeItem(userId, "egg");
+		itemMgr.takeItem(userId, ItemId.EGG);
 
 		MessageEmbed embed = new EmbedBuilder().setTitle("Hatching a Pet")
 				.setDescription("You hatched a new pet: %s".formatted(hatchedPet)).setColor(IapetusColor.RED).build();

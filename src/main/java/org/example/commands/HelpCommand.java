@@ -7,6 +7,7 @@ import net.dv8tion.jda.api.entities.MessageEmbed;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.events.interaction.component.ButtonInteractionEvent;
 import org.example.ButtonManager;
+import org.example.CommandManager;
 import org.example.structures.IapetusButton;
 import org.example.structures.IapetusCommand;
 import org.example.utils.IapetusColor;
@@ -47,13 +48,13 @@ public class HelpCommand extends IapetusCommand {
 
 	private final ButtonManager buttonMgr;
 
-	public HelpCommand(ButtonManager buttonMgr) {
+	public HelpCommand(ButtonManager buttonMgr, CommandManager commandMgr) {
 		super("help", "gives a bit of help and info");
 		this.buttonMgr = buttonMgr;
-		registerButtons();
+		registerButtons(commandMgr);
 	}
 
-	private void registerButtons() {
+	private void registerButtons(CommandManager commandMgr) {
 		buttonMgr.addButtons(new IapetusButton(Button.primary("links", "🔗")) {
 			@Override
 			public void run(ButtonInteractionEvent event) {
@@ -70,7 +71,7 @@ public class HelpCommand extends IapetusCommand {
 				Map<String, String> funCommands = new HashMap<>();
 				Map<String, String> adminCommands = new HashMap<>();
 
-				IapetusCommand.commandMgr.getCommands().forEach((cmdName, cmd) -> {
+				commandMgr.getCommands().forEach((cmdName, cmd) -> {
 					Long rawPerms = cmd.getSlash().getDefaultPermissions().getPermissionsRaw();
 					System.out.printf("Required perms for %s: %d", cmdName, rawPerms);
 					if (rawPerms == null)

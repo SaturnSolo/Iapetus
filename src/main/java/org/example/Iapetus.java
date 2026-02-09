@@ -20,8 +20,9 @@ import org.example.events.DropHandler;
 import org.example.events.InteractionLogger;
 import org.example.events.TextResponses;
 import org.example.items.*;
-import org.example.items.PumpkinItem;
-import org.example.structures.IapetusCommand;
+import org.example.items.flowers.CherryBlossomItem;
+import org.example.items.flowers.RoseItem;
+import org.example.items.flowers.TulipItem;
 
 import java.security.SecureRandom;
 import java.util.Random;
@@ -52,28 +53,32 @@ public class Iapetus {
 		buttonMgr = new ButtonManager();
 		commandMgr = new CommandManager();
 
-		// Initialize static fields
-		Item.init(itemMgr);
-		IapetusCommand.init(commandMgr);
-
 		// Set activity (like "playing Something")
 		builder.setActivity(Activity.listening("🍓"));
 		builder.enableIntents(GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_PRESENCES,
 				GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MEMBERS,
 				GatewayIntent.GUILD_PRESENCES);
 
-		new DiceItem(rng);
-		new GemItem();
-		new KeyItem();
-		new PumpkinItem();
-		new RockItem(buttonMgr, rng);
-		new ShinyItem(itemMgr);
+		// Register items explicitly
+		itemMgr.register(new DiceItem(rng));
+		itemMgr.register(new GemItem());
+		itemMgr.register(new KeyItem());
+		itemMgr.register(new PumpkinItem());
+		itemMgr.register(new RockItem(buttonMgr, rng));
+		itemMgr.register(new ShinyItem(itemMgr));
+		itemMgr.register(new SkullItem());
+		itemMgr.register(new SwordItem());
+		itemMgr.register(new EggItem());
+		itemMgr.register(new RoseItem());
+		itemMgr.register(new TulipItem());
+		itemMgr.register(new CherryBlossomItem());
 
 		// Add stuff to the respective managers
 		buttonMgr.addButtons(new StrawberryButton());
-		commandMgr.addCommands(new PingCommand(), new BonkCommand(), new RandomCommand(rng), new ShopCommand(buttonMgr),
-				new InventoryCommand(), new BerriesCommand(), new PetMenuCommand(), new HatchCommand(itemMgr, rng),
-				new IgnoredChannels(), new HelpCommand(buttonMgr), new UseItemCommand(itemMgr),
+		commandMgr.addCommands(new PingCommand(), new BonkCommand(), new RandomCommand(rng),
+				new ShopCommand(buttonMgr, itemMgr), new InventoryCommand(itemMgr), new BerriesCommand(),
+				new PetMenuCommand(), new HatchCommand(itemMgr, rng), new IgnoredChannels(),
+				new HelpCommand(buttonMgr, commandMgr), new UseItemCommand(itemMgr),
 				new AdventureCommands(buttonMgr, itemMgr, rng), new LootChestCommands(itemMgr, rng), new GiveCommand(),
 				new TopBerriesCommand(), new DailyCommand());
 

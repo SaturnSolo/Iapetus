@@ -3,12 +3,11 @@ package org.example.items.flowers;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.example.items.Item;
-
-import java.lang.reflect.Member;
+import org.example.types.ItemId;
 
 public class RoseItem extends Item {
 	public RoseItem() {
-		super("Rose", "surprisingly no thorns.", "rose", Emoji.fromUnicode("🌹"), 10);
+		super(ItemId.ROSE, "Rose", "surprisingly no thorns.", Emoji.fromUnicode("🌹"));
 	}
 
 	@Override

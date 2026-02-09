@@ -7,11 +7,15 @@ import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEve
 import org.example.ItemManager;
 import org.example.database.Database;
 import org.example.structures.IapetusCommand;
+import org.example.types.ItemId;
+import org.example.types.UserId;
 import org.example.utils.IapetusColor;
 
 import java.util.Random;
 
 public class LootChestCommands extends IapetusCommand {
+	private static final ItemId[] POSSIBLE_LOOT = {ItemId.GEM, ItemId.ROSE, ItemId.DICE, ItemId.SHINY, ItemId.KEY};
+
 	private final ItemManager itemMgr;
 	private final Random rng;
 
@@ -24,18 +28,18 @@ public class LootChestCommands extends IapetusCommand {
 	@Override
 	public boolean runCommand(SlashCommandInteractionEvent event) {
 		User user = event.getUser();
-		String userId = user.getId();
+		UserId userId = UserId.of(user);
 
-		if (itemMgr.hasItem(userId, "key")) {
-			String loot = openRandomLoot();
-			Database.logLootInDatabase(userId, loot);
+		if (itemMgr.hasItem(userId, ItemId.KEY)) {
+			ItemId loot = openRandomLoot();
+			Database.logLootInDatabase(userId.value(), loot.key());
 
-			itemMgr.takeItem(userId, "key");
+			itemMgr.takeItem(userId, ItemId.KEY);
 			MessageEmbed embed = new EmbedBuilder().setTitle("Opening a chest")
-					.setDescription("You opened a chest and got: 5 berries and %s".formatted(loot))
+					.setDescription("You opened a chest and got: 5 berries and %s".formatted(loot.key()))
 					.setColor(IapetusColor.RED).build();
 
-			Database.giveBerries(userId, 5);
+			Database.giveBerries(userId.value(), 5);
 			itemMgr.giveItem(userId, loot);
 
 			event.replyEmbeds(embed).queue();
@@ -45,8 +49,7 @@ public class LootChestCommands extends IapetusCommand {
 		return true;
 	}
 
-	private String openRandomLoot() {
-		String[] possibleLoot = {"gem", "rose", "dice", "shiny", "key"};
-		return possibleLoot[rng.nextInt(possibleLoot.length)];
+	private ItemId openRandomLoot() {
+		return POSSIBLE_LOOT[rng.nextInt(POSSIBLE_LOOT.length)];
 	}
 }

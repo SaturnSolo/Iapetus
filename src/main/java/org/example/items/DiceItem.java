@@ -2,6 +2,7 @@ package org.example.items;
 
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
+import org.example.types.ItemId;
 
 import java.util.Random;
 
@@ -9,7 +10,7 @@ public class DiceItem extends Item {
 	private final Random rng;
 
 	public DiceItem(Random rng) {
-		super("Dice", "Seems rollable.", "dice", Emoji.fromUnicode("🎲"), 0);
+		super(ItemId.DICE, "Dice", "Seems rollable.", Emoji.fromUnicode("🎲"));
 		this.rng = rng;
 	}
 

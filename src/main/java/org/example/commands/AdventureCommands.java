@@ -36,29 +36,29 @@ public class AdventureCommands extends IapetusCommand {
 		 * " wonders into");
 		 * 
 		 * List<String> areas = Arrays.asList(
-		 * "**a cave that seems to go down a long way \n What would you like to do? \n Investigate \uD83D\uDD0D or Leave \uD83D\uDCA8**"
+		 * "**a cave that seems to go down a long way \n What would you like to do? \n Investigate 🔍 or Leave 💨**"
 		 * ,
-		 * "**a forest that seems to be enchanted \n What would you like to do? \n Investigate \uD83D\uDD0D or Leave \uD83D\uDCA8**"
+		 * "**a forest that seems to be enchanted \n What would you like to do? \n Investigate 🔍 or Leave 💨**"
 		 * ,
-		 * "**a mountain that seems impossible to climb \n What would you like to do? \n Investigate \uD83D\uDD0D or Leave \uD83D\uDCA8**"
+		 * "**a mountain that seems impossible to climb \n What would you like to do? \n Investigate 🔍 or Leave 💨**"
 		 * ,
-		 * "**a haunted house that seems dark and spooky \n What would you like to do? \n Investigate \uD83D\uDD0D or Leave \uD83D\uDCA8**"
+		 * "**a haunted house that seems dark and spooky \n What would you like to do? \n Investigate 🔍 or Leave 💨**"
 		 * ,
-		 * "**a barn that seems empty \n What would you like to do? \n Investigate \uD83D\uDD0D or Leave \uD83D\uDCA8**"
+		 * "**a barn that seems empty \n What would you like to do? \n Investigate 🔍 or Leave 💨**"
 		 * ,
-		 * "**an abandoned building that seems to be in ruin \n What would you like to do? \n Investigate \uD83D\uDD0D or Leave \uD83D\uDCA8**"
+		 * "**an abandoned building that seems to be in ruin \n What would you like to do? \n Investigate 🔍 or Leave 💨**"
 		 * ,
-		 * "**a ball of yarn \n What would you like to do? \n Investigate \uD83D\uDD0D or Leave \uD83D\uDCA8**"
+		 * "**a ball of yarn \n What would you like to do? \n Investigate 🔍 or Leave 💨**"
 		 * ,
-		 * "**a rainstorm that seems to never end \n What would you like to do? \n Investigate \uD83D\uDD0D or Leave \uD83D\uDCA8**"
+		 * "**a rainstorm that seems to never end \n What would you like to do? \n Investigate 🔍 or Leave 💨**"
 		 * ,
-		 * "**a tree that seems to hold an item of sorts \n What would you like to do?  \n Investigate \uD83D\uDD0D or Leave \uD83D\uDCA8**"
+		 * "**a tree that seems to hold an item of sorts \n What would you like to do?  \n Investigate 🔍 or Leave 💨**"
 		 * ,
-		 * "**a mossy fountain that seems magical \n What would you like to do? \n Investigate \uD83D\uDD0D or Leave \uD83D\uDCA8**"
+		 * "**a mossy fountain that seems magical \n What would you like to do? \n Investigate 🔍 or Leave 💨**"
 		 * ,
-		 * "**a statue of a mossy moon \n What would you like to do? \n investigate \uD83D\uDD0D or Leave \uD83D\uDCA8**"
+		 * "**a statue of a mossy moon \n What would you like to do? \n investigate 🔍 or Leave 💨**"
 		 * ,
-		 * "**an old cabin in the middle of the woods that is covered in moss \n What would you like to do? \n Investigate \uD83D\uDD0D or Leave \uD83D\uDCA8**"
+		 * "**an old cabin in the middle of the woods that is covered in moss \n What would you like to do? \n Investigate 🔍 or Leave 💨**"
 		 * ); //add seasonal things here // Investigate 🔍 or Leave 💨
 		 * 
 		 * 

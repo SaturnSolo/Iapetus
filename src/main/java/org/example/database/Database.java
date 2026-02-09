@@ -7,6 +7,7 @@ import org.example.ItemManager;
 import org.example.items.InvalidItem;
 import org.example.items.Item;
 import org.example.structures.Inventory;
+import org.example.types.UserId;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -18,15 +19,14 @@ import java.util.stream.Collectors;
 
 @SuppressWarnings("SqlNoDataSourceInspection")
 public class Database {
-	private static ItemManager itemMgr;
 
 	// Inventory + items
-	public static Inventory getUserInventory(String userId) {
+	public static Inventory getUserInventory(UserId userId, ItemManager itemMgr) {
 		List<Item> itemList = new ArrayList<>();
 		try (final Connection connection = SQLiteDataSource.getConnection();
 				final PreparedStatement ps = connection.prepareStatement(
 						"SELECT item_name, COUNT(*) AS item_count FROM inventory WHERE user_id = ? GROUP BY item_name")) {
-			ps.setString(1, userId);
+			ps.setString(1, userId.value());
 			try (final ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
 					String itemName = rs.getString("item_name");
@@ -44,11 +44,11 @@ public class Database {
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return new Inventory(userId, itemList, itemMgr);
+		return new Inventory(userId, itemList);
 	}
 
-	public static Inventory getUserInventory(User user) {
-		return getUserInventory(user.getId());
+	public static Inventory getUserInventory(User user, ItemManager itemMgr) {
+		return getUserInventory(UserId.of(user), itemMgr);
 	}
 
 	public static void addToInventory(String userId, String itemName) {
@@ -101,20 +101,7 @@ public class Database {
 	public static void takeItem(String userId, String id) {
 		try (final Connection connection = SQLiteDataSource.getConnection();
 				final PreparedStatement ps = connection.prepareStatement(
-						"DELETE FROM inventory WHERE rowid = ( SELECT rowid from inventory where user_id = ? AND item_name = ? LIMIT 1 )") // "DELETE
-																																			// FROM
-																																			// inventory
-																																			// WHERE
-																																			// user_id
-																																			// =
-																																			// ?
-																																			// AND
-																																			// item_name
-																																			// =
-																																			// ?
-																																			// LIMIT
-																																			// ?"
-		) {
+						"DELETE FROM inventory WHERE rowid = ( SELECT rowid from inventory where user_id = ? AND item_name = ? LIMIT 1 )")) {
 			ps.setString(1, userId);
 			ps.setString(2, id);
 			ps.executeUpdate();
@@ -125,8 +112,6 @@ public class Database {
 
 	// Pets
 	public static List<String> getHatchedPets(String userId) {
-		// Implement logic to fetch hatched pets from the database
-		// Replace this with your database retrieval logic
 		List<String> petList = new ArrayList<>();
 
 		try (Connection connection = SQLiteDataSource.getConnection();
@@ -147,17 +132,6 @@ public class Database {
 
 	public static List<String> getHatchedPets(User user) {
 		return getHatchedPets(user.getId());
-	}
-
-	private void removeEggFromInventory(String userId) {
-		try (final Connection connection = SQLiteDataSource.getConnection();
-				final PreparedStatement ps = connection
-						.prepareStatement("DELETE FROM inventory WHERE user_id = ? AND item_name = '🥚'")) {
-			ps.setString(1, userId);
-			ps.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
 	}
 
 	// Berries
@@ -247,7 +221,7 @@ public class Database {
 		try (Connection connection = SQLiteDataSource.getConnection();
 				PreparedStatement ps = connection.prepareStatement("SELECT ub.user_id, ub.berry_count "
 						+ "FROM user_berries ub " + "JOIN user_guilds ug ON ub.user_id = ug.user_id "
-						+ "WHERE ug.guild_id = ? " + "ORDER BY ub.berry_count")) {
+						+ "WHERE ug.guild_id = ? " + "ORDER BY ub.berry_count DESC")) {
 
 			ps.setLong(1, guildId);
 
@@ -266,9 +240,7 @@ public class Database {
 
 	public static Map<Long, Integer> getTopNBerryHolders(long guildId, int n) {
 		return getUserBerryMap(guildId).entrySet().stream().limit(n)
-				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, // Dedupe, duplicate not
-																								// possible
-						LinkedHashMap::new));
+				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, LinkedHashMap::new));
 	}
 
 	// Ignored channels
@@ -341,8 +313,6 @@ public class Database {
 	}
 
 	public static void logHatchInDatabase(String userId, String pet) {
-		// Implement logic to log the hatching in your SQLite database
-		// Replace this with your database insertion logic
 		try (Connection connection = SQLiteDataSource.getConnection();
 				PreparedStatement ps = connection
 						.prepareStatement("INSERT INTO hatch_log (user_id, pet) VALUES (?, ?)")) {
