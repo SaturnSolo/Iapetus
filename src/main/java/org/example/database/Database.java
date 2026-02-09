@@ -1,12 +1,10 @@
 package org.example.database;
 
 import net.dv8tion.jda.api.entities.Guild;
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.channel.Channel;
 import org.example.ItemManager;
-import org.example.items.InvalidItem;
-import org.example.items.Item;
 import org.example.structures.Inventory;
+import org.example.types.ItemId;
 import org.example.types.UserId;
 
 import java.sql.Connection;
@@ -22,7 +20,7 @@ public class Database {
 
 	// Inventory + items
 	public static Inventory getUserInventory(UserId userId, ItemManager itemMgr) {
-		List<Item> itemList = new ArrayList<>();
+		Map<ItemId, Integer> items = new EnumMap<>(ItemId.class);
 		try (final Connection connection = SQLiteDataSource.getConnection();
 				final PreparedStatement ps = connection.prepareStatement(
 						"SELECT item_name, COUNT(*) AS item_count FROM inventory WHERE user_id = ? GROUP BY item_name")) {
@@ -32,39 +30,16 @@ public class Database {
 					String itemName = rs.getString("item_name");
 					int itemCount = rs.getInt("item_count");
 
-					Item item = itemMgr.getItem(itemName);
-					if (item == null)
-						item = new InvalidItem(itemName);
-					for (int i = 0; i < itemCount; i++) {
-						itemList.add(item);
+					if (itemMgr.getItem(itemName) != null) {
+						ItemId id = ItemId.valueOf(itemName.toUpperCase());
+						items.put(id, itemCount);
 					}
 				}
-
 			}
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-		return new Inventory(userId, itemList);
-	}
-
-	public static Inventory getUserInventory(User user, ItemManager itemMgr) {
-		return getUserInventory(UserId.of(user), itemMgr);
-	}
-
-	public static void addToInventory(String userId, String itemName) {
-		try (Connection connection = SQLiteDataSource.getConnection();
-				PreparedStatement ps = connection
-						.prepareStatement("INSERT INTO inventory (user_id, item_name) VALUES (?, ?)")) {
-			ps.setString(1, userId);
-			ps.setString(2, itemName);
-			ps.executeUpdate();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-	}
-
-	public static void addToInventory(User user, String itemName) {
-		addToInventory(user.getId(), itemName);
+		return new Inventory(items);
 	}
 
 	public static boolean hasItem(String userId, String id, int amount) {
@@ -130,10 +105,6 @@ public class Database {
 		return petList;
 	}
 
-	public static List<String> getHatchedPets(User user) {
-		return getHatchedPets(user.getId());
-	}
-
 	// Berries
 	public static void giveBerries(String userId, int amount) {
 		try (final Connection connection = SQLiteDataSource.getConnection();
@@ -148,16 +119,8 @@ public class Database {
 		}
 	}
 
-	public static void giveBerries(User user, int amount) {
-		giveBerries(user.getId(), amount);
-	}
-
 	public static void takeBerries(String userId, int amount) {
 		giveBerries(userId, -amount);
-	}
-
-	public static void takeBerries(User user, int amount) {
-		takeBerries(user.getId(), amount);
 	}
 
 	public static int getBerryAmount(String userId) {
@@ -178,10 +141,6 @@ public class Database {
 		}
 	}
 
-	public static int getBerryAmount(User user) {
-		return getBerryAmount(user.getId());
-	}
-
 	public static LocalDate getLastClaimDate(String userId) {
 		try (Connection connection = SQLiteDataSource.getConnection();
 				PreparedStatement ps = connection
@@ -198,10 +157,6 @@ public class Database {
 		return null;
 	}
 
-	public static LocalDate getLastClaimDate(User user) {
-		return getLastClaimDate(user.getId());
-	}
-
 	public static void updateLastClaimDate(String userId, LocalDate currentDate) {
 		try (Connection connection = SQLiteDataSource.getConnection();
 				PreparedStatement ps = connection
@@ -216,7 +171,7 @@ public class Database {
 		}
 	}
 
-	public static Map<Long, Integer> getUserBerryMap(long guildId) {
+	private static Map<Long, Integer> getUserBerryMap(long guildId) {
 		Map<Long, Integer> result = new LinkedHashMap<>();
 		try (Connection connection = SQLiteDataSource.getConnection();
 				PreparedStatement ps = connection.prepareStatement("SELECT ub.user_id, ub.berry_count "
