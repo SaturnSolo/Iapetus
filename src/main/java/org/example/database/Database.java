@@ -221,7 +221,7 @@ public class Database {
 		try (Connection connection = SQLiteDataSource.getConnection();
 				PreparedStatement ps = connection.prepareStatement("SELECT ub.user_id, ub.berry_count "
 						+ "FROM user_berries ub " + "JOIN user_guilds ug ON ub.user_id = ug.user_id "
-						+ "WHERE ug.guild_id = ? " + "ORDER BY ub.berry_count")) {
+						+ "WHERE ug.guild_id = ? " + "ORDER BY ub.berry_count DESC")) {
 
 			ps.setLong(1, guildId);
 
