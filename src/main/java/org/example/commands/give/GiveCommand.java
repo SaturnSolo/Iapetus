@@ -4,43 +4,37 @@ import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import net.dv8tion.jda.api.interactions.commands.OptionType;
 import net.dv8tion.jda.api.interactions.commands.build.Commands;
-import org.example.database.Database;
+import org.example.Economy;
+import org.example.Economy.TransferResult;
 import org.example.structures.IapetusCommand;
+import org.example.types.UserId;
 
 public class GiveCommand extends IapetusCommand {
-	public GiveCommand() {
+	private final Economy economy;
+
+	public GiveCommand(Economy economy) {
 		super(Commands.slash("give", "give berries to user")
 				.addOption(OptionType.MENTIONABLE, "mention", "who to give berries to", true)
 				.addOption(OptionType.INTEGER, "give", "number of berries to give", true));
+		this.economy = economy;
 	}
 
 	@Override
 	public boolean runCommand(SlashCommandInteractionEvent event) {
-		String sourceUserId = event.getUser().getId();
-		User targetUserId = event.getOption("mention").getAsUser(); // NPE impossible
+		UserId sourceUserId = UserId.of(event.getUser());
+		User targetUser = event.getOption("mention").getAsUser(); // NPE impossible
 		int transferAmount = event.getOption("give").getAsInt(); // NPE impossible
 
-		if (transferAmount <= 0) {
-			event.reply("You must specify an amount greater than 0.").setEphemeral(true).queue();
-			return true;
+		TransferResult result = economy.transfer(sourceUserId, UserId.of(targetUser), transferAmount);
+		switch (result) {
+			case BAD_AMOUNT -> event.reply("You must specify an amount greater than 0.").setEphemeral(true).queue();
+			case SELF_TRANSFER -> event.reply("You cannot give berries to yourself.").setEphemeral(true).queue();
+			case INSUFFICIENT_FUNDS ->
+				event.reply("You do not have enough berries to transfer.").setEphemeral(true).queue();
+			case OK ->
+				event.reply("You have successfully transferred %d berries to %s!".formatted(transferAmount, targetUser))
+						.queue();
 		}
-
-		if (sourceUserId.equals(targetUserId.getId())) {
-			event.reply("You cannot give berries to yourself.").setEphemeral(true).queue();
-			return true;
-		}
-
-		int totalBerries = Database.getBerryAmount(sourceUserId);
-		if (totalBerries < transferAmount) {
-			event.reply("You do not have enough berries to transfer.").setEphemeral(true).queue();
-			return true;
-		}
-
-		Database.takeBerries(sourceUserId, transferAmount);
-		Database.giveBerries(targetUserId, transferAmount);
-
-		event.reply("You have successfully transferred %d berries to %s!".formatted(transferAmount, targetUserId))
-				.queue();
 
 		return true;
 	}
