@@ -9,7 +9,8 @@ import java.util.List;
 
 public class ThreadMaker extends ListenerAdapter {
     private final List<String> POLL_KEYWORDS = List.of(
-           "@Polls"
+           "@Polls",
+            "<@&894314069488701490>"
     );
 
     private final String TARGET_BOT_ID;
