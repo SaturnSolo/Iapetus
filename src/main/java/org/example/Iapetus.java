@@ -15,6 +15,7 @@ import org.example.commands.shop.ShopCommand;
 import org.example.events.DropHandler;
 import org.example.events.InteractionLogger;
 import org.example.events.TextResponses;
+import org.example.events.ThreadMaker;
 import org.example.items.*;
 import org.example.items.flowers.CherryBlossomItem;
 import org.example.items.flowers.RoseItem;
@@ -93,7 +94,7 @@ public class Iapetus {
 				new TopBerriesCommand(economy), new DailyCommand(economy));
 
 		builder.addEventListeners(commandMgr, buttonRouter, dropHandler, new TextResponses(rng),
-				new InteractionLogger());
+				new InteractionLogger(), new ThreadMaker());
 		JDA jda = builder.build();
 		commandMgr.register(jda);
 	}
