@@ -21,7 +21,6 @@ public class ThreadMaker extends ListenerAdapter {
 
     @Override
     public void onMessageReceived(MessageReceivedEvent event) {
-        // Only process messages from the target poll bot
         String authorId = event.getAuthor().getId();
 
         if (!authorId.equals(TARGET_BOT_ID))
@@ -30,7 +29,6 @@ public class ThreadMaker extends ListenerAdapter {
         Message message = event.getMessage();
         String content = message.getContentDisplay().toLowerCase();
 
-        // Check if message looks like a poll
         boolean isPoll = false;
         for (String keyword : POLL_KEYWORDS) {
             if (content.contains(keyword)) {
@@ -38,8 +36,7 @@ public class ThreadMaker extends ListenerAdapter {
                 break;
             }
         }
-
-        // Also check embeds (many poll bots use embeds)
+        
         if (!isPoll && !message.getEmbeds().isEmpty()) {
             isPoll = true;
         }
@@ -55,7 +52,7 @@ public class ThreadMaker extends ListenerAdapter {
 
         String threadName = "Poll Discussion";
 
-        // Create thread from message
+
         channel.createThreadChannel(threadName, message.getId())
                 .queue(thread -> {
                     thread.sendMessage("Discuss the poll here!").queue();
