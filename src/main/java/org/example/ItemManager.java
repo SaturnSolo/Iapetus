@@ -22,15 +22,6 @@ public class ItemManager {
 		return this.items.get(id);
 	}
 
-	/** Lookup by string key (for DB/Discord values). Returns null if not found. */
-	public Item getItem(String key) {
-		try {
-			return items.get(ItemId.valueOf(key.toUpperCase()));
-		} catch (IllegalArgumentException e) {
-			return null;
-		}
-	}
-
 	/**
 	 * Give a user an item.
 	 *

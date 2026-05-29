@@ -7,7 +7,6 @@ import org.example.database.Database;
 import org.example.items.Item;
 import org.example.structures.IapetusCommand;
 import org.example.structures.Inventory;
-import org.example.types.ItemId;
 import org.example.types.UserId;
 import org.example.utils.IapetusColor;
 
@@ -23,7 +22,7 @@ public class InventoryCommand extends IapetusCommand {
 	public boolean runCommand(SlashCommandInteractionEvent event) {
 		UserId userId = UserId.of(event.getUser());
 
-		Inventory inventory = Database.getUserInventory(userId, itemMgr);
+		Inventory inventory = Database.getUserInventory(userId);
 		EmbedBuilder embed = new EmbedBuilder().setTitle("Inventory").setColor(IapetusColor.BODY)
 				.setDescription(inventory.isEmpty() ? "Your inventory is empty." : "");
 

@@ -19,15 +19,6 @@ public abstract class Item {
 		this.icon = icon;
 	}
 
-	/** For InvalidItem only — no ItemId, uses a raw string key. */
-	protected Item(String id, String name, String description, Emoji icon) {
-		this.itemId = null;
-		this.id = id;
-		this.name = name;
-		this.description = description;
-		this.icon = icon;
-	}
-
 	abstract public boolean use(SlashCommandInteractionEvent event);
 
 	public String getString() {

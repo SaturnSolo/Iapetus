@@ -37,7 +37,7 @@ public class LootChestCommands extends IapetusCommand {
 
 			itemMgr.takeItem(userId, ItemId.KEY);
 			MessageEmbed embed = new EmbedBuilder().setTitle("Opening a chest")
-					.setDescription("You opened a chest and got: 5 berries and %s".formatted(loot.key()))
+					.setDescription("You opened a chest and got: 5 berries and %s".formatted(itemMgr.getItem(loot).getString(true)))
 					.setColor(IapetusColor.RED).build();
 
 			economy.reward(userId, 5);

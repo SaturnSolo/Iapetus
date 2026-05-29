@@ -68,6 +68,7 @@ public class IgnoredChannels extends IapetusCommand {
 				StringBuilder stringList = new StringBuilder();
 				channels.forEach(id -> stringList.append("- <#").append(id).append(">\n"));
 				event.reply("**List of ignored channels:**\n%s".formatted(stringList)).setEphemeral(true).queue();
+				return true;
 			}
 
 			case null :

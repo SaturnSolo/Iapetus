@@ -32,18 +32,18 @@ public class DropHandler extends ListenerAdapter implements ButtonModule {
 
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
-		if (event.getAuthor().isBot() || event.getAuthor().isSystem())
+		if (event.getAuthor().isBot() || event.getAuthor().isSystem() || event.isWebhookMessage())
 			return;
 
 		List<Long> ignoredChannels = Database.getIgnoredChannels(event.getGuild());
 
 		if (ignoredChannels.contains(event.getChannel().getIdLong())) {
-			LOGGER.info("Got a message in an ignored channel");
+			LOGGER.debug("Got a message in an ignored channel");
 			return;
 		}
 
 		int channelMsgCount = perChannelMsgCount.getOrDefault(event.getChannel().getIdLong(), 0);
-		LOGGER.info("Channel %d has %d messages".formatted(event.getChannel().getIdLong(), channelMsgCount));
+		LOGGER.debug("Channel %d has %d messages".formatted(event.getChannel().getIdLong(), channelMsgCount));
 		if (++channelMsgCount == 26) {
 			event.getChannel().sendMessage("**Strawberry Drop!**")
 					.addComponents(ActionRow.of(Button.primary("drop:strawberry", "🍓")))
@@ -51,7 +51,7 @@ public class DropHandler extends ListenerAdapter implements ButtonModule {
 
 			channelMsgCount = 0;
 		}
-		LOGGER.info("Now, it has %d messages".formatted(channelMsgCount));
+		LOGGER.debug("Now, it has %d messages".formatted(channelMsgCount));
 		perChannelMsgCount.put(event.getChannel().getIdLong(), channelMsgCount);
 	}
 

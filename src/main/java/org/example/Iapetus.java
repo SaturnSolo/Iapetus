@@ -55,8 +55,7 @@ public class Iapetus {
 		// Set activity
 		builder.setActivity(Activity.listening("🍓"));
 		builder.enableIntents(GatewayIntent.GUILD_MESSAGES, GatewayIntent.GUILD_PRESENCES,
-				GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MEMBERS,
-				GatewayIntent.GUILD_PRESENCES);
+				GatewayIntent.GUILD_MESSAGE_REACTIONS, GatewayIntent.MESSAGE_CONTENT, GatewayIntent.GUILD_MEMBERS);
 
 		// Register items
 		RockItem rockItem = new RockItem(rng);
