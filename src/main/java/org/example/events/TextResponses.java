@@ -41,7 +41,7 @@ public class TextResponses extends ListenerAdapter {
 
 	@Override
 	public void onMessageReceived(MessageReceivedEvent event) {
-		if (event.getAuthor().isBot() || event.isWebhookMessage())
+		if (event.getAuthor().isBot() || event.getAuthor().isSystem() || event.isWebhookMessage())
 			return;
 		String content = event.getMessage().getContentDisplay().toLowerCase();
 
@@ -53,7 +53,7 @@ public class TextResponses extends ListenerAdapter {
 			case String s when s.contains("🍒") -> output.append(CHERRY.get(rng.nextInt(CHERRY.size()))).append("\n");
 			case String s when s.contains("🫐") ->
 				output.append(BLUEBERRY.get(rng.nextInt(BLUEBERRY.size()))).append("\n");
-			case String s when s.contains("moss") -> output.append(MOSS.get(rng.nextInt(MOSS.size()))).append("\n");
+			case String s when s.matches(".*\\bmoss\\b.*") -> output.append(MOSS.get(rng.nextInt(MOSS.size()))).append("\n");
 			case String s when (s.equals("iapetus")
 					|| s.contains("<@%s>".formatted(event.getJDA().getSelfUser().getId()))) ->
 				output.append(IAPETUS.get(rng.nextInt(IAPETUS.size()))).append("\n");

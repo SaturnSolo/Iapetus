@@ -14,6 +14,10 @@ import org.example.utils.IapetusColor;
 import java.util.Random;
 
 public class HatchCommand extends IapetusCommand {
+	private static final String[] POSSIBLE_PETS = {"🐢", "🦃", "🐈", "🐕", "🐑", "🦌", "🐂", "🐄", "🦎", "🐍", "🐣",
+			"🦐", "🦩", "🐌", "🦢", "🐊", "🦙", "🕷", "🦨", "🦋", "🐸", "🦑", "🦐", "🦞", "🐖", "🦝", "🐙", "🦦",
+			"🐚", "🦌", "🦔", "🌻"};
+
 	private final ItemManager itemMgr;
 	private final Random rng;
 
@@ -50,9 +54,6 @@ public class HatchCommand extends IapetusCommand {
 	}
 
 	private String hatchRandomPet() {
-		String[] possiblePets = {"🐢", "🦃", "🐈", "🐕", "🐑", "🦌", "🐂", "🐄", "🦎", "🐍", "🐣", "🦐", "🦩", "🐌",
-				"🦢", "🐊", "🦙", "🕷", "🦨", "🦋", "🐸", "🦑", "🦐", "🦞", "🐖", "🦝", "🐙", "🦦", "🐚", "🦌", "🦔",
-				"🌻"};
-		return possiblePets[rng.nextInt(possiblePets.length)];
+		return POSSIBLE_PETS[rng.nextInt(POSSIBLE_PETS.length)];
 	}
 }

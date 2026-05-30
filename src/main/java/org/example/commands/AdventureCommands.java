@@ -23,7 +23,7 @@ public class AdventureCommands extends IapetusCommand {
 
 	public AdventureCommands(ItemManager itemMgr, Economy economy, Random rng) {
 		super(Commands.slash("adventure", "go on an adventure somewhere"));
-		this.adventureButtons = new AdventureButtons(itemMgr, economy, rng, adventureCooldowns);
+		this.adventureButtons = new AdventureButtons(itemMgr, economy, rng);
 	}
 
 	public AdventureButtons getAdventureButtons() {

@@ -47,9 +47,6 @@ public class SQLiteDataSource {
 
 		try (final Connection connection = getConnection(); final Statement statement = connection.createStatement()) {
 
-			statement.execute("CREATE TABLE IF NOT EXISTS guild_settings (" + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-					+ "guild_id VARCHAR(20) NOT NULL," + "prefix VARCHAR(255) NOT NULL DEFAULT 'i!'" + ");");
-
 			statement.execute("CREATE TABLE IF NOT EXISTS user_berries (" + "user_id VARCHAR(20) PRIMARY KEY,"
 					+ "berry_count INTEGER NOT NULL DEFAULT 0" + ");");
 
@@ -58,9 +55,6 @@ public class SQLiteDataSource {
 
 			statement.execute("CREATE TABLE IF NOT EXISTS inventory (" + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
 					+ "user_id VARCHAR(20) NOT NULL," + "item_name VARCHAR(100) NOT NULL" + ");");
-
-			statement.execute("CREATE TABLE IF NOT EXISTS items (" + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
-					+ "name VARCHAR(100) NOT NULL," + "price INTEGER NOT NULL" + ");");
 
 			statement.execute("CREATE TABLE IF NOT EXISTS hatch_log (" + "id INTEGER PRIMARY KEY AUTOINCREMENT,"
 					+ "user_id VARCHAR(20) NOT NULL," + "pet VARCHAR(100) NOT NULL" + ");");

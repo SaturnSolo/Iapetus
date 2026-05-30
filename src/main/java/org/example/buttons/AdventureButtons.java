@@ -24,18 +24,16 @@ public class AdventureButtons implements ButtonModule {
 	private final ItemManager itemMgr;
 	private final Economy economy;
 	private final Random rng;
-	private final Map<String, Date> adventureCooldowns;
 	private final Map<String, AdventureLocation> locations = new HashMap<>();
 	private final Map<String, ChoiceEvent> choiceEvents = new HashMap<>();
 
 	//
 	// INITIALIZING THE LOCATIONS.
 	//
-	public AdventureButtons(ItemManager itemMgr, Economy economy, Random rng, Map<String, Date> advCooldowns) {
+	public AdventureButtons(ItemManager itemMgr, Economy economy, Random rng) {
 		this.itemMgr = itemMgr;
 		this.economy = economy;
 		this.rng = rng;
-		this.adventureCooldowns = advCooldowns;
 
 		addLocations(new AdventureLocation("cave", "%s stumbled upon a cave.",
 				"it seems quite deep, it requires you to crawl.", 5)
@@ -274,7 +272,6 @@ public class AdventureButtons implements ButtonModule {
 								"Not ready for adventure yet? That's fine!"))
 				.build();
 
-		adventureCooldowns.put(user.getId(), new Date());
 		event.editMessage(new MessageEditBuilder().setEmbeds(embed).setReplace(true).build()).queue();
 	}
 
@@ -377,8 +374,7 @@ public class AdventureButtons implements ButtonModule {
 
 		@Override
 		public void run(ButtonInteractionEvent event) {
-			if (itemId != null)
-				itemMgr.giveItem(UserId.of(event.getUser()), itemId, amount);
+			itemMgr.giveItem(UserId.of(event.getUser()), itemId, amount);
 			MessageEmbed embed = new EmbedBuilder(event.getMessage().getEmbeds().get(0)).setDescription(message)
 					.setFooter("+%d %s".formatted(amount, itemMgr.getItem(itemId).getString(true))).build();
 			event.editMessage(new MessageEditBuilder().setEmbeds(embed).setReplace(true).build()).queue();
@@ -424,7 +420,7 @@ public class AdventureButtons implements ButtonModule {
 		public void run(ButtonInteractionEvent event) {
 			User user = event.getUser();
 			UserId userId = UserId.of(user);
-			Inventory inventory = Database.getUserInventory(userId, itemMgr);
+			Inventory inventory = Database.getUserInventory(userId);
 
 			String footer = null;
 			if (inventory.totalCount() > 2) {

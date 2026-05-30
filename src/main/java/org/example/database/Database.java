@@ -2,7 +2,6 @@ package org.example.database;
 
 import net.dv8tion.jda.api.entities.Guild;
 import net.dv8tion.jda.api.entities.channel.Channel;
-import org.example.ItemManager;
 import org.example.structures.Inventory;
 import org.example.types.ItemId;
 import org.example.types.UserId;
@@ -13,13 +12,11 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.time.LocalDate;
 import java.util.*;
-import java.util.stream.Collectors;
-
 @SuppressWarnings("SqlNoDataSourceInspection")
 public class Database {
 
 	// Inventory + items
-	public static Inventory getUserInventory(UserId userId, ItemManager itemMgr) {
+	public static Inventory getUserInventory(UserId userId) {
 		Map<ItemId, Integer> items = new EnumMap<>(ItemId.class);
 		try (final Connection connection = SQLiteDataSource.getConnection();
 				final PreparedStatement ps = connection.prepareStatement(
@@ -27,13 +24,9 @@ public class Database {
 			ps.setString(1, userId.value());
 			try (final ResultSet rs = ps.executeQuery()) {
 				while (rs.next()) {
-					String itemName = rs.getString("item_name");
-					int itemCount = rs.getInt("item_count");
-
-					if (itemMgr.getItem(itemName) != null) {
-						ItemId id = ItemId.valueOf(itemName.toUpperCase());
-						items.put(id, itemCount);
-					}
+					try {
+						items.put(ItemId.valueOf(rs.getString("item_name").toUpperCase()), rs.getInt("item_count"));
+					} catch (IllegalArgumentException ignored) {}
 				}
 			}
 		} catch (SQLException e) {
@@ -171,31 +164,23 @@ public class Database {
 		}
 	}
 
-	private static Map<Long, Integer> getUserBerryMap(long guildId) {
+	public static Map<Long, Integer> getTopNBerryHolders(long guildId, int n) {
 		Map<Long, Integer> result = new LinkedHashMap<>();
-		try (Connection connection = SQLiteDataSource.getConnection();
-				PreparedStatement ps = connection.prepareStatement("SELECT ub.user_id, ub.berry_count "
-						+ "FROM user_berries ub " + "JOIN user_guilds ug ON ub.user_id = ug.user_id "
-						+ "WHERE ug.guild_id = ? " + "ORDER BY ub.berry_count DESC")) {
-
+		try (Connection conn = SQLiteDataSource.getConnection();
+				PreparedStatement ps = conn.prepareStatement(
+						"SELECT ub.user_id, ub.berry_count FROM user_berries ub "
+								+ "JOIN user_guilds ug ON ub.user_id = ug.user_id "
+								+ "WHERE ug.guild_id = ? ORDER BY ub.berry_count DESC LIMIT ?")) {
 			ps.setLong(1, guildId);
-
+			ps.setInt(2, n);
 			try (ResultSet rs = ps.executeQuery()) {
-				while (rs.next()) {
+				while (rs.next())
 					result.put(Long.parseLong(rs.getString("user_id")), rs.getInt("berry_count"));
-				}
 			}
-
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
-
 		return result;
-	}
-
-	public static Map<Long, Integer> getTopNBerryHolders(long guildId, int n) {
-		return getUserBerryMap(guildId).entrySet().stream().limit(n)
-				.collect(Collectors.toMap(Map.Entry::getKey, Map.Entry::getValue, (a, b) -> a, LinkedHashMap::new));
 	}
 
 	// Ignored channels
@@ -236,7 +221,7 @@ public class Database {
 				}
 			}
 		} catch (SQLException e) {
-			throw new RuntimeException(e);
+			e.printStackTrace();
 		}
 		return channels;
 	}

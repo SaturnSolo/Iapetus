@@ -1,6 +1,5 @@
 package org.example.items;
 
-import net.dv8tion.jda.api.entities.User;
 import net.dv8tion.jda.api.entities.emoji.Emoji;
 import net.dv8tion.jda.api.events.interaction.command.SlashCommandInteractionEvent;
 import org.example.ItemManager;
@@ -17,15 +16,9 @@ public class ShinyItem extends Item {
 
 	@Override
 	public boolean use(SlashCommandInteractionEvent event) {
-		User user = event.getUser();
-		UserId userId = UserId.of(user);
-
-		if (itemMgr.hasItem(userId, ItemId.SHINY)) {
-
-			itemMgr.giveItem(userId, ItemId.KEY);
-			event.reply("**This item sparkles ✨ and explodes 💥 into a key!**").queue();
-			return false;
-		}
-		return false;
+		UserId userId = UserId.of(event.getUser());
+		itemMgr.giveItem(userId, ItemId.KEY);
+		event.reply("**This item sparkles ✨ and explodes 💥 into a key!**").queue();
+		return true;
 	}
 }
